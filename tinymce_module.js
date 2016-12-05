@@ -17,133 +17,335 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
  *            Y YUI instance
  */
 
- var recordrtc_dataSource;
- var recordrtc_ping_id;
-
- M.tinymce_recordrtc.datasource_init = function(Y) {
-     recordrtc_dataSource = new Y.DataSource.Get({
-         source : M.cfg.wwwroot + "/mod/recordrtc/bbb_broker.php?"
-     });
- };
-
 M.tinymce_recordrtc.view_init = function(Y) {
     console.info('Init...');
 
-    // Init general datasource
-    M.tinymce_recordrtc.datasource_init(Y);
-
-    if ( Y.one('#recording_polling') ) {
-        // Start polling
-        recordrtc_ping_id = recordrtc_dataSource.setInterval(recordrtc.ping_interval, {
-            request : "action=recording_list&idx=" + recordrtc.meetingid, // it uses the meetingID for looking up recordings
-            callback : {
-                success : function(e) {
-                    if (e.data.status) {
-                        // See if there is a new recording not included in the current list
-                        var new_recording = _is_new_recording_ready(e.data.recordings);
-                        if ( new_recording ) {
-                            clearInterval(recordrtc_ping_id);
-                            _update_recording_polling(new_recording);
+    var getUserMedia = null;
+    var webrtcDetectedBrowser = null;
+    var webrtcDetectedVersion = null;
+    var webrtcMinimumVersion = null;
+    
+    var webrtcUtils = window.webrtcUtils || {};
+    if(!webrtcUtils.enableLogs) {
+        webrtcUtils.enableLogs = true;
+    }
+    if(!webrtcUtils.log) {
+        webrtcUtils.log = function() {
+            if(!webrtcUtils.enableLogs) {
+                return;
+            }
+    
+            // suppress console.log output when being included as a module.
+            if (typeof module !== 'undefined' ||
+                typeof require === 'function' && typeof define === 'function') {
+                return;
+            }
+            console.log.apply(console, arguments);
+        };
+    }
+    
+    if(!webrtcUtils.extractVersion) {
+        webrtcUtils.extractVersion = function(uastring, expr, pos) {
+            var match = uastring.match(expr);
+            return match && match.length >= pos && parseInt(match[pos], 10);
+        };
+    }
+    
+    if (typeof window === 'object') {
+      if (window.HTMLMediaElement &&
+        !('srcObject' in window.HTMLMediaElement.prototype)) {
+        // Shim the srcObject property, once, when HTMLMediaElement is found.
+        Object.defineProperty(window.HTMLMediaElement.prototype, 'srcObject', {
+          get: function() {
+            // If prefixed srcObject property exists, return it.
+            // Otherwise use the shimmed property, _srcObject
+            return 'mozSrcObject' in this ? this.mozSrcObject : this._srcObject;
+          },
+          set: function(stream) {
+            if ('mozSrcObject' in this) {
+              this.mozSrcObject = stream;
+            } else {
+              // Use _srcObject as a private property for this shim
+              this._srcObject = stream;
+              // TODO: revokeObjectUrl(this.src) when !stream to release resources?
+              this.src = stream ? URL.createObjectURL(stream) : null;
+            }
+          }
+        });
+      }
+      // Proxy existing globals
+      getUserMedia = window.navigator && window.navigator.getUserMedia;
+    }
+    
+    if (typeof window === 'undefined' || !window.navigator) {
+        webrtcDetectedBrowser = 'not a browser';
+    } else if (navigator.mozGetUserMedia && window.mozRTCPeerConnection) {
+        webrtcDetectedBrowser = 'firefox';
+    
+        // the detected firefox version.
+        webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent,
+            /Firefox\/([0-9]+)\./, 1);
+    
+        // the minimum firefox version still supported by adapter.
+        webrtcMinimumVersion = 31;
+    
+        // getUserMedia constraints shim.
+        getUserMedia = function(constraints, onSuccess, onError) {
+            var constraintsToFF37 = function(c) {
+                if (typeof c !== 'object' || c.require) {
+                    return c;
+                }
+                var require = [];
+                Object.keys(c).forEach(function(key) {
+                    if (key === 'require' || key === 'advanced' || key === 'mediaSource') {
+                        return;
+                    }
+                    var r = c[key] = (typeof c[key] === 'object') ?
+                        c[key] : {
+                            ideal: c[key]
+                        };
+                    if (r.min !== undefined ||
+                        r.max !== undefined || r.exact !== undefined) {
+                        require.push(key);
+                    }
+                    if (r.exact !== undefined) {
+                        if (typeof r.exact === 'number') {
+                            r.min = r.max = r.exact;
+                        } else {
+                            c[key] = r.exact;
+                        }
+                        delete r.exact;
+                    }
+                    if (r.ideal !== undefined) {
+                        c.advanced = c.advanced || [];
+                        var oc = {};
+                        if (typeof r.ideal === 'number') {
+                            oc[key] = {
+                                min: r.ideal,
+                                max: r.ideal
+                            };
+                        } else {
+                            oc[key] = r.ideal;
+                        }
+                        c.advanced.push(oc);
+                        delete r.ideal;
+                        if (!Object.keys(r).length) {
+                            delete c[key];
                         }
                     }
-                },
-                failure : function(e) {
-                    console.log("Failed...");
-                    clearInterval(recordrtc_ping_id);
+                });
+                if (require.length) {
+                    c.require = require;
                 }
+                return c;
+            };
+            if (webrtcDetectedVersion < 38) {
+                webrtcUtils.log('spec: ' + JSON.stringify(constraints));
+                if (constraints.audio) {
+                    constraints.audio = constraintsToFF37(constraints.audio);
+                }
+                if (constraints.video) {
+                    constraints.video = constraintsToFF37(constraints.video);
+                }
+                webrtcUtils.log('ff37: ' + JSON.stringify(constraints));
             }
+            return navigator.mozGetUserMedia(constraints, onSuccess, onError);
+        };
+    
+        navigator.getUserMedia = getUserMedia;
+    
+        // Shim for mediaDevices on older versions.
+        if (!navigator.mediaDevices) {
+            navigator.mediaDevices = {
+                getUserMedia: requestUserMedia,
+                addEventListener: function() {},
+                removeEventListener: function() {}
+            };
+        }
+        navigator.mediaDevices.enumerateDevices =
+            navigator.mediaDevices.enumerateDevices || function() {
+                return new Promise(function(resolve) {
+                    var infos = [{
+                        kind: 'audioinput',
+                        deviceId: 'default',
+                        label: '',
+                        groupId: ''
+                    }, {
+                        kind: 'videoinput',
+                        deviceId: 'default',
+                        label: '',
+                        groupId: ''
+                    }];
+                    resolve(infos);
+                });
+            };
+    
+        if (webrtcDetectedVersion < 41) {
+            // Work around http://bugzil.la/1169665
+            var orgEnumerateDevices =
+                navigator.mediaDevices.enumerateDevices.bind(navigator.mediaDevices);
+            navigator.mediaDevices.enumerateDevices = function() {
+                return orgEnumerateDevices().then(undefined, function(e) {
+                    if (e.name === 'NotFoundError') {
+                        return [];
+                    }
+                    throw e;
+                });
+            };
+        }
+    
+    } else if (navigator.webkitGetUserMedia && window.webkitRTCPeerConnection) {
+        webrtcDetectedBrowser = 'chrome';
+    
+        webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent,
+            /Chrom(e|ium)\/([0-9]+)\./, 2);
+    
+        // the minimum chrome version still supported by adapter.
+        webrtcMinimumVersion = 38;
+    
+        // getUserMedia constraints shim.
+        var constraintsToChrome = function(c) {
+            if (typeof c !== 'object' || c.mandatory || c.optional) {
+                return c;
+            }
+            var cc = {};
+            Object.keys(c).forEach(function(key) {
+                if (key === 'require' || key === 'advanced' || key === 'mediaSource') {
+                    return;
+                }
+                var r = (typeof c[key] === 'object') ? c[key] : {
+                    ideal: c[key]
+                };
+                if (r.exact !== undefined && typeof r.exact === 'number') {
+                    r.min = r.max = r.exact;
+                }
+                var oldname = function(prefix, name) {
+                    if (prefix) {
+                        return prefix + name.charAt(0).toUpperCase() + name.slice(1);
+                    }
+                    return (name === 'deviceId') ? 'sourceId' : name;
+                };
+                if (r.ideal !== undefined) {
+                    cc.optional = cc.optional || [];
+                    var oc = {};
+                    if (typeof r.ideal === 'number') {
+                        oc[oldname('min', key)] = r.ideal;
+                        cc.optional.push(oc);
+                        oc = {};
+                        oc[oldname('max', key)] = r.ideal;
+                        cc.optional.push(oc);
+                    } else {
+                        oc[oldname('', key)] = r.ideal;
+                        cc.optional.push(oc);
+                    }
+                }
+                if (r.exact !== undefined && typeof r.exact !== 'number') {
+                    cc.mandatory = cc.mandatory || {};
+                    cc.mandatory[oldname('', key)] = r.exact;
+                } else {
+                    ['min', 'max'].forEach(function(mix) {
+                        if (r[mix] !== undefined) {
+                            cc.mandatory = cc.mandatory || {};
+                            cc.mandatory[oldname(mix, key)] = r[mix];
+                        }
+                    });
+                }
+            });
+            if (c.advanced) {
+                cc.optional = (cc.optional || []).concat(c.advanced);
+            }
+            return cc;
+        };
+    
+        getUserMedia = function(constraints, onSuccess, onError) {
+            if (constraints.audio) {
+                constraints.audio = constraintsToChrome(constraints.audio);
+            }
+            if (constraints.video) {
+                constraints.video = constraintsToChrome(constraints.video);
+            }
+            webrtcUtils.log('chrome: ' + JSON.stringify(constraints));
+            return navigator.webkitGetUserMedia(constraints, onSuccess, onError);
+        };
+        navigator.getUserMedia = getUserMedia;
+    
+        if (!navigator.mediaDevices) {
+            navigator.mediaDevices = {
+                getUserMedia: requestUserMedia
+            };
+        }
+    
+        // A shim for getUserMedia method on the mediaDevices object.
+        // TODO(KaptenJansson) remove once implemented in Chrome stable.
+        if (!navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia = function(constraints) {
+                return requestUserMedia(constraints);
+            };
+        } else {
+            // Even though Chrome 45 has navigator.mediaDevices and a getUserMedia
+            // function which returns a Promise, it does not accept spec-style
+            // constraints.
+            var origGetUserMedia = navigator.mediaDevices.getUserMedia.
+            bind(navigator.mediaDevices);
+            navigator.mediaDevices.getUserMedia = function(c) {
+                webrtcUtils.log('spec:   ' + JSON.stringify(c)); // whitespace for alignment
+                c.audio = constraintsToChrome(c.audio);
+                c.video = constraintsToChrome(c.video);
+                webrtcUtils.log('chrome: ' + JSON.stringify(c));
+                return origGetUserMedia(c);
+            };
+        }
+    
+        // Dummy devicechange event methods.
+        // TODO(KaptenJansson) remove once implemented in Chrome stable.
+        if (typeof navigator.mediaDevices.addEventListener === 'undefined') {
+            navigator.mediaDevices.addEventListener = function() {
+                webrtcUtils.log('Dummy mediaDevices.addEventListener called.');
+            };
+        }
+        if (typeof navigator.mediaDevices.removeEventListener === 'undefined') {
+            navigator.mediaDevices.removeEventListener = function() {
+                webrtcUtils.log('Dummy mediaDevices.removeEventListener called.');
+            };
+        }
+    
+    } else if (navigator.mediaDevices && navigator.userAgent.match(/Edge\/(\d+).(\d+)$/)) {
+        webrtcUtils.log('This appears to be Edge');
+        webrtcDetectedBrowser = 'edge';
+    
+        webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent, /Edge\/(\d+).(\d+)$/, 2);
+    
+        // the minimum version still supported by adapter.
+        webrtcMinimumVersion = 12;
+    } else {
+        webrtcUtils.log('Browser does not appear to be WebRTC-capable');
+    }
+    
+    // Returns the result of getUserMedia as a Promise.
+    function requestUserMedia(constraints) {
+        return new Promise(function(resolve, reject) {
+            getUserMedia(constraints, resolve, reject);
+        });
+    }
+    
+    if (typeof module !== 'undefined') {
+        module.exports = {
+            getUserMedia: getUserMedia,
+            webrtcDetectedBrowser: webrtcDetectedBrowser,
+            webrtcDetectedVersion: webrtcDetectedVersion,
+            webrtcMinimumVersion: webrtcMinimumVersion,
+            webrtcUtils: webrtcUtils
+        };
+    } else if ((typeof require === 'function') && (typeof define === 'function')) {
+        // Expose objects and functions when RequireJS is doing the loading.
+        define([], function() {
+            return {
+                getUserMedia: getUserMedia,
+                webrtcDetectedBrowser: webrtcDetectedBrowser,
+                webrtcDetectedVersion: webrtcDetectedVersion,
+                webrtcMinimumVersion: webrtcMinimumVersion,
+                webrtcUtils: webrtcUtils
+            };
         });
     }
 };
-
-M.tinymce_recordrtc.view_annotate = function() {
-    console.info('Annotate...');
-
-    var recording_active = Y.one('.btn.recording.active');
-    if ( recording_active == null ) {
-        //Warning, you need to select a recording to insert an annotation
-    } else {
-        var annotation = _create_annotation(recording_active.getAttribute('id'), recording_active.getAttribute('data-url'));
-        console.info(annotation);
-        ////lookup for annotation, if there was one already replace, if there wasn't add it
-        tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
-    }
-
-    tinyMCEPopup.close();
-};
-
-M.tinymce_recordrtc.view_cancel = function() {
-    console.info('Cancel...');
-    tinyMCEPopup.close();
-};
-
-M.tinymce_recordrtc.view_select = function(b) {
-    console.info('Select...');
-    var button_active = Y.one('.btn.recording.active');
-    var button = Y.one(b);
-    if ( button.hasClass('active') ) {
-        button.removeClass('active');
-    } else {
-        button.addClass('active');
-    }
-
-    if ( button_active && button != button_active ) {
-        button_active.removeClass('active');
-    }
-};
-
-M.tinymce_recordrtc.view_delete = function(record_id) {
-    console.info('Delete...');
-    recordrtc_dataSource.sendRequest({
-        request : 'action=recording_delete&id=' + record_id,
-        callback : {
-            success : function(e) {
-                Y.one('div #'+record_id).remove();
-            },
-            failure : function(e) {
-                console.log(e);
-            }
-        }
-    });
-};
-
-
-_is_new_recording_ready = function(recordings) {
-    console.info('Is it ready?...');
-    var shown_recordings = _shown_recordings();
-    for (var i = 0; i < recordings.length; i++) {
-        var recording = recordings[i];
-        if (!(recording['recordID'] in shown_recordings)) {
-            console.info(recording['recordID'] + ' it is not shown...it means it is new and ready');
-            return recording;
-        }
-    }
-
-    return null;
-}
-
-_shown_recordings = function() {
-    var _recordings = {};
-    Y.all('.recording').each(function (_recording) {
-        _recordings[_recording.getAttribute('id')] = _recording;
-    });
-    return _recordings;
-}
-
-_update_recording_polling = function(recording) {
-    console.info('Update polling...');
-    /// Hide spinning wheel
-    Y.one('#recording_polling').addClass('hidden');
-    /// Add new recording button
-    var div_new_recording = Y.Node.create('<div id="' + recording['recordID'] + '" class="show-recording"><input class="delete" type="button" value="x" onclick="M.tinymce_recordrtc.view_delete(\'' + recording['recordID'] + '\');" /></div>');
-    var new_recording = Y.Node.create('<button onclick="M.tinymce_recordrtc.view_select(this);" type="button" class="btn btn-secondary recording" ondblclick="window.open(\''+recording['playbacks']['presentation']['url']+'\');return false;" id="' + recording['recordID'] + '" title="' + recordrtc.recording_ready + '" data-url="' + recording['playbacks']['presentation']['url'] + '"><img src="' + recordrtc.recording_icon80 + '" alt="Recording ready" /></button>');
-    div_new_recording.append(new_recording);
-    Y.one('#recording_selector').append(div_new_recording);
-    /// Restore the button for adding new recordings
-    Y.one('#recording_add').removeClass('hidden');
-}
-
-_create_annotation = function(recording_id, recording_url) {
-    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" id="' + recording_id + '" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
-    return annotation;
-}
