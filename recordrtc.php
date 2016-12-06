@@ -31,11 +31,11 @@ $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'gumadapter.js'));
 
-//$jsmodule = array(
-//    'name'     => 'tinymce_recordrtc',
-//    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce_module.js'
-//);
-//$PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
+$jsmodule = array(
+    'name'     => 'tinymce_recordrtc',
+    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce_module.js'
+);
+$PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
 
 echo $OUTPUT->header();
 
