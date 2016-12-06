@@ -27,54 +27,51 @@ $PAGE->set_heading($title);
 // Reset page layout for inside editor.
 $PAGE->set_pagelayout('embedded');
 
-echo $OUTPUT->header();
-
+$PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.css'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'gumadapter.js'));
 
 //$jsmodule = array(
 //    'name'     => 'tinymce_recordrtc',
-//    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce_module.js',
-//    'requires' => array('datasource-get', 'datasource-jsonschema', 'datasource-polling'),
+//    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce_module.js'
 //);
-//
 //$PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
 
-$out = "";
+echo $OUTPUT->header();
 
-$out .= '<style type="text/css">'."\n";
-$out .= '  <!--'."\n";
-$out .= '     @import url("'.$CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.css");'."\n";
-$out .= '  -->'."\n";
-$out .= '</style>'."\n";
-
-
-
-$out .= '<header style="text-align: center;">'."\n";
-$out .= '  <h1>'."\n";
-$out .= '    RecordRTC Audio Recording'."\n";
-$out .= '  </h1>'."\n";
-$out .= '</header>'."\n";
-
-$out .= '<section class="experiment recordrtc">'."\n";
-$out .= '  <h2 class="header">'."\n";
-$out .= '    <select class="recording-media" style="display:none">'."\n";
-$out .= '      <option value="record-audio">Audio</option>'."\n";
-$out .= '    </select>'."\n";
-$out .= '    <select class="media-container-format" style="display:none">'."\n";
-$out .= '      <option>Ogg</option>'."\n";
-$out .= '    </select>'."\n";
-$out .= '    <button>Start Recording</button>'."\n";
-$out .= '  </h2>'."\n";
-$out .= '  <div style="text-align: center; display: none;">'."\n";
-$out .= '    <button id="save-to-disk" style="display:none">Save To Disk</button>'."\n";
-$out .= '    <button id="open-new-tab" style="display:none">Open New Tab</button>'."\n";
-$out .= '    <button id="upload-to-server">Upload Last Recording to Server</button>'."\n";
-$out .= '  </div>'."\n";
-$out .= '  <br>'."\n";
-$out .= '  <video width="1" height="1" muted></video>'."\n";
-$out .= '</section>'."\n";
-
-echo $out;
+echo get_output();
 
 echo $OUTPUT->footer();
+
+
+function get_output() {
+  global $CFG;
+  $out = "";
+
+  $out .= '<header style="text-align: center;">'."\n";
+  $out .= '  <h1>'."\n";
+  $out .= '    RecordRTC Audio Recording'."\n";
+  $out .= '  </h1>'."\n";
+  $out .= '</header>'."\n";
+
+  $out .= '<section class="experiment recordrtc">'."\n";
+  $out .= '  <h2 class="header">'."\n";
+  $out .= '    <select class="recording-media" style="display:none">'."\n";
+  $out .= '      <option value="record-audio">Audio</option>'."\n";
+  $out .= '    </select>'."\n";
+  $out .= '    <select class="media-container-format" style="display:none">'."\n";
+  $out .= '      <option>Ogg</option>'."\n";
+  $out .= '    </select>'."\n";
+  $out .= '    <button>Start Recording</button>'."\n";
+  $out .= '  </h2>'."\n";
+  $out .= '  <div style="text-align: center; display: none;">'."\n";
+  $out .= '    <button id="save-to-disk" style="display:none">Save To Disk</button>'."\n";
+  $out .= '    <button id="open-new-tab" style="display:none">Open New Tab</button>'."\n";
+  $out .= '    <button id="upload-to-server">Upload Last Recording to Server</button>'."\n";
+  $out .= '  </div>'."\n";
+  $out .= '  <br>'."\n";
+  $out .= '  <video width="1" height="1" muted></video>'."\n";
+  $out .= '</section>'."\n";
+
+  return $out;
+}

@@ -338,26 +338,26 @@ if (typeof module !== 'undefined') {
 }
 
 (function() {
-     var params = {},
-         r = /([^&=]+)=?([^&]*)/g;
+    var params = {},
+        r = /([^&=]+)=?([^&]*)/g;
 
-     function d(s) {
-         return decodeURIComponent(s.replace(/\+/g, ' '));
-     }
+    function d(s) {
+        return decodeURIComponent(s.replace(/\+/g, ' '));
+    }
 
-     var match, search = window.location.search;
-     while (match = r.exec(search.substring(1))) {
-         params[d(match[1])] = d(match[2]);
+    var match, search = window.location.search;
+    while (match = r.exec(search.substring(1))) {
+        params[d(match[1])] = d(match[2]);
 
-         if(d(match[2]) === 'true' || d(match[2]) === 'false') {
-             params[d(match[1])] = d(match[2]) === 'true' ? true : false;
-         }
-     }
+        if(d(match[2]) === 'true' || d(match[2]) === 'false') {
+            params[d(match[1])] = d(match[2]) === 'true' ? true : false;
+        }
+    }
 
-     window.params = params;
- })();
- 
- var recordingDIV = document.querySelector('.recordrtc');
+    window.params = params;
+})();
+
+var recordingDIV = document.querySelector('.recordrtc');
 var recordingMedia = recordingDIV.querySelector('.recording-media');
 var recordingPlayer = recordingDIV.querySelector('video');
 var mediaContainerFormat = recordingDIV.querySelector('.media-container-format');
