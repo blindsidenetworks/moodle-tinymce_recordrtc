@@ -30,6 +30,7 @@ $PAGE->set_pagelayout('embedded');
 $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.css'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'gumadapter.js'));
+$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'view_init.js'));
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',
@@ -69,7 +70,6 @@ function get_output() {
   $out .= '    <button id="open-new-tab" style="display:none">Open New Tab</button>'."\n";
   $out .= '    <button id="upload-to-server">Upload Last Recording to Server</button>'."\n";
   $out .= '  </div>'."\n";
-  $out .= '  <br>'."\n";
   $out .= '  <video width="1" height="1" muted></video>'."\n";
   $out .= '</section>'."\n";
 
