@@ -62,6 +62,8 @@ recordingDIV.querySelector('button').onclick = function() {
             }
             else {
                 button.recordRTC.stopRecording(function(url) {
+                    console.info("stopRecording 2");
+                    console.info(url);
                     button.recordingEndedCallback(url);
                     stopStream();
 
@@ -109,7 +111,6 @@ recordingDIV.querySelector('button').onclick = function() {
         }
     };
 
-
     if(recordingMedia.value === 'record-audio') {
         captureAudio(commonConfig);
 
@@ -124,17 +125,29 @@ recordingDIV.querySelector('button').onclick = function() {
             });
 
             button.recordingEndedCallback = function(url) {
+                console.info(url);
                 var audio = new Audio();
                 audio.src = url;
                 audio.controls = true;
-                recordingPlayer.parentNode.appendChild(document.createElement('hr'));
-                recordingPlayer.parentNode.appendChild(audio);
+                audio.id = url.substr(url.lastIndexOf('/') + 1);
+                console.info(audio);
+
+                recordingDIV.appendChild(document.createElement('hr'));
+                recordingDIV.appendChild(audio);
 
                 if(audio.paused) audio.play();
 
                 audio.onended = function() {
                     audio.pause();
                     audio.src = URL.createObjectURL(button.recordRTC.blob);
+                };
+                audio.onfocus = function() {
+                    recordrtc_select_recording(audio);
+                    alert("selected " + audio.id);
+                };
+                audio.onclick = function() {
+                    recordrtc_select_recording(this);
+                    alert("selected " + audio.id);
                 };
             };
 
@@ -144,8 +157,6 @@ recordingDIV.querySelector('button').onclick = function() {
             recordingDIV.querySelector('#upload-to-server').innerHTML = "Upload Last Recording to Server";
         };
     }
-
-
 };
 
 function captureAudio(config) {
@@ -238,12 +249,16 @@ function saveToDiskOrOpenNewTab(recordRTC) {
 
         var button = this;
         uploadToServer(recordRTC, function(progress, fileURL) {
+            console.info(recordRTC);
+            console.info(fileURL);
             if(progress === 'ended') {
                 button.disabled = false;
                 button.innerHTML = 'Download Last Recording from Server';
                 button.onclick = function() {
                     window.open(fileURL);
                 };
+
+                //recordrtc_view_annotate('XCpK6VK7Q6Zp50Yyx3POiXG8eu1', fileURL);
 
                 return;
             }
@@ -260,7 +275,6 @@ function uploadToServer(recordRTC, callback) {
     var fileName = (Math.random() * 1000).toString().replace('.', '');
 
     if (fileType === 'audio') {
-        // fileName += '.' + (!!navigator.mozGetUserMedia ? 'ogg' : 'wav');
         fileName += '.' + (!!navigator.mozGetUserMedia ? 'ogg' : 'wav');
     } else {
         fileName += '.webm';
@@ -354,7 +368,32 @@ window.onbeforeunload = function() {
     return 'Please wait few seconds before your recordings are deleted from the server.';
 };
 
-_create_annotation = function(recording_id, recording_url) {
+recordrtc_view_annotate = function(recording_id, recording_url) {
+    console.info('Annotate...');
+    var annotation = recordrtc_create_annotation(recording_id, recording_url);
+
+    tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
+    tinyMCEPopup.close();
+};
+
+recordrtc_create_annotation = function(recording_id, recording_url) {
+    console.info('Creating annotation...');
     var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" id="' + recording_id + '" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
+    console.info(annotation);
     return annotation;
+};
+
+recordrtc_select_recording = function(audio) {
+    // Find the one that is currently selected
+    var selected = recordingDIV.querySelectorAll('audio.selected');
+
+    // Remove the class selected from the current one selected, if there is one
+    if ( selected.length > 0 ) {
+        if ( selected[0] != audio ) {
+            selected[0].classList.remove('selected');
+        }
+    }
+
+    // Add the class selected to the new one
+    audio.classList.add('selected');
 };

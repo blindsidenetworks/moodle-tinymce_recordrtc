@@ -25,12 +25,18 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 // Reset page layout for inside editor.
-$PAGE->set_pagelayout('embedded');
+$PAGE->set_pagelayout('popup');
 
 $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.css'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'gumadapter.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'view_init.js'));
+
+$jsVars = array(
+    'contextid' => $contextid,
+    'recording_icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'pix/recordrtc-32.png'
+);
+$PAGE->requires->data_for_js('recordrtc', $jsVars);
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',
@@ -72,6 +78,19 @@ function get_output() {
   $out .= '  </div>'."\n";
   $out .= '  <video width="1" height="1" muted></video>'."\n";
   $out .= '</section>'."\n";
+
+  $out .= '<script type="text/javascript">'."\n";
+  // Because there is no relative path to TinyMCE, we have to use JavaScript
+  // to work out correct path from the .js files from TinyMCE. Only files
+  // inside this plugin can be included with relative path (below).
+  $out .= '   var editor_tinymce_include = function(path) {'."\n";
+  $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' + \'script>\');'."\n";
+  $out .= '   };'."\n";
+  $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
+  $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
+  $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
+  $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
+  $out .= '</script>'."\n";
 
   return $out;
 }
