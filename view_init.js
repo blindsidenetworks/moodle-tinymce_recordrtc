@@ -139,6 +139,9 @@ recordingDIV.querySelector('button').onclick = function() {
             };
 
             button.recordRTC.startRecording();
+
+            // As a recording started, make sure the message for uploading the last recording is set
+            recordingDIV.querySelector('#upload-to-server').innerHTML = "Upload Last Recording to Server";
         };
     }
 
@@ -237,10 +240,11 @@ function saveToDiskOrOpenNewTab(recordRTC) {
         uploadToServer(recordRTC, function(progress, fileURL) {
             if(progress === 'ended') {
                 button.disabled = false;
-                button.innerHTML = 'Click to download from server';
+                button.innerHTML = 'Download Last Recording from Server';
                 button.onclick = function() {
                     window.open(fileURL);
                 };
+
                 return;
             }
             button.innerHTML = progress;
@@ -269,7 +273,7 @@ function uploadToServer(recordRTC, callback) {
 
     callback('Uploading ' + fileType + ' recording to server.');
 
-    makeXMLHttpRequest('save-xyz.php', formData, function(progress) {
+    makeXMLHttpRequest('save.php', formData, function(progress) {
         if (progress !== 'upload-ended') {
             callback(progress);
             return;
@@ -348,4 +352,9 @@ window.onbeforeunload = function() {
     });
 
     return 'Please wait few seconds before your recordings are deleted from the server.';
+};
+
+_create_annotation = function(recording_id, recording_url) {
+    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" id="' + recording_id + '" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
+    return annotation;
 };
