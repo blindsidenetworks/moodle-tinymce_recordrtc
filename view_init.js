@@ -62,8 +62,6 @@ recordingDIV.querySelector('button').onclick = function() {
             }
             else {
                 button.recordRTC.stopRecording(function(url) {
-                    console.info("stopRecording 2");
-                    console.info(url);
                     button.recordingEndedCallback(url);
                     stopStream();
 
@@ -125,16 +123,14 @@ recordingDIV.querySelector('button').onclick = function() {
             });
 
             button.recordingEndedCallback = function(url) {
-                console.info(url);
                 var audio = new Audio();
                 audio.src = url;
                 audio.controls = true;
-                audio.id = url.substr(url.lastIndexOf('/') + 1);
-                console.info(audio);
+                //audio.id = recordrtc_get_recording_id(url);
 
                 recordingDIV.appendChild(document.createElement('hr'));
                 recordingDIV.appendChild(audio);
-
+   
                 if(audio.paused) audio.play();
 
                 audio.onended = function() {
@@ -143,12 +139,12 @@ recordingDIV.querySelector('button').onclick = function() {
                 };
                 audio.onfocus = function() {
                     recordrtc_select_recording(audio);
-                    alert("selected " + audio.id);
                 };
-                audio.onclick = function() {
-                    recordrtc_select_recording(this);
-                    alert("selected " + audio.id);
+                audio.onmouseover = function() {
+                    recordrtc_select_recording(audio);
                 };
+
+                audio.click();
             };
 
             button.recordRTC.startRecording();
@@ -223,8 +219,7 @@ if(webrtcDetectedBrowser === 'edge') {
 // doesn't supports publishing two blobs.
 // todo: add support of uploading both WAV/WebM to server.
 if(false && webrtcDetectedBrowser === 'chrome') {
-    recordingMedia.innerHTML = '<option value="record-audio-plus-video">Audio+Video</option>'
-                                + recordingMedia.innerHTML;
+    recordingMedia.innerHTML = '<option value="record-audio-plus-video">Audio+Video</option>' + recordingMedia.innerHTML;
     console.info('This RecordRTC demo merely tries to playback recorded audio/video sync inside the browser. It still generates two separate files (WAV/WebM).');
 }
 
@@ -249,8 +244,6 @@ function saveToDiskOrOpenNewTab(recordRTC) {
 
         var button = this;
         uploadToServer(recordRTC, function(progress, fileURL) {
-            console.info(recordRTC);
-            console.info(fileURL);
             if(progress === 'ended') {
                 button.disabled = false;
                 button.innerHTML = 'Download Last Recording from Server';
@@ -258,7 +251,7 @@ function saveToDiskOrOpenNewTab(recordRTC) {
                     window.open(fileURL);
                 };
 
-                //recordrtc_view_annotate('XCpK6VK7Q6Zp50Yyx3POiXG8eu1', fileURL);
+                //recordrtc_view_annotate(fileURL);
 
                 return;
             }
@@ -270,9 +263,13 @@ function saveToDiskOrOpenNewTab(recordRTC) {
 var listOfFilesUploaded = [];
 
 function uploadToServer(recordRTC, callback) {
+    //audio.id = url.substr(url.lastIndexOf('/') + 1);
+    console.info(recordRTC);
+    console.info(recordRTC.toURL());
     var blob = recordRTC instanceof Blob ? recordRTC : recordRTC.blob;
     var fileType = blob.type.split('/')[0] || 'audio';
-    var fileName = (Math.random() * 1000).toString().replace('.', '');
+    //var fileName = (Math.random() * 1000).toString().replace('.', '');
+    var fileName = recordrtc_get_recording_id(recordRTC.toURL());
 
     if (fileType === 'audio') {
         fileName += '.' + (!!navigator.mozGetUserMedia ? 'ogg' : 'wav');
@@ -368,22 +365,23 @@ window.onbeforeunload = function() {
     return 'Please wait few seconds before your recordings are deleted from the server.';
 };
 
-recordrtc_view_annotate = function(recording_id, recording_url) {
+recordrtc_view_annotate = function(recording_url) {
     console.info('Annotate...');
-    var annotation = recordrtc_create_annotation(recording_id, recording_url);
+    var annotation = recordrtc_create_annotation(recording_url);
 
     tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
     tinyMCEPopup.close();
 };
 
-recordrtc_create_annotation = function(recording_id, recording_url) {
+recordrtc_create_annotation = function(recording_url) {
     console.info('Creating annotation...');
-    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" id="' + recording_id + '" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
+    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
     console.info(annotation);
     return annotation;
 };
 
 recordrtc_select_recording = function(audio) {
+    console.info("selected " + recordrtc_get_recording_id(audio.src));
     // Find the one that is currently selected
     var selected = recordingDIV.querySelectorAll('audio.selected');
 
@@ -396,4 +394,8 @@ recordrtc_select_recording = function(audio) {
 
     // Add the class selected to the new one
     audio.classList.add('selected');
+};
+
+recordrtc_get_recording_id = function (url) {
+    return url.substr(url.lastIndexOf('/') + 1);
 };
