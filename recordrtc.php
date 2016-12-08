@@ -11,7 +11,6 @@ require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/co
 require_once(dirname(__FILE__).'/lib.php');
 
 $contextid = required_param('contextid', PARAM_INT);
-$content = optional_param('content', '', PARAM_RAW);
 
 list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm);

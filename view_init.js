@@ -304,6 +304,7 @@ function uploadSelectedToServer(selected, callback) {
             var formData = new FormData();
             formData.append(fileType + '-filename', fileName);
             formData.append(fileType + '-blob', blob);
+            formData.append(fileType + '-context', recordrtc.contextid);
 
             callback('Uploading ' + fileType + ' recording to server.');
 
