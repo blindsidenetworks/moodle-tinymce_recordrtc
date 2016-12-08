@@ -302,9 +302,10 @@ function uploadSelectedToServer(selected, callback) {
 
             // create FormData
             var formData = new FormData();
+            formData.append('contextid', recordrtc.contextid);
+            formData.append('sesskey', parent.M.cfg.sesskey);
             formData.append(fileType + '-filename', fileName);
             formData.append(fileType + '-blob', blob);
-            formData.append(fileType + '-context', recordrtc.contextid);
 
             callback('Uploading ' + fileType + ' recording to server.');
 

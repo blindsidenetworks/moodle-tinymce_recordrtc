@@ -10,6 +10,13 @@
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
+$contextid = required_param('contextid', PARAM_INT);
+
+require_sesskey();
+
+list($context, $course, $cm) = get_context_info_array($contextid);
+
+
 //foreach(array('video', 'audio') as $type) {
 foreach(array('audio') as $type) {
     if ( !isset($_FILES["${type}-blob"]) ) {
@@ -20,19 +27,12 @@ foreach(array('audio') as $type) {
         error_log("Filename not included");
         header("HTTP/1.0 400 Bad Request");
         return;
-    } else if ( !isset($_POST["${type}-context"]) ) {
-          error_log("Context ID not included");
-          header("HTTP/1.0 400 Bad Request");
-          return;
     } else {
-        $contextid = $_POST["${type}-context"];
         $fileName = $_POST["${type}-filename"];
         $fileTmp = $_FILES["${type}-blob"]["tmp_name"];
         $fileTarget = 'uploads/'.$fileName;
 
-        list($context, $course, $cm) = get_context_info_array($contextid);
         //require_login($course, false, $cm);
-        //require_sesskey();
         $fs = get_file_storage();
 
         error_log($fileTmp." uploaded, it should be registered as ".$fileName);
