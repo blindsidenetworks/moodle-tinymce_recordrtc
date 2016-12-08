@@ -55,12 +55,6 @@ function get_output() {
   global $CFG;
   $out = "";
 
-  $out .= '<header style="text-align: center;">'."\n";
-  $out .= '  <h1>'."\n";
-  $out .= '    RecordRTC Audio Recording'."\n";
-  $out .= '  </h1>'."\n";
-  $out .= '</header>'."\n";
-
   $out .= '<section class="experiment recordrtc">'."\n";
   $out .= '  <h2 class="header">'."\n";
   $out .= '    <select class="recording-media" style="display:none">'."\n";
@@ -73,8 +67,7 @@ function get_output() {
   $out .= '  </h2>'."\n";
   $out .= '  <div style="text-align: center; display: none;">'."\n";
   $out .= '    <button id="save-to-disk" style="display:none">Save To Disk</button>'."\n";
-  $out .= '    <button id="open-new-tab" style="display:none">Open New Tab</button>'."\n";
-  $out .= '    <button id="upload-to-server">Upload Last Recording to Server</button>'."\n";
+  $out .= '    <button id="upload-to-server">Upload Selected Recording to Server</button>'."\n";
   $out .= '  </div>'."\n";
   $out .= '  <video width="1" height="1" muted></video>'."\n";
   $out .= '</section>'."\n";

@@ -603,7 +603,15 @@ blockquote.inline {
         vertical-align: bottom;
         width: 40em;
     }
-    audio .selected {
+    audio:hover, audio:focus {
+      -webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+      -moz-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+      box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+      -webkit-transform: scale(1.05);
+      -moz-transform: scale(1.05);
+      transform: scale(1.05);
+    }
+    audio.selected {
       -webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
       -moz-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
       box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
