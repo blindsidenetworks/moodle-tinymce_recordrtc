@@ -10,7 +10,8 @@
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-foreach(array('video', 'audio') as $type) {
+//foreach(array('video', 'audio') as $type) {
+foreach(array('audio') as $type) {
     if ( !isset($_FILES["${type}-blob"]) ) {
         error_log("Blob not included");
         header("HTTP/1.0 400 Bad Request");
@@ -26,16 +27,15 @@ foreach(array('video', 'audio') as $type) {
     } else {
         $contextid = $_POST["${type}-context"];
         $fileName = $_POST["${type}-filename"];
-        $fileBlob = $_FILES["${type}-blob"]["tmp_name"];
-        $uploadDirectory = 'uploads/'.$fileName;
+        $fileTmp = $_FILES["${type}-blob"]["tmp_name"];
+        $fileTarget = 'uploads/'.$fileName;
 
         list($context, $course, $cm) = get_context_info_array($contextid);
         //require_login($course, false, $cm);
         //require_sesskey();
         $fs = get_file_storage();
 
-        error_log("Uploading ".$fileName);
-        error_log($fileBlob);
+        error_log($fileTmp." uploaded, it should be registered as ".$fileName);
 
         // Prepare file record object
         $fileinfo = array(
@@ -47,15 +47,15 @@ foreach(array('video', 'audio') as $type) {
               'filename' => $fileName);       // any filename
 
         // Create file containing the uploaded file
-        $fs->create_file_from_string($fileinfo, $fileBlob);
+        $fs->create_file_from_string($fileinfo, $fileTmp);
 
-        if (!move_uploaded_file($fileBlob, $uploadDirectory)) {
+        if (!move_uploaded_file($fileTmp, $fileTarget)) {
             error_log("Problem moving uploaded file");
             header("HTTP/1.0 500 Internal Server Error");
             return;
         } else {
             // OK response
-            echo($uploadDirectory);
+            echo($fileTarget);
         }
     }
 }

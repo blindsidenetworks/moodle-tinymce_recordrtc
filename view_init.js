@@ -394,6 +394,7 @@ function makeXMLHttpRequest(url, data, callback) {
     };
 
     request.open('POST', url);
+    console.info(data);
     request.send(data);
 }
 
