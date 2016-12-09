@@ -1,3 +1,4 @@
+//// Extrraction of parameters
 (function() {
     var params = {},
         r = /([^&=]+)=?([^&]*)/g;
@@ -18,12 +19,16 @@
     window.params = params;
 })();
 
+
+//// Declaration of global variables
 var recordingDIV = document.querySelector('.recordrtc');
 var recordingMedia = recordingDIV.querySelector('.recording-media');
 var recordingPlayer = recordingDIV.querySelector('video');
 var mediaContainerFormat = recordingDIV.querySelector('.media-container-format');
+var listOfFilesUploaded = [];
 
-//// Initialization for recordDIV
+
+//// Initializations for recordDIV
 recordingDIV.querySelector('button').onclick = function() {
     var button = this;
     button.disabled = true;
@@ -138,13 +143,13 @@ recordingDIV.querySelector('button').onclick = function() {
                         audio.src = URL.createObjectURL(button.recordRTC.blob);
                     };
                     audio.onfocus = function() {
-                        recordrtc_select_recording(audio, 'onfocus');
+                        recordrtc_select_recording(audio);
                     };
                     audio.onclick = function() {
-                        recordrtc_select_recording(audio, 'onclick');
+                        recordrtc_select_recording(audio);
                     };
                     audio.onmouseover = function() {
-                        recordrtc_select_recording(audio, 'onmouseover');
+                        recordrtc_select_recording(audio);
                     };
 
                     audio.click();
@@ -161,6 +166,29 @@ recordingDIV.querySelector('button').onclick = function() {
     }
 };
 
+
+//// Initialization for recordingMedia
+recordingMedia.onchange = function() {
+    if (this.value === 'record-audio') {
+        setMediaContainerFormat(['Ogg']);   // On Chrome this still uploads a .wav file
+        return;
+    }
+    setMediaContainerFormat(['WebM', /*'Mp4',*/ 'Gif']);
+};
+
+if (webrtcDetectedBrowser === 'edge') {
+    // webp isn't supported in Microsoft Edge
+    // neither MediaRecorder API
+    // so lets disable both video/screen recording options
+
+    console.warn('Neither MediaRecorder API nor webp is supported in Microsoft Edge. You cam merely record audio.');
+
+    recordingMedia.innerHTML = '<option value="record-audio">Audio</option>';
+    setMediaContainerFormat(['WAV']);
+}
+
+
+//// Functions
 function captureAudio(config) {
     captureUserMedia({audio: true}, function(audioStream) {
         recordingPlayer.srcObject = audioStream;
@@ -198,35 +226,6 @@ function setMediaContainerFormat(arrayOfOptionsSupported) {
             }
         }
     });
-}
-
-
-//// Initialization for recordingMedia
-recordingMedia.onchange = function() {
-    if (this.value === 'record-audio') {
-        setMediaContainerFormat(['Ogg']);   // On Chrome this still uploads a .wav file
-        return;
-    }
-    setMediaContainerFormat(['WebM', /*'Mp4',*/ 'Gif']);
-};
-
-if (webrtcDetectedBrowser === 'edge') {
-    // webp isn't supported in Microsoft Edge
-    // neither MediaRecorder API
-    // so lets disable both video/screen recording options
-
-    console.warn('Neither MediaRecorder API nor webp is supported in Microsoft Edge. You cam merely record audio.');
-
-    recordingMedia.innerHTML = '<option value="record-audio">Audio</option>';
-    setMediaContainerFormat(['WAV']);
-}
-
-// disabling this option because currently this demo
-// doesn't supports publishing two blobs.
-// todo: add support of uploading both WAV/WebM to server.
-if (false && webrtcDetectedBrowser === 'chrome') {
-    recordingMedia.innerHTML = '<option value="record-audio-plus-video">Audio+Video</option>' + recordingMedia.innerHTML;
-    console.info('This RecordRTC demo merely tries to playback recorded audio/video sync inside the browser. It still generates two separate files (WAV/WebM).');
 }
 
 function saveRecording(recordRTC) {
@@ -280,8 +279,6 @@ function saveRecording(recordRTC) {
         */
     };
 }
-
-var listOfFilesUploaded = [];
 
 function uploadSelectedToServer(selected, callback) {
     var xhr = new XMLHttpRequest();
@@ -444,7 +441,7 @@ recordrtc_create_annotation = function(recording_url) {
     return annotation;
 };
 
-recordrtc_select_recording = function(audio, event) {
+recordrtc_select_recording = function(audio) {
     // Find the one that is currently selected
     var selected = recordingDIV.querySelectorAll('audio.selected');
 

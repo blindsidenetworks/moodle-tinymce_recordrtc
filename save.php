@@ -32,7 +32,6 @@ foreach(array('audio') as $type) {
         $fileTmp = $_FILES["${type}-blob"]["tmp_name"];
         $fileTarget = 'uploads/'.$fileName;
 
-        //require_login($course, false, $cm);
         $fs = get_file_storage();
 
         error_log($fileTmp." uploaded, it should be registered as ".$fileName);
