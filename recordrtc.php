@@ -64,10 +64,9 @@ function get_output() {
   $out .= '    </select>'."\n";
   $out .= '    <button>Start Recording</button>'."\n";
   $out .= '  </h2>'."\n";
-  $out .= '  <div style="text-align: center; display: none;">'."\n";
-  $out .= '    <button id="save-to-disk" style="display:none">Save To Disk</button>'."\n";
-  $out .= '    <button id="upload-to-server">Upload Selected Recording to Server</button>'."\n";
-  $out .= '  </div>'."\n";
+  $out .= '  <h3 style="display:none;">'."\n";
+  $out .= '    <button id="upload-to-server">Upload Recording to Server</button>'."\n";
+  $out .= '  </h3>'."\n";
   $out .= '  <video width="1" height="1" muted></video>'."\n";
   $out .= '</section>'."\n";
 

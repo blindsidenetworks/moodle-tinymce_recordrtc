@@ -25,8 +25,6 @@ var recordingDIV = document.querySelector('.recordrtc');
 var recordingMedia = recordingDIV.querySelector('.recording-media');
 var recordingPlayer = recordingDIV.querySelector('video');
 var mediaContainerFormat = recordingDIV.querySelector('.media-container-format');
-var listOfFilesUploaded = [];
-
 
 //// Initializations for recordDIV
 recordingDIV.querySelector('button').onclick = function() {
@@ -57,7 +55,7 @@ recordingDIV.querySelector('button').onclick = function() {
                         button.recordingEndedCallback(url);
                         stopStream();
 
-                        saveRecording(button.recordRTC[0]);
+                        startRecording(button.recordRTC[0]);
                         return;
                     }
 
@@ -71,7 +69,7 @@ recordingDIV.querySelector('button').onclick = function() {
                     button.recordingEndedCallback(url);
                     stopStream();
 
-                    saveRecording(button.recordRTC);
+                    startRecording(button.recordRTC);
                 });
             }
         }
@@ -131,7 +129,6 @@ recordingDIV.querySelector('button').onclick = function() {
                     var audio = new Audio();
                     audio.src = url;
                     audio.controls = true;
-                    //audio.id = recordrtc_get_recording_id(url);
 
                     recordingDIV.appendChild(document.createElement('hr'));
                     recordingDIV.appendChild(audio);
@@ -158,7 +155,7 @@ recordingDIV.querySelector('button').onclick = function() {
                 button.recordRTC.startRecording();
 
                 // As a recording started, make sure the message for uploading the last recording is set
-                recordingDIV.querySelector('#upload-to-server').innerHTML = "Upload Last Recording to Server";
+                recordingDIV.querySelector('#upload-to-server').innerHTML = "Upload Recording to Server";
             };
         }
 
@@ -168,20 +165,11 @@ recordingDIV.querySelector('button').onclick = function() {
 
 
 //// Initialization for recordingMedia
-recordingMedia.onchange = function() {
-    if (this.value === 'record-audio') {
-        setMediaContainerFormat(['Ogg']);   // On Chrome this still uploads a .wav file
-        return;
-    }
-    setMediaContainerFormat(['WebM', /*'Mp4',*/ 'Gif']);
-};
-
 if (webrtcDetectedBrowser === 'edge') {
     // webp isn't supported in Microsoft Edge
     // neither MediaRecorder API
     // so lets disable both video/screen recording options
-
-    console.warn('Neither MediaRecorder API nor webp is supported in Microsoft Edge. You cam merely record audio.');
+    console.warn('Neither MediaRecorder API nor webp is supported in Microsoft Edge. You can merely record audio.');
 
     recordingMedia.innerHTML = '<option value="record-audio">Audio</option>';
     setMediaContainerFormat(['WAV']);
@@ -228,14 +216,8 @@ function setMediaContainerFormat(arrayOfOptionsSupported) {
     });
 }
 
-function saveRecording(recordRTC) {
-    recordingDIV.querySelector('#save-to-disk').parentNode.style.display = 'block';
-    recordingDIV.querySelector('#save-to-disk').onclick = function() {
-        if (!recordRTC) return alert('No recording found.');
-
-        recordRTC.save();
-    };
-
+function startRecording(recordRTC) {
+    recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'block';
     recordingDIV.querySelector('#upload-to-server').disabled = false;
     recordingDIV.querySelector('#upload-to-server').onclick = function() {
         // Find the one that is currently selected
@@ -249,34 +231,13 @@ function saveRecording(recordRTC) {
         var button = this;
         uploadSelectedToServer(selected[0], function(progress, fileURL) {
             if (progress === 'ended') {
-                //button.disabled = false;
-                //button.innerHTML = 'Download Last Recording from Server';
-                //button.onclick = function() {
-                //    window.open(fileURL);
-                //};
-
+                button.disabled = false;
                 recordrtc_view_annotate(fileURL);
 
                 return;
             }
             button.innerHTML = progress;
         });
-        /*
-        uploadLastToServer(recordRTC, function(progress, fileURL) {
-            if (progress === 'ended') {
-                button.disabled = false;
-                button.innerHTML = 'Download Last Recording from Server';
-                button.onclick = function() {
-                    window.open(fileURL);
-                };
-
-                //recordrtc_view_annotate(fileURL);
-
-                return;
-            }
-            button.innerHTML = progress;
-        });
-        */
     };
 }
 
@@ -316,10 +277,6 @@ function uploadSelectedToServer(selected, callback) {
                 console.info("recordingURL: " + initialURL + responseText);
                 //callback('ended', initialURL + responseText.replace('wav','ogg'));
                 callback('ended', initialURL + responseText);
-
-                // to make sure we can delete as soon as visitor leaves
-                // FFD: Added code to convert .wav to .ogg on the server
-                listOfFilesUploaded.push(initialURL + fileName.replace('wav','ogg'));
             });
         }
     };
@@ -352,10 +309,6 @@ function uploadLastToServer(recordRTC, callback) {
 
         var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads/';
         callback('ended', initialURL + fileName.replace('wav','ogg'));
-
-        // to make sure we can delete as soon as visitor leaves
-        // FFD: Added code to convert .wav to .ogg on the server
-        listOfFilesUploaded.push(initialURL + fileName.replace('wav','ogg'));
     });
 }
 
@@ -398,34 +351,6 @@ function makeXMLHttpRequest(url, data, callback) {
     request.open('POST', url);
     request.send(data);
 }
-
-window.onbeforeunload = function() {
-    recordingDIV.querySelector('button').disabled = false;
-    recordingMedia.disabled = false;
-    mediaContainerFormat.disabled = false;
-
-    if (!listOfFilesUploaded.length) return;
-
-    listOfFilesUploaded.forEach(function(fileURL) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = function() {
-            if (request.readyState == 4 && request.status == 200) {
-                if (this.responseText === ' problem deleting files.') {
-                    return;
-                }
-
-                listOfFilesUploaded = [];
-            }
-        };
-        request.open('POST', 'delete.php');
-
-        var formData = new FormData();
-        formData.append('delete-file', fileURL.split('/').pop());
-        request.send(formData);
-    });
-
-    return 'Please wait few seconds before your recordings are deleted from the server.';
-};
 
 recordrtc_view_annotate = function(recording_url) {
     var annotation = recordrtc_create_annotation(recording_url);
