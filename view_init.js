@@ -313,9 +313,8 @@ function uploadSelectedToServer(selected, callback) {
                 }
 
                 var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
-                //console.info("recordingURL: " + initialURL + fileName.replace('wav','ogg'));
-                //callback('ended', initialURL + fileName.replace('wav','ogg'));
                 console.info("recordingURL: " + initialURL + responseText);
+                //callback('ended', initialURL + responseText.replace('wav','ogg'));
                 callback('ended', initialURL + responseText);
 
                 // to make sure we can delete as soon as visitor leaves
@@ -364,7 +363,6 @@ function makeXMLHttpRequest(url, data, callback) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         console.info("Response:");
-        console.info(request);
         if (request.readyState == 4 && request.status == 200) {
             console.info(this.responseText);
             callback('upload-ended', this.responseText);
@@ -398,8 +396,6 @@ function makeXMLHttpRequest(url, data, callback) {
     };
 
     request.open('POST', url);
-    console.info("data:");
-    console.info(data);
     request.send(data);
 }
 
@@ -432,7 +428,6 @@ window.onbeforeunload = function() {
 };
 
 recordrtc_view_annotate = function(recording_url) {
-    console.info('Annotate...');
     var annotation = recordrtc_create_annotation(recording_url);
 
     tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
@@ -440,7 +435,6 @@ recordrtc_view_annotate = function(recording_url) {
 };
 
 recordrtc_create_annotation = function(recording_url) {
-    console.info('Creating annotation...');
     //Shows an icon in both, the editor content box and the submission page
     var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
     //Shows a text in the editor content box and a player in the submission page

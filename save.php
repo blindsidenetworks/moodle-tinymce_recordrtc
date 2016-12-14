@@ -19,7 +19,7 @@ list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm);
 require_sesskey();
 
-//foreach(array('video', 'audio') as $type) {
+//foreach(array('video', 'audio') as $type) { //Only works with audio
 foreach(array('audio') as $type) {
     if ( !isset($_FILES["${type}-blob"]) ) {
         error_log("Blob not included");
@@ -30,15 +30,11 @@ foreach(array('audio') as $type) {
         header("HTTP/1.0 400 Bad Request");
         return;
     } else {
-        //\core\antivirus\manager::scan_file($_FILES[$elname]['tmp_name'], $_FILES[$elname]['name'], true);
 
         $fileName = $_POST["${type}-filename"];
         $fileTmp = $_FILES["${type}-blob"]["tmp_name"];
 
         $fs = get_file_storage();
-        error_log($fileTmp." uploaded, it should be registered as ".$fileName);
-        //$sourcefield = $repo->get_file_source_info($fileurl);
-        //$record->source = repository::build_source_field($sourcefield);
 
         // Prepare file record object
         $user_context = context_user::instance($USER->id);
@@ -52,32 +48,10 @@ foreach(array('audio') as $type) {
               'author' => fullname($USER),
               'licence' => $CFG->sitedefaultlicense
               );
-        // $file = $fs->get_file($user_context->id, 'user', 'draft', $draftid, $filepath, $filename);
-        // Create file containing the uploaded file
-        error_log("**************************************************************");
         $fileSaved = $fs->create_file_from_pathname($fileinfo, $fileTmp);
-        //error_log("".$fileSaved->get_content_file_handle());
-        //error_log($fileSaved->get_component());
-        //error_log($fileSaved->get_itemid());
-        //error_log($fileSaved->get_filearea());
-        //error_log($fileSaved->get_filepath());
-        //error_log($fileSaved->get_filename());
-        //error_log($fileSaved->get_userid());
-        //error_log($fileSaved->get_contextid());
-        //error_log(json_encode($fileSaved));
 
-        // $file = $fs->get_file($user_context->id, 'tinymce_recordrtc', 'annotation', $DRAFTID, '/', $fileName);
-
-        // Former method for uploads
-        //$fileTarget = $fileSaved->get_filename();
-        //if (!move_uploaded_file($fileTmp, $fileTarget)) {
-        //    error_log("Problem moving uploaded file");
-        //    header("HTTP/1.0 500 Internal Server Error");
-        //    return;
-        //}
         //// OK response
         $fileTarget = $fileSaved->get_contextid().'/'.$fileSaved->get_component().'/'.$fileSaved->get_filearea().'/'.$fileSaved->get_itemid().'/'.$fileSaved->get_filename();
-        error_log($fileTarget);
         echo($fileTarget);
     }
 }

@@ -54,13 +54,10 @@ if ($USER->id != $userid) {
     print_error('invaliduserid');
 }
 
-
 $fs = get_file_storage();
 
 $relativepath = implode('/', $args);
 $fullpath = "/$context->id/tinymce_recordrtc/annotation/$draftid/$relativepath";
-error_log("fullpath: $fullpath");
-error_log("hash: ".sha1($fullpath));
 
 if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->get_filename() == '.') {
     send_file_not_found();
