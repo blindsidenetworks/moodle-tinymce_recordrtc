@@ -61,7 +61,7 @@ footer a:hover, footer a:focus {
     color: #111;
 }
 
-h1, h2 {
+h1, h2, h3 {
     border-bottom: 1px solid rgb(189, 189, 189);
     display: inline;
     font-weight: normal;
@@ -115,7 +115,7 @@ button, input[type=button] {
     font-size: 1.5em;
 }
 
-button:hover, button:focus, input[type=button]:hover {
+button:hover, input[type=button]:hover {
     background: rgb(9, 147, 240);
 }
 
@@ -474,7 +474,7 @@ li h2 {
     color: red;
 }
 
-li li h2 {
+li li h2 h3{
     font-size: 1em;
     color: rgb(6, 101, 243);
 }
