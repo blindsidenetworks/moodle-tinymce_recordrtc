@@ -306,14 +306,17 @@ function uploadSelectedToServer(selected, callback) {
 
             callback('Uploading ' + fileType + ' recording to server.');
 
-            makeXMLHttpRequest('save.php', formData, function(progress) {
+            makeXMLHttpRequest('save.php', formData, function(progress, responseText) {
                 if (progress !== 'upload-ended') {
                     callback(progress);
                     return;
                 }
 
-                var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads/';
-                callback('ended', initialURL + fileName.replace('wav','ogg'));
+                var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
+                //console.info("recordingURL: " + initialURL + fileName.replace('wav','ogg'));
+                //callback('ended', initialURL + fileName.replace('wav','ogg'));
+                console.info("recordingURL: " + initialURL + responseText);
+                callback('ended', initialURL + responseText);
 
                 // to make sure we can delete as soon as visitor leaves
                 // FFD: Added code to convert .wav to .ogg on the server
@@ -360,8 +363,11 @@ function uploadLastToServer(recordRTC, callback) {
 function makeXMLHttpRequest(url, data, callback) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
+        console.info("Response:");
+        console.info(request);
         if (request.readyState == 4 && request.status == 200) {
-            callback('upload-ended');
+            console.info(this.responseText);
+            callback('upload-ended', this.responseText);
         }
     };
 
@@ -392,6 +398,7 @@ function makeXMLHttpRequest(url, data, callback) {
     };
 
     request.open('POST', url);
+    console.info("data:");
     console.info(data);
     request.send(data);
 }
