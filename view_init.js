@@ -130,7 +130,6 @@ recordingDIV.querySelector('button').onclick = function() {
                     audio.src = url;
                     audio.controls = true;
 
-                    recordingDIV.appendChild(document.createElement('hr'));
                     recordingDIV.appendChild(audio);
 
                     if (audio.paused) audio.play();

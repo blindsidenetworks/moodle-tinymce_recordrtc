@@ -54,21 +54,21 @@ function get_output() {
   global $CFG;
   $out = "";
 
-  $out .= '<section class="experiment recordrtc">'."\n";
-  $out .= '  <h2 class="header">'."\n";
+  $out .= '<div class="experiment recordrtc">'."\n";
+  $out .= '  <div class="header">'."\n";
   $out .= '    <select class="recording-media" style="display:none">'."\n";
   $out .= '      <option value="record-audio">Audio</option>'."\n";
   $out .= '    </select>'."\n";
   $out .= '    <select class="media-container-format" style="display:none">'."\n";
   $out .= '      <option>Ogg</option>'."\n";
   $out .= '    </select>'."\n";
-  $out .= '    <button>Start Recording</button>'."\n";
-  $out .= '  </h2>'."\n";
-  $out .= '  <h3 style="display:none;">'."\n";
-  $out .= '    <button id="upload-to-server">Upload Recording to Server</button>'."\n";
-  $out .= '  </h3>'."\n";
+  $out .= '    <button class="btn btn-primary btn-lg">Start Recording</button>'."\n";
+  $out .= '  </div>'."\n";
+  $out .= '  <div style="display:none;">'."\n";
+  $out .= '    <button class="btn btn-primary btn-md" id="upload-to-server">Upload Recording to Server</button>'."\n";
+  $out .= '  </div>'."\n";
   $out .= '  <video width="1" height="1" muted></video>'."\n";
-  $out .= '</section>'."\n";
+  $out .= '</div>'."\n";
 
   $out .= '<script type="text/javascript">'."\n";
   // Because there is no relative path to TinyMCE, we have to use JavaScript
