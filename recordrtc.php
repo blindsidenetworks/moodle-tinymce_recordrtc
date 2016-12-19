@@ -33,7 +33,7 @@ $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.
 
 $jsVars = array(
     'contextid' => $contextid,
-    'recording_icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'pix/recordrtc-32.png'
+    'recording_icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/recordrtc-32.png'
 );
 $PAGE->requires->data_for_js('recordrtc', $jsVars);
 
