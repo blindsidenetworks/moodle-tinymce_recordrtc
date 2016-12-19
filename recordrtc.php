@@ -54,7 +54,7 @@ function get_output() {
   global $CFG;
   $out = "";
 
-  $out .= '<div class="experiment recordrtc">'."\n";
+  $out .= '<div class="recordrtc">'."\n";
   $out .= '  <div class="header">'."\n";
   $out .= '    <select class="recording-media" style="display:none">'."\n";
   $out .= '      <option value="record-audio">Audio</option>'."\n";

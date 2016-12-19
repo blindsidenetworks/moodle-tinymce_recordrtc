@@ -1,12 +1,8 @@
-html {
-    background: #eee;
-}
-
 div {
     display: inline;
     font-weight: normal;
-    line-height: 36px;
-    padding: 0 0 3px 0;
+    line-height: 40px;
+    padding: 3px 0 3px 0;
 }
 
 button, input[type=button] {
@@ -16,21 +12,6 @@ button, input[type=button] {
     padding: 5px 12px;
     text-align: center;
     text-shadow: 1px 1px 1px #076bd2;
-}
-
-.experiment {
-    border: 1px solid rgb(189, 189, 189);
-    margin: 1em 3em;
-    border-radius: .2em;
-    text-align: left;
-}
-
-.experiment .header {
-    padding: .2em .4em;
-}
-
-.experiment .description {
-    padding: .8em 1.4em;
 }
 
 .recordrtc, .recordrtc .header {
