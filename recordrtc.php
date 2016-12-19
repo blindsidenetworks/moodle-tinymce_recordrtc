@@ -27,9 +27,9 @@ $PAGE->set_heading($title);
 $PAGE->set_pagelayout('popup');
 
 $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css'));
-$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.js'));
-$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'gumadapter.js'));
-$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'view_init.js'));
+$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/RecordRTC.js'));
+$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/gumadapter.js'));
+$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/view_init.js'));
 
 $jsVars = array(
     'contextid' => $contextid,
@@ -39,7 +39,7 @@ $PAGE->requires->data_for_js('recordrtc', $jsVars);
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',
-    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce_module.js'
+    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/module.js'
 );
 $PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
 
