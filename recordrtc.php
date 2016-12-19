@@ -26,7 +26,7 @@ $PAGE->set_heading($title);
 // Reset page layout for inside editor.
 $PAGE->set_pagelayout('popup');
 
-$PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.css'));
+$PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'style.css'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'RecordRTC.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'gumadapter.js'));
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'view_init.js'));
@@ -70,10 +70,10 @@ function get_output() {
   $out .= '  <video width="1" height="1" muted></video>'."\n";
   $out .= '</div>'."\n";
 
-  $out .= '<script type="text/javascript">'."\n";
   // Because there is no relative path to TinyMCE, we have to use JavaScript
   // to work out correct path from the .js files from TinyMCE. Only files
   // inside this plugin can be included with relative path (below).
+  $out .= '<script type="text/javascript">'."\n";
   $out .= '   var editor_tinymce_include = function(path) {'."\n";
   $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' + \'script>\');'."\n";
   $out .= '   };'."\n";

@@ -7,8 +7,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- // disable moodle specific debug messages and any errors in output
- define('NO_DEBUG_DISPLAY', true);
+// disable moodle specific debug messages and any errors in output
+define('NO_DEBUG_DISPLAY', true);
 
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
 require_once(dirname(__FILE__).'/locallib.php');
@@ -30,7 +30,6 @@ foreach(array('audio') as $type) {
         header("HTTP/1.0 400 Bad Request");
         return;
     } else {
-
         $fileName = $_POST["${type}-filename"];
         $fileTmp = $_FILES["${type}-blob"]["tmp_name"];
 

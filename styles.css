@@ -1,0 +1,66 @@
+html {
+    background: #eee;
+}
+
+div {
+    display: inline;
+    font-weight: normal;
+    line-height: 36px;
+    padding: 0 0 3px 0;
+}
+
+button, input[type=button] {
+    display: inline-block;
+    font-family: inherit;
+    line-height: 1.3;
+    padding: 5px 12px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #076bd2;
+}
+
+.experiment {
+    border: 1px solid rgb(189, 189, 189);
+    margin: 1em 3em;
+    border-radius: .2em;
+    text-align: left;
+}
+
+.experiment .header {
+    padding: .2em .4em;
+}
+
+.experiment .description {
+    padding: .8em 1.4em;
+}
+
+.recordrtc, .recordrtc .header {
+    display: block;
+    text-align: center;
+    padding-top: 0;
+}
+
+.recordrtc option[disabled] {
+    display: none;
+}
+
+audio {
+    vertical-align: bottom;
+    width: 40em;
+    padding: 0 0 3px 3px;
+}
+audio:hover, audio:focus {
+    -webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+    -moz-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+    box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    transform: scale(1.05);
+}
+audio.selected {
+    -webkit-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+    -moz-box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+    box-shadow: 15px 15px 20px rgba(0,0, 0, 0.4);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    transform: scale(1.05);
+}
