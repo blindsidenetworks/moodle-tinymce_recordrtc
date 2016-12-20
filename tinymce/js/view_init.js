@@ -1,4 +1,4 @@
-//// Extrraction of parameters
+//// Extraction of parameters
 (function() {
     var params = {},
         r = /([^&=]+)=?([^&]*)/g;
