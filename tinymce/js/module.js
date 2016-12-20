@@ -155,8 +155,6 @@ M.tinymce_recordrtc.view_init = function(Y) {
                         audio.src = url;
                         audio.controls = true;
 
-                        recordingDIV.appendChild(audio);
-
                         if (audio.paused) audio.play();
 
                         audio.onended = function() {
@@ -173,6 +171,15 @@ M.tinymce_recordrtc.view_init = function(Y) {
                             M.tinymce_recordrtc.select_recording(audio);
                         };
 
+                        // Hide current audio, if any
+                        var selected = recordingDIV.querySelectorAll('audio.selected');
+                        if ( selected.length > 0 ) {
+                            selected[0].classList.remove('selected');
+                            selected[0].classList.add('hide');
+                        }
+                        // Add the new audio
+                        recordingDIV.appendChild(audio);
+                        // Select the new audio
                         audio.click();
                     };
 

@@ -24,6 +24,10 @@ button, input[type=button] {
     display: none;
 }
 
+.hide {
+    display: none !important;
+}
+
 audio {
     vertical-align: bottom;
     width: 40em;
