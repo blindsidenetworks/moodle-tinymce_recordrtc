@@ -38,7 +38,10 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
  *            Y YUI instance
  */
 
-var recordingDIV, recordingMedia, recordingPlayer, mediaContainerFormat;
+var recordingDIV = null;
+var recordingMedia = null;
+var recordingPlayer = null;
+var mediaContainerFormat = null;
 
 M.tinymce_recordrtc.view_init = function(Y) {
     console.info('Init tinymce_recordrtc.js...');
