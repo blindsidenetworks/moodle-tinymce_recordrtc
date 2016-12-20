@@ -61,7 +61,7 @@ function get_output() {
   $out .= '    <select class="media-container-format" style="display:none">'."\n";
   $out .= '      <option>Ogg</option>'."\n";
   $out .= '    </select>'."\n";
-  $out .= '    <button class="btn btn-primary btn-lg">Start Recording</button>'."\n";
+  $out .= '    <button class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
   $out .= '  </div>'."\n";
   $out .= '  <div style="display:none;">'."\n";
   $out .= '    <button class="btn btn-primary btn-md" id="upload-to-server">Upload Recording to Server</button>'."\n";
