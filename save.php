@@ -13,7 +13,7 @@ define('NO_DEBUG_DISPLAY', true);
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$contextid = required_param('contextid', PARAM_INT);
+$contextid = optional_param('contextid', 0, PARAM_INT);
 
 list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm);

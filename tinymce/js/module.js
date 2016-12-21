@@ -281,10 +281,15 @@ M.tinymce_recordrtc.startRecording = function(recordRTC) {
             if (progress === 'ended') {
                 button.disabled = false;
                 M.tinymce_recordrtc.view_annotate(fileURL);
-
+                return;
+            } else if ( progress === 'upload-failed') {
+                button.disabled = false;
+                button.innerHTML = 'Upload failed, try again';
+                return;
+            } else {
+                button.innerHTML = progress;
                 return;
             }
-            button.innerHTML = progress;
         });
     };
 }
@@ -316,57 +321,27 @@ M.tinymce_recordrtc.uploadSelectedToServer = function(selected, callback) {
             callback('Uploading ' + fileType + ' recording to server.');
 
             M.tinymce_recordrtc.makeXMLHttpRequest('save.php', formData, function(progress, responseText) {
-                if (progress !== 'upload-ended') {
+                if (progress === 'upload-ended') {
+                    var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
+                    callback('ended', initialURL + responseText);
+                    return;
+                } else {
                     callback(progress);
                     return;
                 }
-
-                var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
-                console.info("recordingURL: " + initialURL + responseText);
-                //callback('ended', initialURL + responseText.replace('wav','ogg'));
-                callback('ended', initialURL + responseText);
             });
         }
     };
     xhr.send();
 }
 
-M.tinymce_recordrtc.uploadLastToServer = function(recordRTC, callback) {
-    var blob = recordRTC instanceof Blob ? recordRTC : recordRTC.blob;
-    var fileType = blob.type.split('/')[0] || 'audio';
-    var fileName = M.tinymce_recordrtc.get_recording_id(recordRTC.toURL());
-
-    if (fileType === 'audio') {
-        fileName += '.' + (!!navigator.mozGetUserMedia ? 'ogg' : 'wav');
-    } else {
-        fileName += '.webm';
-    }
-
-    // create FormData
-    var formData = new FormData();
-    formData.append(fileType + '-filename', fileName);
-    formData.append(fileType + '-blob', blob);
-
-    callback('Uploading ' + fileType + ' recording to server.');
-
-    M.tinymce_recordrtc.makeXMLHttpRequest('save.php', formData, function(progress) {
-        if (progress !== 'upload-ended') {
-            callback(progress);
-            return;
-        }
-
-        var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads/';
-        callback('ended', initialURL + fileName.replace('wav','ogg'));
-    });
-}
-
 M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
-        console.info("Response:");
         if (request.readyState == 4 && request.status == 200) {
-            console.info(this.responseText);
             callback('upload-ended', this.responseText);
+        } else if (request.status == 404) {
+            callback('upload-failed');
         }
     };
 
