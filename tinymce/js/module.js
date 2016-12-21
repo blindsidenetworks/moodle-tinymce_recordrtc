@@ -206,6 +206,12 @@ M.tinymce_recordrtc.view_init = function(Y) {
     };
 
     //// Initialization for recordingMedia
+    if ( webrtcDetectedBrowser !== 'firefox' ) {
+        var alert = document.querySelector('div[id=alert]');
+        alert.innerHTML == "Use Firefox for best experience";
+        alert.classList.add('alert-danger');
+        alert.classList.remove('hide');
+    }
     if (webrtcDetectedBrowser === 'edge') {
         // webp isn't supported in Microsoft Edge
         // neither MediaRecorder API

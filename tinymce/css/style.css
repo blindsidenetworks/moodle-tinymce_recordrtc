@@ -49,3 +49,8 @@ audio.selected {
     -moz-transform: scale(1.05);
     transform: scale(1.05);
 }
+
+.alert {
+    text-align:center;
+    width: 100%;
+}

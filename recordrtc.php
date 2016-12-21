@@ -52,7 +52,8 @@ echo $OUTPUT->footer();
 function get_output() {
   global $CFG;
 
-  $out  = '<div class="recordrtc">'."\n";
+  $out  = '<div id="alert" class="alert hide">Use Firefox for best experience</div>'."\n";
+  $out .= '<div class="recordrtc">'."\n";
   $out .= '  <div class="header">'."\n";
   $out .= '    <select class="recording-media" style="display:none">'."\n";
   $out .= '      <option value="record-audio">Audio</option>'."\n";
