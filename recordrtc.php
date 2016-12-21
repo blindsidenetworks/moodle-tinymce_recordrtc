@@ -24,7 +24,7 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 // Reset page layout for inside editor.
-$PAGE->set_pagelayout('popup');
+$PAGE->set_pagelayout('embedded');
 
 $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css') );
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/RecordRTC.js') );
@@ -51,9 +51,8 @@ echo $OUTPUT->footer();
 
 function get_output() {
   global $CFG;
-  $out = "";
 
-  $out .= '<div class="recordrtc">'."\n";
+  $out  = '<div class="recordrtc">'."\n";
   $out .= '  <div class="header">'."\n";
   $out .= '    <select class="recording-media" style="display:none">'."\n";
   $out .= '      <option value="record-audio">Audio</option>'."\n";
