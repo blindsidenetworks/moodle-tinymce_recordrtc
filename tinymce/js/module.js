@@ -42,6 +42,8 @@ var recordingDIV = null;
 var recordingMedia = null;
 var recordingPlayer = null;
 var mediaContainerFormat = null;
+var countdownSeconds = null;
+var countdownTicker = null;
 
 M.tinymce_recordrtc.view_init = function(Y) {
     console.info('Init tinymce_recordrtc.js...');
@@ -58,6 +60,15 @@ M.tinymce_recordrtc.view_init = function(Y) {
 
         if ( button.innerHTML === 'Start Recording' || button.innerHTML === 'Record Again' ) {
 
+            // Hide current audio, if any
+            var selected = recordingDIV.querySelectorAll('audio.selected');
+            if ( selected.length > 0 ) {
+                selected[0].classList.remove('selected');
+                selected[0].classList.add('hide');
+            }
+            // Make sure the upload button is not shown
+            recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'none';
+
             var commonConfig = {
                 onMediaCaptured: function(stream) {
                     button.stream = stream;
@@ -65,8 +76,11 @@ M.tinymce_recordrtc.view_init = function(Y) {
                         button.mediaCapturedCallback();
                     }
 
-                    button.innerHTML = 'Stop Recording';
+                    button.innerHTML = 'Stop Recording (<label id="minutes">02</label>:<label id="seconds">00</label>)';
                     button.disabled = false;
+
+                    countdownSeconds = 120;
+                    countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
                 },
                 onMediaStopped: function() {
                     button.innerHTML = 'Start Recording';
@@ -126,12 +140,6 @@ M.tinymce_recordrtc.view_init = function(Y) {
                             M.tinymce_recordrtc.select_recording(audio);
                         };
 
-                        // Hide current audio, if any
-                        var selected = recordingDIV.querySelectorAll('audio.selected');
-                        if ( selected.length > 0 ) {
-                            selected[0].classList.remove('selected');
-                            selected[0].classList.add('hide');
-                        }
                         // Add the new audio
                         recordingDIV.appendChild(audio);
                         // Select the new audio
@@ -148,6 +156,9 @@ M.tinymce_recordrtc.view_init = function(Y) {
             return;
 
         } else { // It means (button.innerHTML === 'Stop Recording')
+
+            // First of all clears the countdownTicker
+            clearInterval(countdownTicker);
 
             button.disableStateWaiting = true;
             setTimeout(function() {
@@ -422,3 +433,21 @@ M.tinymce_recordrtc.select_recording = function(audio) {
 M.tinymce_recordrtc.get_recording_id = function (url) {
     return url.substr(url.lastIndexOf('/') + 1);
 };
+
+M.tinymce_recordrtc.setTime = function () {
+    countdownSeconds--;
+    recordingDIV.querySelector('label[id=seconds]').innerHTML = M.tinymce_recordrtc.pad(countdownSeconds%60);
+    recordingDIV.querySelector('label[id=minutes]').innerHTML = M.tinymce_recordrtc.pad(parseInt(countdownSeconds/60));
+    if ( countdownSeconds == 0 ) {
+        recordingDIV.querySelector('button').click();
+    }
+};
+
+M.tinymce_recordrtc.pad = function (val) {
+    var valString = val + "";
+    if (valString.length < 2) {
+        return "0" + valString;
+    } else {
+        return valString;
+    }
+}
