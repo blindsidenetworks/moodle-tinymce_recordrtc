@@ -56,52 +56,7 @@ M.tinymce_recordrtc.view_init = function(Y) {
         var button = this;
         button.disabled = true;
 
-        if (button.innerHTML === 'Stop Recording') {
-
-            button.disableStateWaiting = true;
-            setTimeout(function() {
-                button.disabled = false;
-                button.disableStateWaiting = false;
-            }, 2 * 1000);
-
-            button.innerHTML = 'Record Again';
-
-            function stopStream() {
-                if (button.stream && button.stream.stop) {
-                    button.stream.stop();
-                    button.stream = null;
-                }
-            }
-
-            if (button.recordRTC) {
-                if (button.recordRTC.length) {
-                    button.recordRTC[0].stopRecording(function(url) {
-                        if (!button.recordRTC[1]) {
-                            button.recordingEndedCallback(url);
-                            stopStream();
-
-                            M.tinymce_recordrtc.startRecording(button.recordRTC[0]);
-                            return;
-                        }
-
-                        button.recordRTC[1].stopRecording(function(url) {
-                            button.recordingEndedCallback(url);
-                            stopStream();
-                        });
-                    });
-                } else {
-                    button.recordRTC.stopRecording(function(url) {
-                        button.recordingEndedCallback(url);
-                        stopStream();
-
-                        M.tinymce_recordrtc.startRecording(button.recordRTC);
-                    });
-                }
-            }
-
-            return;
-
-        } else { // It means ( button.innerHTML === 'Start Recording' || button.innerHTML === 'Record Again' )
+        if ( button.innerHTML === 'Start Recording' || button.innerHTML === 'Record Again' ) {
 
             var commonConfig = {
                 onMediaCaptured: function(stream) {
@@ -188,6 +143,51 @@ M.tinymce_recordrtc.view_init = function(Y) {
                     // As a recording started, make sure the message for uploading the last recording is set
                     recordingDIV.querySelector('#upload-to-server').innerHTML = "Upload Recording to Server";
                 };
+            }
+
+            return;
+
+        } else { // It means (button.innerHTML === 'Stop Recording')
+
+            button.disableStateWaiting = true;
+            setTimeout(function() {
+                button.disabled = false;
+                button.disableStateWaiting = false;
+            }, 2 * 1000);
+
+            button.innerHTML = 'Record Again';
+
+            function stopStream() {
+                if (button.stream && button.stream.stop) {
+                    button.stream.stop();
+                    button.stream = null;
+                }
+            }
+
+            if (button.recordRTC) {
+                if (button.recordRTC.length) {
+                    button.recordRTC[0].stopRecording(function(url) {
+                        if (!button.recordRTC[1]) {
+                            button.recordingEndedCallback(url);
+                            stopStream();
+
+                            M.tinymce_recordrtc.startRecording(button.recordRTC[0]);
+                            return;
+                        }
+
+                        button.recordRTC[1].stopRecording(function(url) {
+                            button.recordingEndedCallback(url);
+                            stopStream();
+                        });
+                    });
+                } else {
+                    button.recordRTC.stopRecording(function(url) {
+                        button.recordingEndedCallback(url);
+                        stopStream();
+
+                        M.tinymce_recordrtc.startRecording(button.recordRTC);
+                    });
+                }
             }
 
             return;
