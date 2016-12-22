@@ -52,21 +52,27 @@ echo $OUTPUT->footer();
 function get_output() {
   global $CFG;
 
-  $out  = '<div id="alert" class="alert hide">Use Firefox for best experience</div>'."\n";
-  $out .= '<div class="recordrtc">'."\n";
-  $out .= '  <div class="header">'."\n";
-  $out .= '    <select class="recording-media" style="display:none">'."\n";
-  $out .= '      <option value="record-audio">Audio</option>'."\n";
-  $out .= '    </select>'."\n";
-  $out .= '    <select class="media-container-format" style="display:none">'."\n";
-  $out .= '      <option>Ogg</option>'."\n";
-  $out .= '    </select>'."\n";
-  $out .= '    <button class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
+  $out  = '<div class="container-fluid">'."\n";
+  $out  = '  <div class="row">'."\n";
+  $out  = '    <div class="col-md-16">'."\n";
+  $out .= '      <div id="alert" class="alert h5 hide">Use Firefox for best experience</div>'."\n";
+  $out .= '      <div class="recordrtc">'."\n";
+  $out .= '        <div class="header">'."\n";
+  $out .= '          <select class="recording-media" style="display:none">'."\n";
+  $out .= '            <option value="record-audio">Audio</option>'."\n";
+  $out .= '          </select>'."\n";
+  $out .= '          <select class="media-container-format" style="display:none">'."\n";
+  $out .= '            <option>Ogg</option>'."\n";
+  $out .= '          </select>'."\n";
+  $out .= '          <button class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
+  $out .= '        </div>'."\n";
+  $out .= '        <div style="display:none;">'."\n";
+  $out .= '          <button class="btn btn-primary btn-md" id="upload-to-server">Upload Recording to Server</button>'."\n";
+  $out .= '        </div>'."\n";
+  $out .= '        <video width="1" height="1" muted></video>'."\n";
+  $out .= '      </div>'."\n";
+  $out .= '    </div>'."\n";
   $out .= '  </div>'."\n";
-  $out .= '  <div style="display:none;">'."\n";
-  $out .= '    <button class="btn btn-primary btn-md" id="upload-to-server">Upload Recording to Server</button>'."\n";
-  $out .= '  </div>'."\n";
-  $out .= '  <video width="1" height="1" muted></video>'."\n";
   $out .= '</div>'."\n";
 
   // Because there is no relative path to TinyMCE, we have to use JavaScript

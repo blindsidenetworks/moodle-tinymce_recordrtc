@@ -1,17 +1,7 @@
-div {
-    display: inline;
-    font-weight: normal;
-    line-height: 40px;
-    padding: 3px 0 3px 0;
-}
-
-button, input[type=button] {
-    display: inline-block;
+.alert {
     font-family: inherit;
-    line-height: 1.3;
-    padding: 5px 12px;
     text-align: center;
-    text-shadow: 1px 1px 1px #076bd2;
+    margin: 10px 15px 20px 20px;
 }
 
 .recordrtc, .recordrtc .header {
@@ -24,8 +14,22 @@ button, input[type=button] {
     display: none;
 }
 
-.hide {
-    display: none !important;
+div {
+    font-weight: normal;
+    line-height: 40px;
+    padding: 3px 0 3px 0;
+}
+
+div.alert {
+    line-height: 10px;
+}
+button, input[type=button] {
+    display: inline-block;
+    font-family: inherit;
+    line-height: 1.3;
+    padding: 5px 12px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #076bd2;
 }
 
 audio {
@@ -50,7 +54,6 @@ audio.selected {
     transform: scale(1.05);
 }
 
-.alert {
-    text-align:center;
-    width: 100%;
+.hide {
+    display: none !important;
 }
