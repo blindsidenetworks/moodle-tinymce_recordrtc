@@ -33,7 +33,7 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
 /**
  * This function is initialized from PHP
- * 
+ *
  * @param {Object}
  *            Y YUI instance
  */
@@ -59,7 +59,6 @@ M.tinymce_recordrtc.view_init = function(Y) {
         button.disabled = true;
 
         if ( button.innerHTML === 'Start Recording' || button.innerHTML === 'Record Again' ) {
-
             // Hide current audio, if any
             var selected = recordingDIV.querySelectorAll('audio.selected');
             if ( selected.length > 0 ) {
