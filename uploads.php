@@ -49,11 +49,6 @@ if ($context->contextlevel != CONTEXT_USER) {
     send_file_not_found();
 }
 
-$userid = $context->instanceid;
-if ($USER->id != $userid) {
-    print_error('invaliduserid');
-}
-
 $fs = get_file_storage();
 
 $relativepath = implode('/', $args);
