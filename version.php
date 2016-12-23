@@ -11,8 +11,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016120101;            // The current plugin version (Date: YYYYMMDDXX).
+$plugin->version   = 2016120102;            // The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2014051200;            // Requires this Moodle version.
 $plugin->component = 'tinymce_recordrtc';   // Full name of the plugin (used for diagnostics).
 $plugin->maturity = MATURITY_ALPHA;         // Maturity level. (ALPHA, BETA, RC, STABLE)
-$plugin->release = '1.0-a2';
+$plugin->release = '1.0-a3';
