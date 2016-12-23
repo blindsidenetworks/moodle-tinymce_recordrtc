@@ -58,15 +58,19 @@ M.tinymce_recordrtc.view_init = function(Y) {
         var button = this;
         button.disabled = true;
 
-        if ( button.innerHTML === 'Start Recording' || button.innerHTML === 'Record Again' ) {
+        if ( button.innerHTML.indexOf('Start Recording') >= 0 || button.innerHTML.indexOf('Record Again') >= 0 ) {
+            // Hide alert-danger if shown
+            var alert = document.querySelector('div[id=alert-danger]');
+            alert.innerHTML == "";
+            alert.classList.add('hide');
+            // Make sure the upload button is not shown
+            recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'none';
             // Hide current audio, if any
             var selected = recordingDIV.querySelectorAll('audio.selected');
             if ( selected.length > 0 ) {
                 selected[0].classList.remove('selected');
                 selected[0].classList.add('hide');
             }
-            // Make sure the upload button is not shown
-            recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'none';
 
             var commonConfig = {
                 onMediaCaptured: function(stream) {
@@ -81,14 +85,15 @@ M.tinymce_recordrtc.view_init = function(Y) {
                     countdownSeconds = 120;
                     countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
                 },
-                onMediaStopped: function() {
-                    button.innerHTML = 'Start Recording';
+                onMediaStopped: function(btnLabel) {
+                    button.innerHTML = btnLabel;
 
                     if (!button.disableStateWaiting) {
                         button.disabled = false;
                     }
                 },
                 onMediaCapturingFailed: function(error) {
+                    var btnLabel = 'Start Recording';
                     if (error.name === 'PermissionDeniedError' && !!navigator.mozGetUserMedia) {
                         InstallTrigger.install({
                             'Foo': {
@@ -99,9 +104,22 @@ M.tinymce_recordrtc.view_init = function(Y) {
                                 }
                             }
                         });
+                    } else if (error.name === 'DevicesNotFoundError') {
+                        // Show alert
+                        var alert = document.querySelector('div[id=alert-danger]');
+                        alert.classList.remove('hide');
+                        alert.innerHTML = "There is no input device enabled";
+                        // Update button
+                        if ( button.innerHTML.indexOf('Start Recording') >= 0 ) {
+                            btnLabel = 'Start Recording failed, try again';
+                        } else {
+                            btnLabel = 'Record Again failed, try once more';
+                        }
+                        // Send alert to the development console
+                        console.info(alert.innerHTML);
                     }
 
-                    commonConfig.onMediaStopped();
+                    commonConfig.onMediaStopped(btnLabel);
                 }
             };
 
@@ -206,9 +224,8 @@ M.tinymce_recordrtc.view_init = function(Y) {
 
     //// Initialization for recordingMedia
     if ( webrtcDetectedBrowser !== 'firefox' ) {
-        var alert = document.querySelector('div[id=alert]');
+        var alert = document.querySelector('div[id=alert-info]');
         alert.innerHTML == "Use Firefox for best experience";
-        alert.classList.add('alert-danger');
         alert.classList.remove('hide');
     }
     if (webrtcDetectedBrowser === 'edge') {
@@ -235,11 +252,12 @@ M.tinymce_recordrtc.captureAudio = function(config) {
             config.onMediaCaptured(audioStream);
 
             audioStream.onended = function() {
-                config.onMediaStopped();
+                config.onMediaStopped('Start Recording');
             };
         },
         // error callback
         function(error) {
+            console.info("MediaCapturingFailed: " + error.name);
             config.onMediaCapturingFailed(error);
         }
     );

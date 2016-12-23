@@ -55,7 +55,8 @@ function get_output() {
   $out  = '<div class="container-fluid">'."\n";
   $out  = '  <div class="row">'."\n";
   $out  = '    <div class="col-md-16">'."\n";
-  $out .= '      <div id="alert" class="alert h5 hide">Use Firefox for best experience</div>'."\n";
+  $out .= '      <div id="alert-info" class="alert alert-info h5 hide">Use Firefox for best experience</div>'."\n";
+  $out .= '      <div id="alert-danger" class="alert alert-danger h5 hide"></div>'."\n";
   $out .= '      <div class="recordrtc">'."\n";
   $out .= '        <div class="header">'."\n";
   $out .= '          <select class="recording-media" style="display:none">'."\n";
