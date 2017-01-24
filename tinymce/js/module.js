@@ -104,7 +104,7 @@ M.tinymce_recordrtc.view_init = function(Y) {
                                 }
                             }
                         });
-                    } else if (error.name === 'DevicesNotFoundError') {
+                    } else if ( /* For most browsers */ error.name === 'DevicesNotFoundError' || /* For Firefox */ error.name === 'NotFoundError' ) {
                         // Show alert
                         var alert = document.querySelector('div[id=alert-danger]');
                         alert.classList.remove('hide');
