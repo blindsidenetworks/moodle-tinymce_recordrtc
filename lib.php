@@ -36,6 +36,9 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
             return;
         }
 
+        // Add JS file, which uses default name.
+        $this->add_js_plugin($params);
+
         // Add parameters for recordrtc
         $params['recordrtc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey() );
 
@@ -43,16 +46,17 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         if ($row = $this->find_button($params, 'moodlemedia')) {
             // Add button after 'moodlemedia' button.
             $this->add_button_after($params, $row, 'recordrtc', 'moodlemedia');
-        } else if ($row = $this->find_button($params, 'image')) {
+            return;
+        }
+      
+        if ($row = $this->find_button($params, 'image')) {
             // If 'moodlemedia' is not found add after 'image'.
             $this->add_button_after($params, $row, 'recordrtc', 'image');
-        } else {
-            // OTherwise add button in the end of the last row.
-            $this->add_button_after($params, $this->count_button_rows($params), 'recordrtc');
+            return;
         }
-
-        // Add JS file, which uses default name.
-        $this->add_js_plugin($params);
+        
+        // OTherwise add button in the end of the last row.
+        $this->add_button_after($params, $this->count_button_rows($params), 'recordrtc');
     }
 
     protected function get_sort_order() {

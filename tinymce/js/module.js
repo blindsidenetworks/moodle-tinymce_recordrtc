@@ -8,24 +8,28 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/** global: M */
+
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
 //// Extraction of parameters
 (function() {
-    var params = {},
-        r = /([^&=]+)=?([^&]*)/g;
+    var params = {};
+    var r = /([^&=]+)=?([^&]*)/g;
 
-    function d(s) {
+    var d = function(s) {
         return decodeURIComponent(s.replace(/\+/g, ' '));
-    }
+    };
 
-    var match, search = window.location.search;
-    while (match = r.exec(search.substring(1))) {
+    var search = window.location.search;
+    var match = r.exec(search.substring(1));
+    while (match) {
         params[d(match[1])] = d(match[2]);
 
         if (d(match[2]) === 'true' || d(match[2]) === 'false') {
             params[d(match[1])] = d(match[2]) === 'true' ? true : false;
         }
+        match = r.exec(search.substring(1));
     }
 
     window.params = params;
@@ -45,7 +49,7 @@ var mediaContainerFormat = null;
 var countdownSeconds = null;
 var countdownTicker = null;
 
-M.tinymce_recordrtc.view_init = function(Y) {
+M.tinymce_recordrtc.view_init = function() {
     console.info('Init tinymce_recordrtc.js...');
     //// Declaration of global variables
     recordingDIV = document.querySelector('.recordrtc');
@@ -61,7 +65,7 @@ M.tinymce_recordrtc.view_init = function(Y) {
         if ( button.innerHTML.indexOf('Start Recording') >= 0 || button.innerHTML.indexOf('Record Again') >= 0 ) {
             // Hide alert-danger if shown
             var alert = document.querySelector('div[id=alert-danger]');
-            alert.innerHTML == "";
+            alert.innerHTML = "";
             alert.classList.add('hide');
             // Make sure the upload button is not shown
             recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'none';
@@ -185,7 +189,7 @@ M.tinymce_recordrtc.view_init = function(Y) {
 
             button.innerHTML = 'Record Again';
 
-            function stopStream() {
+            var stopStream = function() {
                 if (button.stream && button.stream.stop) {
                     button.stream.stop();
                     button.stream = null;
@@ -294,7 +298,7 @@ M.tinymce_recordrtc.startRecording = function(recordRTC) {
         // Find the one that is currently selected
         var selected = recordingDIV.querySelectorAll('audio.selected');
         // Trigger error if noone is found
-        if ( selected.length == 0 ) return alert('No recording found.');
+        if ( selected.length === 0 ) return alert('No recording found.');
 
         if (!recordRTC) return alert('No recording found.');
         this.disabled = true;
@@ -436,7 +440,7 @@ M.tinymce_recordrtc.setTime = function () {
     countdownSeconds--;
     recordingDIV.querySelector('label[id=seconds]').innerHTML = M.tinymce_recordrtc.pad(countdownSeconds%60);
     recordingDIV.querySelector('label[id=minutes]').innerHTML = M.tinymce_recordrtc.pad(parseInt(countdownSeconds/60));
-    if ( countdownSeconds == 0 ) {
+    if ( countdownSeconds === 0 ) {
         recordingDIV.querySelector('button').click();
     }
 };
