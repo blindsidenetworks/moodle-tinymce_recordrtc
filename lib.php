@@ -5,7 +5,7 @@
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2016 Blindside Networks Inc.
+ * @copyright  2017 Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -48,13 +48,13 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
             $this->add_button_after($params, $row, 'recordrtc', 'moodlemedia');
             return;
         }
-      
+
         if ($row = $this->find_button($params, 'image')) {
             // If 'moodlemedia' is not found add after 'image'.
             $this->add_button_after($params, $row, 'recordrtc', 'image');
             return;
         }
-        
+
         // OTherwise add button in the end of the last row.
         $this->add_button_after($params, $this->count_button_rows($params), 'recordrtc');
     }

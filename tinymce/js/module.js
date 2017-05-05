@@ -4,7 +4,7 @@
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2016 Blindside Networks Inc.
+ * @copyright  2017 Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -44,8 +44,8 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
 var recordingDIV = null;
 var recordingMedia = null;
-var recordingPlayer = null;
-var mediaContainerFormat = null;
+var audioPlayer = null;
+var videoPlayer = null;
 var countdownSeconds = null;
 var countdownTicker = null;
 
@@ -54,8 +54,8 @@ M.tinymce_recordrtc.view_init = function() {
     //// Declaration of global variables
     recordingDIV = document.querySelector('.recordrtc');
     recordingMedia = recordingDIV.querySelector('.recording-media');
-    recordingPlayer = recordingDIV.querySelector('video');
-    mediaContainerFormat = recordingDIV.querySelector('.media-container-format');
+    audioPlayer = recordingDIV.querySelector('#audio-player');
+    videoPlayer = recordingDIV.querySelector('#video-player');
 
     //// Initializations for recordDIV
     recordingDIV.querySelector('button').onclick = function() {
@@ -68,13 +68,7 @@ M.tinymce_recordrtc.view_init = function() {
             alert.innerHTML = "";
             alert.classList.add('hide');
             // Make sure the upload button is not shown
-            recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'none';
-            // Hide current audio, if any
-            var selected = recordingDIV.querySelectorAll('audio.selected');
-            if ( selected.length > 0 ) {
-                selected[0].classList.remove('selected');
-                selected[0].classList.add('hide');
-            }
+            recordingDIV.querySelector('#upload').parentNode.style.display = 'none';
 
             var commonConfig = {
                 onMediaCaptured: function(stream) {
@@ -128,6 +122,9 @@ M.tinymce_recordrtc.view_init = function() {
             };
 
             if (recordingMedia.value === 'record-audio') {
+                audioPlayer.classList.add('hide');
+                videoPlayer.classList.add('hide');
+
                 M.tinymce_recordrtc.captureAudio(commonConfig);
 
                 button.mediaCapturedCallback = function() {
@@ -141,36 +138,57 @@ M.tinymce_recordrtc.view_init = function() {
                     });
 
                     button.recordingEndedCallback = function(url) {
-                        var audio = new Audio();
-                        audio.src = url;
-                        audio.controls = true;
+                        audioPlayer.srcObject = null;
+                        audioPlayer.muted = false;
+                        audioPlayer.controls = true;
+                        audioPlayer.src = url;
+                        audioPlayer.play();
 
-                        if (audio.paused) audio.play();
+                        audioPlayer.classList.remove('hide');
 
-                        audio.onended = function() {
-                            audio.pause();
-                            audio.src = URL.createObjectURL(button.recordRTC.blob);
+                        audioPlayer.onended = function() {
+                            audioPlayer.pause();
+                            audioPlayer.src = URL.createObjectURL(button.recordRTC.blob);
                         };
-                        audio.onfocus = function() {
-                            M.tinymce_recordrtc.select_recording(audio);
-                        };
-                        audio.onclick = function() {
-                            M.tinymce_recordrtc.select_recording(audio);
-                        };
-                        audio.onmouseover = function() {
-                            M.tinymce_recordrtc.select_recording(audio);
-                        };
-
-                        // Add the new audio
-                        recordingDIV.appendChild(audio);
-                        // Select the new audio
-                        audio.click();
                     };
 
                     button.recordRTC.startRecording();
 
                     // As a recording started, make sure the message for uploading the last recording is set
-                    recordingDIV.querySelector('#upload-to-server').innerHTML = "Upload Recording to Server";
+                    recordingDIV.querySelector('#upload').innerHTML = "Upload Recording to Server";
+                };
+            }
+
+            if(recordingMedia.value === 'record-video') {
+                audioPlayer.classList.add('hide');
+                videoPlayer.classList.remove('hide');
+                videoPlayer.controls = false;
+
+                M.tinymce_recordrtc.captureAudioPlusVideo(commonConfig);
+                button.mediaCapturedCallback = function() {
+                    button.recordRTC = RecordRTC(button.stream, {
+                        type: 'video',
+                        disableLogs: params.disableLogs || false
+                    });
+                    button.recordingEndedCallback = function(url) {
+                        videoPlayer.srcObject = null;
+                        videoPlayer.muted = false;
+                        videoPlayer.controls = true;
+                        videoPlayer.src = url;
+                        videoPlayer.play();
+
+                        videoPlayer.classList.remove('hide');
+
+                        videoPlayer.onended = function() {
+                            videoPlayer.pause();
+                            videoPlayer.src = URL.createObjectURL(button.recordRTC.blob);
+                        };
+                    };
+
+                    button.recordRTC.startRecording();
+
+                    // As a recording started, make sure the message for uploading the last recording is set
+                    recordingDIV.querySelector('#upload').innerHTML = "Upload Recording to Server";
                 };
             }
 
@@ -239,7 +257,6 @@ M.tinymce_recordrtc.view_init = function() {
         console.warn('Neither MediaRecorder API nor webp is supported in Microsoft Edge. You can merely record audio.');
 
         recordingMedia.innerHTML = '<option value="record-audio">Audio</option>';
-        M.tinymce_recordrtc.setMediaContainerFormat(['WAV']);
     }
 };
 
@@ -250,8 +267,8 @@ M.tinymce_recordrtc.captureAudio = function(config) {
         {audio: true},
         // success callback
         function(audioStream) {
-            recordingPlayer.srcObject = audioStream;
-            recordingPlayer.play();
+            audioPlayer.srcObject = audioStream;
+            audioPlayer.play();
 
             config.onMediaCaptured(audioStream);
 
@@ -267,44 +284,42 @@ M.tinymce_recordrtc.captureAudio = function(config) {
     );
 }
 
+M.tinymce_recordrtc.captureAudioPlusVideo = function(config) {
+    M.tinymce_recordrtc.captureUserMedia(
+      {video: true, audio: true},
+      function(audioVideoStream) {
+        videoPlayer.srcObject = audioVideoStream;
+        videoPlayer.play();
+        config.onMediaCaptured(audioVideoStream);
+        audioVideoStream.onended = function() {
+            config.onMediaStopped();
+        };
+    }, function(error) {
+        config.onMediaCapturingFailed(error);
+    });
+}
+
 M.tinymce_recordrtc.captureUserMedia = function(mediaConstraints, successCallback, errorCallback) {
     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 }
 
-M.tinymce_recordrtc.setMediaContainerFormat = function(arrayOfOptionsSupported) {
-    var options = Array.prototype.slice.call(
-        mediaContainerFormat.querySelectorAll('option')
-    );
-
-    var selectedItem;
-    options.forEach(function(option) {
-        option.disabled = true;
-
-        if (arrayOfOptionsSupported.indexOf(option.value) !== -1) {
-            option.disabled = false;
-
-            if (!selectedItem) {
-                option.selected = true;
-                selectedItem = option;
-            }
-        }
-    });
-}
-
 M.tinymce_recordrtc.startRecording = function(recordRTC) {
-    recordingDIV.querySelector('#upload-to-server').parentNode.style.display = 'block';
-    recordingDIV.querySelector('#upload-to-server').disabled = false;
-    recordingDIV.querySelector('#upload-to-server').onclick = function() {
+    recordingDIV.querySelector('#upload').parentNode.style.display = 'block';
+    recordingDIV.querySelector('#upload').disabled = false;
+    recordingDIV.querySelector('#upload').onclick = function() {
         // Find the one that is currently selected
-        var selected = recordingDIV.querySelectorAll('audio.selected');
+        var selected;
+        if (recordingDIV.querySelectorAll('audio.hide').length === 0) {
+            selected = recordingDIV.querySelector('audio');
+        } else {
+            selected = recordingDIV.querySelector('video');
+        }
         // Trigger error if noone is found
-        if ( selected.length === 0 ) return alert('No recording found.');
-
         if (!recordRTC) return alert('No recording found.');
         this.disabled = true;
 
         var button = this;
-        M.tinymce_recordrtc.uploadSelectedToServer(selected[0], function(progress, fileURL) {
+        M.tinymce_recordrtc.uploadSelectedToServer(selected, function(progress, fileURL) {
             if (progress === 'ended') {
                 button.disabled = false;
                 M.tinymce_recordrtc.view_annotate(fileURL);
@@ -328,9 +343,14 @@ M.tinymce_recordrtc.uploadSelectedToServer = function(selected, callback) {
     xhr.onload = function(e) {
         if (this.status == 200) {
             // blob is now the blob that the object URL pointed to.
+            var date = new Date();
+
             var blob = this.response;
             var fileType = blob.type.split('/')[0] || 'audio';
-            var fileName = selected.id;
+            var fileName = date.getYear() + date.getMonth() + date.getDay() +
+                           date.getHours() + date.getMinutes() +
+                           date.getSeconds() + '-' +
+                           (Math.random() * 1000).toString().replace('.', '');
 
             if (fileType === 'audio') {
                 fileName += '.' + (!!navigator.mozGetUserMedia ? 'ogg' : 'wav');
