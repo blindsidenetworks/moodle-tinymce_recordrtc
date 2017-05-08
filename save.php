@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// disable moodle specific debug messages and any errors in output
+// Disable moodle specific debug messages and any errors in output
 define('NO_DEBUG_DISPLAY', true);
 
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
@@ -42,11 +42,11 @@ if ( !isset($_FILES["audio-blob"]) && !isset($_FILES["video-blob"]) ) {
     $user_context = context_user::instance($USER->id);
     $fileinfo = array(
           'contextid' => $user_context->id,   // ID of context
-          'component' => 'tinymce_recordrtc', // usually = table name
-          'filearea' => 'annotation',         // usually = table name
-          'itemid' => time(),                 // usually = ID of row in table
-          'filepath' => '/',                  // any path beginning and ending in /
-          'filename' => $fileName,            // any filename
+          'component' => 'tinymce_recordrtc', // Usually = table name
+          'filearea' => 'annotation',         // Usually = table name
+          'itemid' => time(),                 // Usually = ID of row in table
+          'filepath' => '/',                  // Any path beginning and ending in /
+          'filename' => $fileName,            // Any filename
           'author' => fullname($USER),
           'licence' => $CFG->sitedefaultlicense
           );

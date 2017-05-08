@@ -7,7 +7,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// disable moodle specific debug messages and any errors in output
+// Disable moodle specific debug messages and any errors in output
 define('NO_DEBUG_DISPLAY', true);
 
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
@@ -21,17 +21,17 @@ if (isguestuser()) {
 $relativepath = get_file_argument();
 $preview = optional_param('preview', null, PARAM_ALPHANUM);
 
-// relative path must start with '/'
+// Relative path must start with '/'
 if (!$relativepath) {
     print_error('invalidargorconf');
 } else if ($relativepath{0} != '/') {
     print_error('pathdoesnotstartslash');
 }
 
-// extract relative path components
+// Extract relative path components
 $args = explode('/', ltrim($relativepath, '/'));
 
-if (count($args) == 0) { // always at least user id
+if (count($args) == 0) { // Always at least user id
     print_error('invalidarguments');
 }
 
@@ -59,7 +59,7 @@ if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->get_filename() == 
 }
 
 // ========================================
-// finally send the file
+// Finally send the file
 // ========================================
-\core\session\manager::write_close(); // Unlock session during file serving.
+\core\session\manager::write_close(); // Unlock session during file serving
 send_stored_file($file, 0, false, false, array('preview' => $preview));
