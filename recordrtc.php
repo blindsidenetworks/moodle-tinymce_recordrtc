@@ -63,10 +63,10 @@ function get_output() {
   $out .= '            <option value="record-video">Video</option>'."\n";
   $out .= '            <option value="record-audio">Audio</option>'."\n";
   $out .= '          </select>'."\n";
-  $out .= '          <button class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
+  $out .= '          <button id="start-stop" class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
   $out .= '        </div>'."\n";
   $out .= '        <div style="display:none;">'."\n";
-  $out .= '          <button class="btn btn-primary btn-md" id="upload">Upload Recording to Server</button>'."\n";
+  $out .= '          <button id="upload" class="btn btn-primary btn-md">Attach Recording as Annotation</button>'."\n";
   $out .= '        </div>'."\n";
   $out .= '        <br>'."\n";
   $out .= '        <audio id="audio-player" muted></audio>'."\n";
