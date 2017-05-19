@@ -27,7 +27,6 @@ $PAGE->set_heading($title);
 $PAGE->set_pagelayout('embedded');
 
 $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css') );
-$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/RecordRTC.js') );
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/gumadapter.js') );
 
 $jsVars = array(
