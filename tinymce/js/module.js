@@ -91,7 +91,7 @@ M.tinymce_recordrtc.view_init = function() {
       // Empty the array containing the previously recorded chunks
       chunks = [];
 
-      // Disable media format selection drop-box
+      // Disable media format selection dropdown
       recordingMedia.disabled = true;
 
       // Initialize common configurations
@@ -101,7 +101,6 @@ M.tinymce_recordrtc.view_init = function() {
           // Make audio/video stream available at a higher level by making it a property of btn
           btn.stream = stream;
 
-          // Start recording
           if (btn.mediaCapturedCallback) {
             btn.mediaCapturedCallback();
           }
@@ -159,14 +158,9 @@ M.tinymce_recordrtc.view_init = function() {
         // Capture audio stream from microphone
         M.tinymce_recordrtc.captureAudio(commonConfig);
 
-        // Start actual recording via RecordRTC
+        // When audio stream is successfully captured, start recording
         btn.mediaCapturedCallback = function() {
-
-          // Start recording
           M.tinymce_recordrtc.startRecording(btn.stream);
-
-          // As a recording started, make sure the message for uploading the last recording is set
-          uploadBtn.innerHTML = 'Attach Recording as Annotation';
         };
       }
 
@@ -181,14 +175,9 @@ M.tinymce_recordrtc.view_init = function() {
         // Capture audio+video stream from webcam/microphone
         M.tinymce_recordrtc.captureAudioPlusVideo(commonConfig);
 
-        // Start actual recording via RceordRTC
+        // When audio+video stream is successfully captured, start recording
         btn.mediaCapturedCallback = function() {
-
-          // Start recording
           M.tinymce_recordrtc.startRecording(btn.stream);
-
-          // As a recording started, make sure the message for uploading the last recording is set
-          uploadBtn.innerHTML = 'Attach Recording as Annotation';
         };
       }
 
@@ -199,16 +188,17 @@ M.tinymce_recordrtc.view_init = function() {
       // First of all clears the countdownTicker
       clearInterval(countdownTicker);
 
-      // Disables "Record Again" button for 1s to allow background processing (closing streams)
+      // Disable "Record Again" button for 1s to allow background processing (closing streams)
       setTimeout(function() {
         btn.disabled = false;
       }, 1000);
 
+      // Stop recording
       M.tinymce_recordrtc.stopRecording();
 
-      btn.innerHTML = 'Record Again';
-
+      // Re-enable format selector dropdown
       recordingMedia.disabled = false;
+      btn.innerHTML = 'Record Again';
 
       return;
     }
@@ -234,6 +224,17 @@ M.tinymce_recordrtc.view_init = function() {
   }
 };
 
+
+
+////////////////////
+// Functions for capturing, recording, and uploading stream
+////////////////////
+
+// Capture webcam/microphone stream
+M.tinymce_recordrtc.captureUserMedia = function(mediaConstraints, successCallback, errorCallback) {
+  navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+};
+
 // Setup to get audio stream from microphone
 M.tinymce_recordrtc.captureAudio = function(config) {
   M.tinymce_recordrtc.captureUserMedia(
@@ -244,7 +245,7 @@ M.tinymce_recordrtc.captureAudio = function(config) {
     function(audioStream) {
       console.log('getUserMedia() got stream: ', audioStream);
 
-      // Set audio player to play microphone stream being recorded
+      // Set audio player to play microphone stream
       if (window.URL) {
         audioPlayer.src = URL.createObjectURL(audioStream);
       } else {
@@ -252,7 +253,6 @@ M.tinymce_recordrtc.captureAudio = function(config) {
       }
       audioPlayer.play();
 
-      // WHAT?
       config.onMediaCaptured(audioStream);
     },
 
@@ -262,7 +262,7 @@ M.tinymce_recordrtc.captureAudio = function(config) {
       config.onMediaCapturingFailed(error);
     }
   );
-}
+};
 
 // Setup to get audio+video stream from microphone/webcam
 M.tinymce_recordrtc.captureAudioPlusVideo = function(config) {
@@ -274,7 +274,7 @@ M.tinymce_recordrtc.captureAudioPlusVideo = function(config) {
     function(audioVideoStream) {
       console.log('getUserMedia() got stream: ', audioVideoStream);
 
-      // Set audio player to play microphone+webcam stream being recorded
+      // Set audio player to play microphone+webcam stream
       if (window.URL) {
         videoPlayer.src = URL.createObjectURL(audioVideoStream);
       } else {
@@ -282,7 +282,6 @@ M.tinymce_recordrtc.captureAudioPlusVideo = function(config) {
       }
       videoPlayer.play();
 
-      // WHAT?
       config.onMediaCaptured(audioVideoStream);
     },
 
@@ -292,66 +291,109 @@ M.tinymce_recordrtc.captureAudioPlusVideo = function(config) {
       config.onMediaCapturingFailed(error);
     }
   );
-}
+};
 
-// Open webcam/microphone stream
-M.tinymce_recordrtc.captureUserMedia = function(mediaConstraints, successCallback, errorCallback) {
-  navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
-}
+// Add chunks of audio/video to array when made available
+M.tinymce_recordrtc.handleDataAvailable = function(event) {
+  chunks.push(event.data);
+};
 
-// Uploads recorded video/audio to server
-M.tinymce_recordrtc.uploadToServer = function(selected, callback) {
-  var xhr = new XMLHttpRequest();
+// Output information to console when recording stopped
+M.tinymce_recordrtc.handleStop = function(event) {
+  console.log('Recorder stopped: ', event);
+};
 
-  // Get src URL of either audio or video tag, depending on which is selected
-  xhr.open('GET', selected.src, true);
-  xhr.responseType = 'blob';
+M.tinymce_recordrtc.startRecording = function (stream) {
+  // Initialize recording of stream
+  mediaRecorder = new MediaRecorder(stream);
 
-  xhr.onload = function(e) {
-    if (xhr.status === 200) {
-      var date = new Date();
+  console.log('Created MediaRecorder', mediaRecorder);
 
-      // blob is now the blob that the video/audio tag's src pointed to
-      var blob = this.response;
-      // Determine if video or audio
-      var fileType = blob.type.split('/')[0];
-      // Generate filename with timestamp, random ID and file extension
-      var fileName = date.getYear() + date.getMonth() + date.getDay() +
-                     date.getHours() + date.getMinutes() +
-                     date.getSeconds() + '-' +
-                     (Math.random() * 1000).toString().replace('.', '');
-      if (fileType === 'audio') {
-        fileName += '.ogg'; // '.' + (webrtcDetectedBrowser === 'firefox' ? '.ogg' : 'wav');
-      } else if (fileType === 'video') {
-        fileName += '.webm';
-      }
+  mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
+  mediaRecorder.onstop = M.tinymce_recordrtc.handleStop;
+  mediaRecorder.start(10); // Capture in 10ms chunks. Must be set to work with Firefox
 
-      // Create FormData to send to PHP upload/save script
-      var formData = new FormData();
-      formData.append('contextid', recordrtc.contextid);
-      formData.append('sesskey', parent.M.cfg.sesskey);
-      formData.append(fileType + '-filename', fileName);
-      formData.append(fileType + '-blob', blob);
+  console.log('MediaRecorder started', mediaRecorder);
+};
 
-      callback('Uploading ' + fileType + ' recording to server.');
+M.tinymce_recordrtc.stopRecording = function() {
+  mediaRecorder.stop();
 
-      // Pass FormData to PHP script using XHR
-      M.tinymce_recordrtc.makeXMLHttpRequest('save.php', formData, function(progress, responseText) {
-        if (progress === 'upload-ended') {
-          var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
-          callback('ended', initialURL + responseText);
-          return;
-        } else {
-          callback(progress);
-          return;
-        }
-      });
+  // Set source of audio or video player, then show it with controls enabled
+  if (recordingMedia.value === 'record-audio') {
+    // Not sure if necessary, need to figure out what formats the different browsers record in
+    /*
+    if (webrtcDetectedBrowser === 'firefox') {
+      var blob = new Blob(chunks, {type: 'audio/ogg'});
+    } else {
+      var blob = new Blob(chunks, {type: 'audio/wav'});
     }
+    */
+    var blob = new Blob(chunks, {type: 'audio/webm'});
+    audioPlayer.src = URL.createObjectURL(blob);
+
+    audioPlayer.muted = false;
+    audioPlayer.controls = true;
+    audioPlayer.classList.remove('hide');
+    audioPlayer.play();
+
+    audioPlayer.onended = function() {
+      audioPlayer.pause();
+    };
+  } else if (recordingMedia.value === 'record-video') {
+    var blob = new Blob(chunks, {type: 'video/webm'});
+    videoPlayer.src = URL.createObjectURL(blob);
+
+    videoPlayer.muted = false;
+    videoPlayer.controls = true;
+    videoPlayer.play();
+
+    videoPlayer.onended = function() {
+      videoPlayer.pause();
+    };
+  }
+
+  // Show upload button
+  uploadBtn.parentNode.style.display = 'block';
+  uploadBtn.innerHTML = 'Attach Recording as Annotation';
+  uploadBtn.disabled = false;
+
+  // Handle when upload button is clicked
+  uploadBtn.onclick = function() {
+    var selected;
+
+    // Find whether video or audio recording is selected
+    if (!audioPlayer.classList.contains('hide')) {
+      selected = audioPlayer;
+    } else {
+      selected = videoPlayer;
+    }
+
+    // Trigger error if no recording has been made
+    if ((!audioPlayer.src && !videoPlayer.src) || chunks === []) return alert('No recording found.');
+
+    var btn = uploadBtn;
+    btn.disabled = true;
+
+    // Upload recording to server
+    M.tinymce_recordrtc.uploadToServer(selected, function(progress, fileURL) {
+      if (progress === 'ended') {
+        btn.disabled = false;
+        M.tinymce_recordrtc.insert_annotation(fileURL);
+        return;
+      } else if (progress === 'upload-failed') {
+        btn.disabled = false;
+        btn.innerHTML = 'Upload failed, try again';
+        return;
+      } else {
+        btn.innerHTML = progress;
+        return;
+      }
+    });
   };
+};
 
-  xhr.send();
-}
-
+// Handle XHR sending/receiving/status
 M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
   var xhr = new XMLHttpRequest();
 
@@ -393,23 +435,70 @@ M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
   xhr.send(data);
 }
 
-// Inserts link to annotation in editor text area
-M.tinymce_recordrtc.insert_annotation = function(recording_url) {
-  var annotation = M.tinymce_recordrtc.create_annotation(recording_url);
+// Upload recorded video/audio to server
+M.tinymce_recordrtc.uploadToServer = function(selected, callback) {
+  var xhr = new XMLHttpRequest();
 
-  tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
-  tinyMCEPopup.close();
-};
+  // Get src URL of either audio or video tag, depending on which is selected
+  xhr.open('GET', selected.src, true);
+  xhr.responseType = 'blob';
 
-// Generates link to recorded annotation
-M.tinymce_recordrtc.create_annotation = function(recording_url) {
-  // Create an icon linked to file in both editor text area and submission page
-  //// var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
+  xhr.onload = function(e) {
+    if (xhr.status === 200) {
+      var date = new Date();
 
-  // Creates link to file in editor text area and audio/video player in submission page
-  var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">RecordRTC Annotation</a></div>';
+      // blob is now the blob that the video/audio tag's src pointed to
+      var blob = this.response;
+      // Determine if video or audio
+      var fileType = blob.type.split('/')[0];
+      // Generate filename with timestamp, random ID and file extension
+      var fileName = date.getYear() + date.getMonth() + date.getDay() +
+                     date.getHours() + date.getMinutes() +
+                     date.getSeconds() + '-' +
+                     (Math.random() * 1000).toString().replace('.', '');
+      if (fileType === 'audio') {
+        // Not sure if necessary, need to figure out what formats the different browsers record in
+        //// fileName += '.' + (webrtcDetectedBrowser === 'firefox' ? '.ogg' : 'wav');
+        fileName += '.ogg';
+      } else if (fileType === 'video') {
+        fileName += '.webm';
+      }
 
-  return annotation;
+      // Create FormData to send to PHP upload/save script
+      var formData = new FormData();
+      formData.append('contextid', recordrtc.contextid);
+      formData.append('sesskey', parent.M.cfg.sesskey);
+      formData.append(fileType + '-filename', fileName);
+      formData.append(fileType + '-blob', blob);
+
+      callback('Uploading ' + fileType + ' recording to server.');
+
+      // Pass FormData to PHP script using XHR
+      M.tinymce_recordrtc.makeXMLHttpRequest('save.php', formData, function(progress, responseText) {
+        if (progress === 'upload-ended') {
+          var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
+          callback('ended', initialURL + responseText);
+          return;
+        } else {
+          callback(progress);
+          return;
+        }
+      });
+    }
+  };
+
+  xhr.send();
+}
+
+// Makes 1min and 2s display as 1:02 on timer instead of 1:2, for example
+M.tinymce_recordrtc.pad = function (val) {
+  var valString = val + "";
+
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
 };
 
 // Functionality to make recording timer count down
@@ -425,110 +514,21 @@ M.tinymce_recordrtc.setTime = function () {
   }
 };
 
-// Makes 1min and 2s display as 1:02 on timer instead of 1:2, for example
-M.tinymce_recordrtc.pad = function (val) {
-  var valString = val + "";
+// Generates link to recorded annotation
+M.tinymce_recordrtc.create_annotation = function(recording_url) {
+  // Create an icon linked to file in both editor text area and submission page
+  //// var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '"><img alt="RecordRTC Annotation" title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';
 
-  if (valString.length < 2) {
-    return "0" + valString;
-  } else {
-    return valString;
-  }
+  // Creates link to file in editor text area and audio/video player in submission page
+  var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">RecordRTC Annotation</a></div>';
+
+  return annotation;
 };
 
-// Start recording
-M.tinymce_recordrtc.startRecording = function (stream) {
-  mediaRecorder = new MediaRecorder(stream);
+// Inserts link to annotation in editor text area
+M.tinymce_recordrtc.insert_annotation = function(recording_url) {
+  var annotation = M.tinymce_recordrtc.create_annotation(recording_url);
 
-  console.log('Created MediaRecorder', mediaRecorder);
-
-  mediaRecorder.onstop = M.tinymce_recordrtc.handleStop;
-  mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
-  mediaRecorder.start(10);
-
-  console.log('MediaRecorder started', mediaRecorder);
-};
-
-// Stop recording
-M.tinymce_recordrtc.stopRecording = function() {
-  mediaRecorder.stop();
-
-  if (recordingMedia.value === 'record-audio') {
-    // audioPlayer.srcObject = null;
-    /*
-    if (webrtcDetectedBrowser === 'firefox') {
-      var blob = new Blob(chunks, {type: 'audio/ogg'});
-    } else {
-      var blob = new Blob(chunks, {type: 'audio/wav'});
-    }
-    */
-    var blob = new Blob(chunks, {type: 'audio/webm'});
-    audioPlayer.src = URL.createObjectURL(blob);
-
-    audioPlayer.muted = false;
-    audioPlayer.controls = true;
-    audioPlayer.classList.remove('hide');
-    audioPlayer.play();
-
-    audioPlayer.onended = function() {
-      audioPlayer.pause();
-    };
-  } else if (recordingMedia.value === 'record-video') {
-    // videoPlayer.srcObject = null;
-    var blob = new Blob(chunks, {type: 'video/webm'});
-    videoPlayer.src = URL.createObjectURL(blob);
-
-    videoPlayer.muted = false;
-    videoPlayer.controls = true;
-    videoPlayer.play();
-
-    videoPlayer.onended = function() {
-      videoPlayer.pause();
-    };
-  }
-
-  uploadBtn.parentNode.style.display = 'block';
-  uploadBtn.disabled = false;
-
-  uploadBtn.onclick = function() {
-    var selected;
-
-    // Find whether video or audio recording is selected
-    if (!audioPlayer.classList.contains('hide')) {
-      selected = audioPlayer;
-    } else {
-      selected = videoPlayer;
-    }
-
-    // Trigger error if no recording has been made
-    if ((!audioPlayer.src && !videoPlayer.src) || chunks === []) return alert('No recording found.');
-
-    var btn = uploadBtn;
-    btn.disabled = true;
-
-    M.tinymce_recordrtc.uploadToServer(selected, function(progress, fileURL) {
-      if (progress === 'ended') {
-        btn.disabled = false;
-        M.tinymce_recordrtc.insert_annotation(fileURL);
-        return;
-      } else if (progress === 'upload-failed') {
-        btn.disabled = false;
-        btn.innerHTML = 'Upload failed, try again';
-        return;
-      } else {
-        btn.innerHTML = progress;
-        return;
-      }
-    });
-  };
-};
-
-// Outputs information to console when stopped
-M.tinymce_recordrtc.handleStop = function(event) {
-  console.log('Recorder stopped: ', event);
-};
-
-// Adds chunks of audio/video to array when made available
-M.tinymce_recordrtc.handleDataAvailable = function(event) {
-  chunks.push(event.data);
+  tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
+  tinyMCEPopup.close();
 };
