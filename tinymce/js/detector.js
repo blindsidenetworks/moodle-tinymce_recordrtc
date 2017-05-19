@@ -1,12 +1,11 @@
 // Last time updated at Fri Jan 08 2016 14:06
 
-// gumadapter.js
-// https://cdn.webrtc-experiment.com/gumadapter.js
-
-// getUserMedia hacks from git/webrtc/adapter; 
-// removed redundant codes
+// getUserMedia hacks from git/webrtc/adapter;
+// removed redundant code
 // A-to-Zee, all copyrights goes to:
 // https://github.com/webrtc/adapter/blob/master/LICENSE.md
+
+// Used to detect browser and version for our purposes
 
 var getUserMedia = null;
 var webrtcDetectedBrowser = null;
@@ -273,7 +272,8 @@ if (typeof window === 'undefined' || !window.navigator) {
         // Even though Chrome 45 has navigator.mediaDevices and a getUserMedia
         // function which returns a Promise, it does not accept spec-style
         // constraints.
-        var origGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+        var origGetUserMedia = navigator.mediaDevices.getUserMedia.
+        bind(navigator.mediaDevices);
         navigator.mediaDevices.getUserMedia = function(c) {
             webrtcUtils.log('spec:   ' + JSON.stringify(c)); // whitespace for alignment
             c.audio = constraintsToChrome(c.audio);
@@ -315,7 +315,6 @@ function requestUserMedia(constraints) {
     });
 }
 
-/*
 if (typeof module !== 'undefined') {
     module.exports = {
         getUserMedia: getUserMedia,
@@ -336,4 +335,3 @@ if (typeof module !== 'undefined') {
         };
     });
 }
-*/
