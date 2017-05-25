@@ -1,11 +1,11 @@
-// Last time updated at Fri Jan 08 2016 14:06
+// Last time updated at Fri Jan 08 2016 14:06.
 
-// getUserMedia hacks from git/webrtc/adapter;
+// Hacks for getUserMedia from git/webrtc/adapter;
 // removed redundant code
 // A-to-Zee, all copyrights goes to:
-// https://github.com/webrtc/adapter/blob/master/LICENSE.md
+// https://github.com/webrtc/adapter/blob/master/LICENSE.md.
 
-// Used to detect browser and version for our purposes
+// Used to detect browser and version for our purposes.
 
 var getUserMedia = null;
 var webrtcDetectedBrowser = null;
@@ -22,7 +22,7 @@ if(!webrtcUtils.log) {
             return;
         }
 
-        // suppress console.log output when being included as a module.
+        // Suppress console.log output when being included as a module.
         if (typeof module !== 'undefined' ||
             typeof require === 'function' && typeof define === 'function') {
             return;
@@ -44,14 +44,14 @@ if (typeof window === 'object') {
         Object.defineProperty(window.HTMLMediaElement.prototype, 'srcObject', {
             get: function() {
                 // If prefixed srcObject property exists, return it.
-                // Otherwise use the shimmed property, _srcObject
+                // Otherwise use the shimmed property, _srcObject.
                 return 'mozSrcObject' in this ? this.mozSrcObject : this._srcObject;
             },
             set: function(stream) {
                 if ('mozSrcObject' in this) {
                     this.mozSrcObject = stream;
                 } else {
-                    // Use _srcObject as a private property for this shim
+                    // Use _srcObject as a private property for this shim.
                     this._srcObject = stream;
                     // TODO: revokeObjectUrl(this.src) when !stream to release resources?
                     this.src = stream ? URL.createObjectURL(stream) : null;
@@ -59,7 +59,7 @@ if (typeof window === 'object') {
             }
         });
     }
-    // Proxy existing globals
+    // Proxy existing globals.
     getUserMedia = window.navigator && window.navigator.getUserMedia;
 }
 
@@ -68,13 +68,13 @@ if (typeof window === 'undefined' || !window.navigator) {
 } else if (navigator.mozGetUserMedia && window.mozRTCPeerConnection) {
     webrtcDetectedBrowser = 'firefox';
 
-    // the detected firefox version.
+    // Detected firefox version.
     webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent, /Firefox\/([0-9]+)\./, 1);
 
-    // the minimum firefox version still supported by adapter.
+    // Minimum firefox version still supported by adapter.
     webrtcMinimumVersion = 31;
 
-    // getUserMedia constraints shim.
+    // Shim for getUserMedia constraints.
     getUserMedia = function(constraints, onSuccess, onError) {
         var constraintsToFF37 = function(c) {
             if (typeof c !== 'object' || c.require) {
@@ -85,10 +85,7 @@ if (typeof window === 'undefined' || !window.navigator) {
                 if (key === 'require' || key === 'advanced' || key === 'mediaSource') {
                     return;
                 }
-                var r = c[key] = (typeof c[key] === 'object') ?
-                    c[key] : {
-                        ideal: c[key]
-                    };
+                var r = c[key] = (typeof c[key] === 'object') ? c[key] : {ideal : c[key]};
                 if (r.min !== undefined ||
                     r.max !== undefined || r.exact !== undefined) {
                     require.push(key);
@@ -147,8 +144,8 @@ if (typeof window === 'undefined' || !window.navigator) {
             removeEventListener: function() {}
         };
     }
-    navigator.mediaDevices.enumerateDevices =
-        navigator.mediaDevices.enumerateDevices || function() {
+    navigator.mediaDevices.enumerateDevices = navigator.mediaDevices.enumerateDevices ||
+        function() {
             return new Promise(function(resolve) {
                 var infos = [{
                     kind: 'audioinput',
@@ -166,9 +163,9 @@ if (typeof window === 'undefined' || !window.navigator) {
         };
 
     if (webrtcDetectedVersion < 41) {
-        // Work around http://bugzil.la/1169665
-        var orgEnumerateDevices =
-            navigator.mediaDevices.enumerateDevices.bind(navigator.mediaDevices);
+        // Work around: http://bugzil.la/1169665.
+        var orgEnumerateDevices = navigator.mediaDevices.enumerateDevices
+                                  .bind(navigator.mediaDevices);
         navigator.mediaDevices.enumerateDevices = function() {
             return orgEnumerateDevices().then(undefined, function(e) {
                 if (e.name === 'NotFoundError') {
@@ -185,10 +182,10 @@ if (typeof window === 'undefined' || !window.navigator) {
     webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent,
         /Chrom(e|ium)\/([0-9]+)\./, 2);
 
-    // the minimum chrome version still supported by adapter.
+    // Minimum chrome version still supported by adapter.
     webrtcMinimumVersion = 38;
 
-    // getUserMedia constraints shim.
+    // Shim for getUserMedia constraints.
     var constraintsToChrome = function(c) {
         if (typeof c !== 'object' || c.mandatory || c.optional) {
             return c;
@@ -273,7 +270,7 @@ if (typeof window === 'undefined' || !window.navigator) {
         var origGetUserMedia = navigator.mediaDevices.getUserMedia.
         bind(navigator.mediaDevices);
         navigator.mediaDevices.getUserMedia = function(c) {
-            webrtcUtils.log('spec:   ' + JSON.stringify(c)); // whitespace for alignment
+            webrtcUtils.log('spec:   ' + JSON.stringify(c)); // Whitespace for alignment.
             c.audio = constraintsToChrome(c.audio);
             c.video = constraintsToChrome(c.video);
             webrtcUtils.log('chrome: ' + JSON.stringify(c));
@@ -300,7 +297,7 @@ if (typeof window === 'undefined' || !window.navigator) {
 
     webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent, /Edge\/(\d+).(\d+)$/, 2);
 
-    // the minimum version still supported by adapter.
+    // Minimum version still supported by adapter.
     webrtcMinimumVersion = 12;
 } else {
     webrtcUtils.log('Browser does not appear to be WebRTC-capable');

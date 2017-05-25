@@ -97,7 +97,8 @@ function get_output() {
     // inside this plugin can be included with relative path (below).
     $out .= '<script type="text/javascript">'."\n";
     $out .= '   var editor_tinymce_include = function(path) {'."\n";
-    $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' + \'script>\');'."\n";
+    $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' +
+                                   \'script>\');'."\n";
     $out .= '   };'."\n";
     $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
     $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";

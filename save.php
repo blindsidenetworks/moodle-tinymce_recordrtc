@@ -72,5 +72,6 @@ $fileinfo = array(
 $filesaved = $fs->create_file_from_pathname($fileinfo, $filetmp);
 
 // OK response.
-$filetarget = $filesaved->get_contextid().'/'.$filesaved->get_component().'/'.$filesaved->get_filearea().'/'.$filesaved->get_itemid().'/'.$filesaved->get_filename();
+$filetarget = $filesaved->get_contextid().'/'.$filesaved->get_component().'/'.$filesaved->get_filearea().'/'.
+              $filesaved->get_itemid().'/'.$filesaved->get_filename();
 echo($filetarget);
