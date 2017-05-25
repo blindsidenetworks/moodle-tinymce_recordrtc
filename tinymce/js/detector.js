@@ -39,29 +39,28 @@ if(!webrtcUtils.extractVersion) {
 }
 
 if (typeof window === 'object') {
-  if (window.HTMLMediaElement &&
-    !('srcObject' in window.HTMLMediaElement.prototype)) {
-    // Shim the srcObject property, once, when HTMLMediaElement is found.
-    Object.defineProperty(window.HTMLMediaElement.prototype, 'srcObject', {
-      get: function() {
-        // If prefixed srcObject property exists, return it.
-        // Otherwise use the shimmed property, _srcObject
-        return 'mozSrcObject' in this ? this.mozSrcObject : this._srcObject;
-      },
-      set: function(stream) {
-        if ('mozSrcObject' in this) {
-          this.mozSrcObject = stream;
-        } else {
-          // Use _srcObject as a private property for this shim
-          this._srcObject = stream;
-          // TODO: revokeObjectUrl(this.src) when !stream to release resources?
-          this.src = stream ? URL.createObjectURL(stream) : null;
-        }
-      }
-    });
-  }
-  // Proxy existing globals
-  getUserMedia = window.navigator && window.navigator.getUserMedia;
+    if (window.HTMLMediaElement && !('srcObject' in window.HTMLMediaElement.prototype)) {
+        // Shim the srcObject property, once, when HTMLMediaElement is found.
+        Object.defineProperty(window.HTMLMediaElement.prototype, 'srcObject', {
+            get: function() {
+                // If prefixed srcObject property exists, return it.
+                // Otherwise use the shimmed property, _srcObject
+                return 'mozSrcObject' in this ? this.mozSrcObject : this._srcObject;
+            },
+            set: function(stream) {
+                if ('mozSrcObject' in this) {
+                    this.mozSrcObject = stream;
+                } else {
+                    // Use _srcObject as a private property for this shim
+                    this._srcObject = stream;
+                    // TODO: revokeObjectUrl(this.src) when !stream to release resources?
+                    this.src = stream ? URL.createObjectURL(stream) : null;
+                }
+            }
+        });
+    }
+    // Proxy existing globals
+    getUserMedia = window.navigator && window.navigator.getUserMedia;
 }
 
 if (typeof window === 'undefined' || !window.navigator) {
@@ -70,8 +69,7 @@ if (typeof window === 'undefined' || !window.navigator) {
     webrtcDetectedBrowser = 'firefox';
 
     // the detected firefox version.
-    webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent,
-        /Firefox\/([0-9]+)\./, 1);
+    webrtcDetectedVersion = webrtcUtils.extractVersion(navigator.userAgent, /Firefox\/([0-9]+)\./, 1);
 
     // the minimum firefox version still supported by adapter.
     webrtcMinimumVersion = 31;

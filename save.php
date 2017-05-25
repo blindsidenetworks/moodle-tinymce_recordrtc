@@ -23,36 +23,37 @@ if ( !isset($_FILES["audio-blob"]) && !isset($_FILES["video-blob"]) ) {
     error_log("Blob not included");
     header("HTTP/1.0 400 Bad Request");
     return;
-} else if ( !isset($_POST["audio-filename"]) && !isset($_POST["video-filename"]) ) {
+}
+
+if ( !isset($_POST["audio-filename"]) && !isset($_POST["video-filename"]) ) {
     error_log("Filename not included");
     header("HTTP/1.0 400 Bad Request");
     return;
-} else {
-    if ( !isset($_FILES["audio-blob"]) || !isset($_POST["audio-filename"]) ) {
-        $fileName = $_POST["video-filename"];
-        $fileTmp = $_FILES["video-blob"]["tmp_name"];
-    } else {
-        $fileName = $_POST["audio-filename"];
-        $fileTmp = $_FILES["audio-blob"]["tmp_name"];
-    }
-
-    $fs = get_file_storage();
-
-    // Prepare file record object.
-    $user_context = context_user::instance($USER->id);
-    $fileinfo = array(
-          'contextid' => $user_context->id,   // ID of context.
-          'component' => 'tinymce_recordrtc', // Usually = table name.
-          'filearea' => 'annotation',         // Usually = table name.
-          'itemid' => time(),                 // Usually = ID of row in table.
-          'filepath' => '/',                  // Any path beginning and ending in "/".
-          'filename' => $fileName,            // Any filename.
-          'author' => fullname($USER),
-          'licence' => $CFG->sitedefaultlicense
-          );
-    $fileSaved = $fs->create_file_from_pathname($fileinfo, $fileTmp);
-
-    //// OK response.
-    $fileTarget = $fileSaved->get_contextid().'/'.$fileSaved->get_component().'/'.$fileSaved->get_filearea().'/'.$fileSaved->get_itemid().'/'.$fileSaved->get_filename();
-    echo($fileTarget);
 }
+
+$fileName = $_POST["audio-filename"];
+$fileTmp = $_FILES["audio-blob"]["tmp_name"];
+if ( !isset($_FILES["audio-blob"]) || !isset($_POST["audio-filename"]) ) {
+    $fileName = $_POST["video-filename"];
+    $fileTmp = $_FILES["video-blob"]["tmp_name"];
+}
+
+$fs = get_file_storage();
+
+// Prepare file record object.
+$user_context = context_user::instance($USER->id);
+$fileinfo = array(
+      'contextid' => $user_context->id,   // ID of context.
+      'component' => 'tinymce_recordrtc', // Usually = table name.
+      'filearea' => 'annotation',         // Usually = table name.
+      'itemid' => time(),                 // Usually = ID of row in table.
+      'filepath' => '/',                  // Any path beginning and ending in "/".
+      'filename' => $fileName,            // Any filename.
+      'author' => fullname($USER),
+      'licence' => $CFG->sitedefaultlicense
+      );
+$fileSaved = $fs->create_file_from_pathname($fileinfo, $fileTmp);
+
+// OK response.
+$fileTarget = $fileSaved->get_contextid().'/'.$fileSaved->get_component().'/'.$fileSaved->get_filearea().'/'.$fileSaved->get_itemid().'/'.$fileSaved->get_filename();
+echo($fileTarget);

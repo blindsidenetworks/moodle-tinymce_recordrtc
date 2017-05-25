@@ -49,44 +49,44 @@ echo $OUTPUT->footer();
 
 
 function get_output() {
-  global $CFG;
+    global $CFG;
 
-  $out  = '<div class="container-fluid">'."\n";
-  $out .= '  <div class="row">'."\n";
-  $out .= '    <div class="col-md-16">'."\n";
-  $out .= '      <div id="alert-info" class="alert alert-info h5 hide">Use Firefox for best experience</div>'."\n";
-  $out .= '      <div id="alert-danger" class="alert alert-danger h5 hide"></div>'."\n";
-  $out .= '      <div class="recordrtc">'."\n";
-  $out .= '        <div class="header">'."\n";
-  $out .= '          <select class="recording-media">'."\n";
-  $out .= '            <option value="record-video">Video</option>'."\n";
-  $out .= '            <option value="record-audio">Audio</option>'."\n";
-  $out .= '          </select>'."\n";
-  $out .= '          <button id="start-stop" class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
-  $out .= '        </div>'."\n";
-  $out .= '        <div style="display:none;">'."\n";
-  $out .= '          <button id="upload" class="btn btn-primary btn-md">Attach Recording as Annotation</button>'."\n";
-  $out .= '        </div>'."\n";
-  $out .= '        <br>'."\n";
-  $out .= '        <audio id="audio-player" muted></audio>'."\n";
-  $out .= '        <video id="video-player" width="320" height="240" muted></video>'."\n";
-  $out .= '      </div>'."\n";
-  $out .= '    </div>'."\n";
-  $out .= '  </div>'."\n";
-  $out .= '</div>'."\n";
+    $out  = '<div class="container-fluid">'."\n";
+    $out .= '  <div class="row">'."\n";
+    $out .= '    <div class="col-md-16">'."\n";
+    $out .= '      <div id="alert-info" class="alert alert-info h5 hide">Use Firefox for best experience</div>'."\n";
+    $out .= '      <div id="alert-danger" class="alert alert-danger h5 hide"></div>'."\n";
+    $out .= '      <div class="recordrtc">'."\n";
+    $out .= '        <div class="header">'."\n";
+    $out .= '          <select class="recording-media">'."\n";
+    $out .= '            <option value="record-video">Video</option>'."\n";
+    $out .= '            <option value="record-audio">Audio</option>'."\n";
+    $out .= '          </select>'."\n";
+    $out .= '          <button id="start-stop" class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
+    $out .= '        </div>'."\n";
+    $out .= '        <div style="display:none;">'."\n";
+    $out .= '          <button id="upload" class="btn btn-primary btn-md">Attach Recording as Annotation</button>'."\n";
+    $out .= '        </div>'."\n";
+    $out .= '        <br>'."\n";
+    $out .= '        <audio id="audio-player" muted></audio>'."\n";
+    $out .= '        <video id="video-player" width="320" height="240" muted></video>'."\n";
+    $out .= '      </div>'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '  </div>'."\n";
+    $out .= '</div>'."\n";
 
-  // Because there is no relative path to TinyMCE, we have to use JavaScript
-  // to work out correct path from the .js files from TinyMCE. Only files
-  // inside this plugin can be included with relative path (below).
-  $out .= '<script type="text/javascript">'."\n";
-  $out .= '   var editor_tinymce_include = function(path) {'."\n";
-  $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' + \'script>\');'."\n";
-  $out .= '   };'."\n";
-  $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
-  $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
-  $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
-  $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
-  $out .= '</script>'."\n";
+    // Because there is no relative path to TinyMCE, we have to use JavaScript
+    // to work out correct path from the .js files from TinyMCE. Only files
+    // inside this plugin can be included with relative path (below).
+    $out .= '<script type="text/javascript">'."\n";
+    $out .= '   var editor_tinymce_include = function(path) {'."\n";
+    $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' + \'script>\');'."\n";
+    $out .= '   };'."\n";
+    $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
+    $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
+    $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
+    $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
+    $out .= '</script>'."\n";
 
-  return $out;
+    return $out;
 }
