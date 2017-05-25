@@ -5,7 +5,7 @@
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2017 Blindside Networks Inc.
+ * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -39,10 +39,10 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         // Add JS file, which uses default name.
         $this->add_js_plugin($params);
 
-        // Add parameters for recordrtc
+        // Add parameters for recordrtc.
         $params['recordrtc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey() );
 
-        // Position button in toolbar
+        // Position button in toolbar.
         if ($row = $this->find_button($params, 'moodlemedia')) {
             // Add button after 'moodlemedia' button.
             $this->add_button_after($params, $row, 'recordrtc', 'moodlemedia');

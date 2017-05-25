@@ -3,7 +3,7 @@
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2017 Blindside Networks Inc.
+ * @copyright  2016 to present, Blindside Networks Inc.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -37,7 +37,7 @@
                 // This function duplicates the TinyMCE windowManager code when 'maximize' button is pressed.
                 var vp = ed.dom.getViewPort(),
                     id = w.id;
-                // Reduce viewport size to avoid scrollbars
+                // Reduce viewport size to avoid scrollbars.
                 vp.w -= 2;
                 vp.h -= 2;
 
@@ -76,7 +76,7 @@
                     height : height,
                     inline : 1
                 }, {
-                    plugin_url : url // Plugin absolute URL
+                    plugin_url : url // Plugin absolute URL.
                 });
                 if (maximizedmode) {
                     ed.execCommand('mceMaximizeWindow', w);

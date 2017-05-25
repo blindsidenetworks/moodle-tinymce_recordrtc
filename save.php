@@ -3,11 +3,11 @@
 /**
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2017 Blindside Networks Inc.
+ * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Disable moodle specific debug messages and any errors in output
+// Disable Moodle-specific debug messages and any errors in output.
 define('NO_DEBUG_DISPLAY', true);
 
 require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
@@ -38,21 +38,21 @@ if ( !isset($_FILES["audio-blob"]) && !isset($_FILES["video-blob"]) ) {
 
     $fs = get_file_storage();
 
-    // Prepare file record object
+    // Prepare file record object.
     $user_context = context_user::instance($USER->id);
     $fileinfo = array(
-          'contextid' => $user_context->id,   // ID of context
-          'component' => 'tinymce_recordrtc', // Usually = table name
-          'filearea' => 'annotation',         // Usually = table name
-          'itemid' => time(),                 // Usually = ID of row in table
-          'filepath' => '/',                  // Any path beginning and ending in /
-          'filename' => $fileName,            // Any filename
+          'contextid' => $user_context->id,   // ID of context.
+          'component' => 'tinymce_recordrtc', // Usually = table name.
+          'filearea' => 'annotation',         // Usually = table name.
+          'itemid' => time(),                 // Usually = ID of row in table.
+          'filepath' => '/',                  // Any path beginning and ending in "/".
+          'filename' => $fileName,            // Any filename.
           'author' => fullname($USER),
           'licence' => $CFG->sitedefaultlicense
           );
     $fileSaved = $fs->create_file_from_pathname($fileinfo, $fileTmp);
 
-    //// OK response
+    //// OK response.
     $fileTarget = $fileSaved->get_contextid().'/'.$fileSaved->get_component().'/'.$fileSaved->get_filearea().'/'.$fileSaved->get_itemid().'/'.$fileSaved->get_filename();
     echo($fileTarget);
 }
