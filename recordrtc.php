@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * @package    tinymce_recordrtc
@@ -19,7 +33,10 @@ require_sesskey();
 $PAGE->set_context($context);
 $PAGE->set_url(MOODLE_TINYMCE_RECORDRTC_URL);
 $PAGE->set_cacheable(false);
-$title = isset($cm->name)? $cm->name: '';
+$title = '';
+if (isset($cm->name)) {
+    $title = $cm->name;
+}
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
@@ -29,11 +46,11 @@ $PAGE->set_pagelayout('embedded');
 $PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css') );
 $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/detector.js') );
 
-$jsVars = array(
+$jsvars = array(
     'contextid' => $contextid,
     'recording_icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/recordrtc-32.png'
 );
-$PAGE->requires->data_for_js('recordrtc', $jsVars);
+$PAGE->requires->data_for_js('recordrtc', $jsvars);
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',

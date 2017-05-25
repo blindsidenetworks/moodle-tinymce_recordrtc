@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 
 /**
  * @package    tinymce_recordrtc
@@ -20,40 +35,42 @@ require_login($course, false, $cm);
 require_sesskey();
 
 if ( !isset($_FILES["audio-blob"]) && !isset($_FILES["video-blob"]) ) {
-    error_log("Blob not included");
+    $error = "Blob not included";
+    debugging($error, DEBUG_DEVELOPER);
     header("HTTP/1.0 400 Bad Request");
     return;
 }
 
 if ( !isset($_POST["audio-filename"]) && !isset($_POST["video-filename"]) ) {
-    error_log("Filename not included");
+    $error = "Filename not included";
+    debugging($error, DEBUG_DEVELOPER);
     header("HTTP/1.0 400 Bad Request");
     return;
 }
 
-$fileName = $_POST["audio-filename"];
-$fileTmp = $_FILES["audio-blob"]["tmp_name"];
+$filename = $_POST["audio-filename"];
+$filetmp = $_FILES["audio-blob"]["tmp_name"];
 if ( !isset($_FILES["audio-blob"]) || !isset($_POST["audio-filename"]) ) {
-    $fileName = $_POST["video-filename"];
-    $fileTmp = $_FILES["video-blob"]["tmp_name"];
+    $filename = $_POST["video-filename"];
+    $filetmp = $_FILES["video-blob"]["tmp_name"];
 }
 
 $fs = get_file_storage();
 
 // Prepare file record object.
-$user_context = context_user::instance($USER->id);
+$usercontext = context_user::instance($USER->id);
 $fileinfo = array(
-      'contextid' => $user_context->id,   // ID of context.
+      'contextid' => $usercontext->id,   // ID of context.
       'component' => 'tinymce_recordrtc', // Usually = table name.
       'filearea' => 'annotation',         // Usually = table name.
       'itemid' => time(),                 // Usually = ID of row in table.
       'filepath' => '/',                  // Any path beginning and ending in "/".
-      'filename' => $fileName,            // Any filename.
+      'filename' => $filename,            // Any filename.
       'author' => fullname($USER),
       'licence' => $CFG->sitedefaultlicense
       );
-$fileSaved = $fs->create_file_from_pathname($fileinfo, $fileTmp);
+$filesaved = $fs->create_file_from_pathname($fileinfo, $filetmp);
 
 // OK response.
-$fileTarget = $fileSaved->get_contextid().'/'.$fileSaved->get_component().'/'.$fileSaved->get_filearea().'/'.$fileSaved->get_itemid().'/'.$fileSaved->get_filename();
-echo($fileTarget);
+$filetarget = $filesaved->get_contextid().'/'.$filesaved->get_component().'/'.$filesaved->get_filearea().'/'.$filesaved->get_itemid().'/'.$filesaved->get_filename();
+echo($filetarget);

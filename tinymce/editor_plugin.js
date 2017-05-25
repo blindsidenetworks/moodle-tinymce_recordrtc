@@ -27,7 +27,7 @@
                 items = root.getElementsByTagName("img");
                 for (var i = 0; i < items.length; i++) {
                     src = items[i].getAttribute('src').replace(/\?\d+$/, '');
-                    items[i].setAttribute('src', src+'?'+(new Date().getTime()))
+                    items[i].setAttribute('src', src + '?' + (new Date().getTime()))
                 }
                 ed.execCommand('mceRepaint');
                 ed.focus();
@@ -58,8 +58,8 @@
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/recordrtc.php' + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
-                   ed.windowManager.onClose.remove(onClose);
-                   ed.execCommand('mceForceRepaint');
+                    ed.windowManager.onClose.remove(onClose);
+                    ed.execCommand('mceForceRepaint');
                 };
                 ed.windowManager.onClose.add(onClose);
                 var vp = ed.dom.getViewPort(),
@@ -85,7 +85,7 @@
 
             var recordrtc = ed.getParam('recordrtc', {});
 
-            // Register button
+            // Register button.
             ed.addButton('recordrtc', {
                 title : 'recordrtc.desc',
                 cmd : 'mceRecordRTC',
