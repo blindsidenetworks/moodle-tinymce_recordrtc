@@ -196,23 +196,16 @@ M.tinymce_recordrtc.view_init = function() {
         }
     };
 
-    // Display "consider switching browsers" message if not using.
-    // - Firefox v.29 or higher;
-    // - Chrome v.49 or higher;
-    // - Opera v.36 or higher (when gumadapter.js is updated to include it).
-    if (!(((webrtcDetectedBrowser === 'firefox') && (webrtcDetectedVersion >= 29)) ||
-          ((webrtcDetectedBrowser === 'chrome') && (webrtcDetectedVersion >= 49)))) {
+    // Display "consider switching browsers" message if not using:
+    // - Firefox 29+;
+    // - Chrome 49+;
+    // - Opera 36+;
+    if (!((bowser.firefox && bowser.version >= 29) ||
+          (bowser.chrome && bowser.version >= 49) ||
+          (bowser.opera && bowser.version >= 36))) {
         var alert = document.querySelector('div[id=alert-info]');
-        // Add "or Opera >= 36" when gumadapter.js gets updated to include Opera detection.
-        alert.innerHTML = "Use Firefox >= 29 or Chrome >= 49 for best experience";
+        alert.innerHTML = "Use Firefox >= 29, Chrome >= 49 or Opera >= 36 for best experience";
         alert.classList.remove('hide');
-    }
-    // Video recording not yet supported in Microsoft Edge.
-    // Only allow audio recording option.
-    if (webrtcDetectedBrowser === 'edge') {
-        console.warn('Neither MediaRecorder API nor webp is supported in Microsoft Edge. You can merely record audio.');
-
-        recordingMedia.innerHTML = '<option value="record-audio">Audio</option>';
     }
 };
 
