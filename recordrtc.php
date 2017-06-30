@@ -66,8 +66,6 @@ echo $OUTPUT->footer();
 
 
 function get_output() {
-    global $CFG;
-
     $out  = '<div class="container-fluid">'."\n";
     $out .= '  <div class="row">'."\n";
     $out .= '    <div class="col-md-16">'."\n";
@@ -105,6 +103,5 @@ function get_output() {
     $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
     $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
     $out .= '</script>'."\n";
-
     return $out;
 }
