@@ -229,11 +229,7 @@ M.tinymce_recordrtc.captureAudio = function(config) {
             console.log('getUserMedia() got stream: ', audioStream);
 
             // Set audio player to play microphone stream.
-            if (window.URL) {
-                audioPlayer.src = URL.createObjectURL(audioStream);
-            } else {
-                audioPlayer.src = audioStream;
-            }
+            audioPlayer.srcObject = audioStream;
             audioPlayer.play();
 
             config.onMediaCaptured(audioStream);
@@ -259,11 +255,7 @@ M.tinymce_recordrtc.captureAudioPlusVideo = function(config) {
         // Success callback.
         function(audioVideoStream) {
             // Set audio player to play microphone+webcam stream.
-            if (window.URL) {
-                videoPlayer.src = URL.createObjectURL(audioVideoStream);
-            } else {
-                videoPlayer.src = audioVideoStream;
-            }
+            videoPlayer.srcObject = audioVideoStream;
             videoPlayer.play();
 
             config.onMediaCaptured(audioVideoStream);
@@ -284,20 +276,20 @@ M.tinymce_recordrtc.handleDataAvailable = function(event) {
 
 // Output information to console when recording stopped.
 M.tinymce_recordrtc.handleStop = function(event) {
-    console.log('Recorder stopped: ', event);
+    console.log('MediaRecorder stopped:', event);
 };
 
 M.tinymce_recordrtc.startRecording = function(stream) {
     // Initialize recording of stream.
     mediaRecorder = new MediaRecorder(stream);
 
-    console.log('Created MediaRecorder', mediaRecorder);
+    console.log('Created MediaRecorder:', mediaRecorder);
 
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
     mediaRecorder.onstop = M.tinymce_recordrtc.handleStop;
     mediaRecorder.start(10); // Capture in 10ms chunks. Must be set to work with Firefox.
 
-    console.log('MediaRecorder started', mediaRecorder);
+    console.log('MediaRecorder started:', mediaRecorder);
 };
 
 M.tinymce_recordrtc.stopRecording = function() {
