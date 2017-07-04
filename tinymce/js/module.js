@@ -46,6 +46,7 @@ var countdownSeconds = null;
 var countdownTicker = null;
 var mediaRecorder = null;
 var chunks = null;
+var strings = {};
 
 /**
  * This function is initialized from PHP
@@ -72,11 +73,11 @@ M.tinymce_recordrtc.view_init = function() {
         btn.disabled = true;
 
         // If button is displaying "Start Recording" or "Record Again".
-        if ((btn.innerHTML === 'Start Recording') || (btn.innerHTML === 'Record Again') ||
-            (btn.innerHTML === 'Recording failed, try again')) {
+        if ((btn.innerHTML === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
+            (btn.innerHTML === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
+            (btn.innerHTML === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
             // Hide alert-danger if it is shown.
             var alert = document.querySelector('div[id=alert-danger]');
-            alert.innerHTML = "";
             alert.classList.add('hide');
 
             // Make sure the upload button is not shown.
@@ -100,7 +101,8 @@ M.tinymce_recordrtc.view_init = function() {
                     }
 
                     // Set recording timer at 2:00.
-                    btn.innerHTML = 'Stop Recording (<label id="minutes">02</label>:<label id="seconds">00</label>)';
+                    btn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc') +
+                                    ' (<label id="minutes">02</label>:<label id="seconds">00</label>)';
                     btn.disabled = false;
                     countdownSeconds = 120;
                     countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
@@ -113,7 +115,7 @@ M.tinymce_recordrtc.view_init = function() {
 
                 // Handle recording errors.
                 onMediaCapturingFailed: function(error) {
-                    var btnLabel = 'Start Recording';
+                    var btnLabel = M.util.get_string('startrecording', 'tinymce_recordrtc');
 
                     // If Firefox and Permission Denied error.
                     if ((error.name === 'PermissionDeniedError') && (!!navigator.mozGetUserMedia)) {
@@ -131,9 +133,9 @@ M.tinymce_recordrtc.view_init = function() {
                                (error.name === 'NotFoundError')) { // If Device Not Found error.
                         var alert = document.querySelector('div[id=alert-danger]');
                         alert.classList.remove('hide');
-                        alert.innerHTML = "There is no input device enabled";
+                        alert.innerHTML = M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
 
-                        btnLabel = 'Recording failed, try again';
+                        btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
 
                         console.info(alert.innerHTML);
                     }
@@ -190,7 +192,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Re-enable format selector dropdown.
             recordingMedia.disabled = false;
-            btn.innerHTML = 'Record Again';
+            btn.innerHTML = M.util.get_string('recordagain', 'tinymce_recordrtc');
 
             return;
         }
@@ -204,7 +206,7 @@ M.tinymce_recordrtc.view_init = function() {
           (bowser.chrome && bowser.version >= 49) ||
           (bowser.opera && bowser.version >= 36))) {
         var alert = document.querySelector('div[id=alert-info]');
-        alert.innerHTML = "Use Firefox >= 29, Chrome >= 49 or Opera >= 36 for best experience";
+        alert.innerHTML = M.util.get_string('browseralert', 'tinymce_recordrtc');
         alert.classList.remove('hide');
     }
 };
@@ -335,7 +337,7 @@ M.tinymce_recordrtc.stopRecording = function() {
 
     // Show upload button.
     uploadBtn.parentNode.style.display = 'block';
-    uploadBtn.innerHTML = 'Attach Recording as Annotation';
+    uploadBtn.innerHTML = M.util.get_string('attachrecording', 'tinymce_recordrtc');
     uploadBtn.disabled = false;
 
     // Handle when upload button is clicked.
@@ -365,7 +367,7 @@ M.tinymce_recordrtc.stopRecording = function() {
                 return;
             } else if (progress === 'upload-failed') {
                 btn.disabled = false;
-                btn.innerHTML = 'Upload failed, try again';
+                btn.innerHTML = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
                 return;
             } else {
                 btn.innerHTML = progress;
@@ -499,7 +501,8 @@ M.tinymce_recordrtc.create_annotation = function(recording_url) {
     // ...title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';.
 
     // Create link to file in editor text area and audio/video player in submission page.
-    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">RecordRTC Annotation</a></div>';
+    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' +
+                     M.util.get_string('annotation', 'tinymce_recordrtc') + '</a></div>';
 
     return annotation;
 };

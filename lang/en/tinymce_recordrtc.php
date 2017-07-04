@@ -38,3 +38,13 @@ $string['both'] = 'Both audio and video';
 $string['audio'] = 'Audio';
 $string['video'] = 'Video';
 $string['timelimit'] = 'Time limit in seconds';
+
+$string['inputdevicealert'] = 'There is no input device enabled';
+$string['browseralert'] = 'Use Firefox >= 29, Chrome >= 49 or Opera >= 36 for best experience';
+$string['startrecording'] = 'Start Recording';
+$string['recordagain'] = 'Record Again';
+$string['stoprecording'] = 'Stop Recording';
+$string['recordingfailed'] = 'Recording failed, try again';
+$string['attachrecording'] = 'Attach Recording as Annotation';
+$string['uploadfailed'] = 'Upload failed, try again';
+$string['annotation'] = 'RecordRTC Annotation';

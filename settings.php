@@ -28,7 +28,7 @@ if ($ADMIN->fulltree) {
         'both'=>get_string('both', 'tinymce_recordrtc'),
         'audio'=>get_string('onlyaudio', 'tinymce_recordrtc'),
         'video'=>get_string('onlyvideo', 'tinymce_recordrtc')
-      );
+    );
     $settings->add(new admin_setting_configselect('tinymce_recordrtc/allowedtypes',
         get_string('allowedtypes', 'tinymce_recordrtc'), '', '', $options));
     $settings->add(new admin_setting_configtext_with_maxlength('tinymce_recordrtc/timelimit',
