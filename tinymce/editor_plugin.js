@@ -50,13 +50,23 @@
                 ed.dom.addClass(id + '_wrapper', 'mceMaximized');
             });
 
-            ed.addCommand('mceRecordRTC', function() {
-                var recordrtc = ed.getParam('recordrtc', {});
+            var audiortc = ed.getParam('audiortc', {});
+            if ( typeof audiortc.type !== 'undefined' ) {
+                this.test('audiortc');
+            }
+
+            var videortc = ed.getParam('videortc', {});
+            if ( typeof videortc.type !== 'undefined' ) {
+                this.test('videortc');
+            }
+
+            ed.addCommand('mceAudioRTC', function() {
+                var audiortc = ed.getParam('audiortc', {});
                 var viewparams = '';
-                for (key in recordrtc) {
-                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(recordrtc[key]);
+                for (key in audiortc) {
+                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
                 }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/recordrtc.php' + (viewparams != '' ? '?' + viewparams : '');
+                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php' + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
                     ed.windowManager.onClose.remove(onClose);
                     ed.execCommand('mceForceRepaint');
@@ -83,13 +93,51 @@
                 }
             });
 
-            var recordrtc = ed.getParam('recordrtc', {});
+            // Register audiortc button.
+            ed.addButton('audiortc', {
+                title : 'recordrtc.audiortc',
+                cmd : 'mceAudioRTC',
+                image : url + '/img/audiortc.png'
+            });
 
-            // Register button.
-            ed.addButton('recordrtc', {
-                title : 'recordrtc.desc',
-                cmd : 'mceRecordRTC',
-                image : url + '/img/recordrtc.png'
+            ed.addCommand('mceVideoRTC', function() {
+                var videortc = ed.getParam('videortc', {});
+                var viewparams = '';
+                for (key in videortc) {
+                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
+                }
+                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php' + (viewparams != '' ? '?' + viewparams : '');
+                var onClose = function() {
+                    ed.windowManager.onClose.remove(onClose);
+                    ed.execCommand('mceForceRepaint');
+                };
+                ed.windowManager.onClose.add(onClose);
+                var vp = ed.dom.getViewPort(),
+                        width = 900 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                        height = 600 + parseInt(ed.getLang('advimage.delta_height', 0)),
+                        maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+                if (maximizedmode) {
+                    width = vp.w;
+                    height = vp.h;
+                }
+                w = ed.windowManager.open({
+                    file : viewurl ,
+                    width : width,
+                    height : height,
+                    inline : 1
+                }, {
+                    plugin_url : url // Plugin absolute URL.
+                });
+                if (maximizedmode) {
+                    ed.execCommand('mceMaximizeWindow', w);
+                }
+            });
+
+            // Register videortc button.
+            ed.addButton('videortc', {
+                title : 'recordrtc.videortc',
+                cmd : 'mceVideoRTC',
+                image : url + '/img/videortc.png'
             });
         },
         createControl : function(n, cm) {
@@ -109,7 +157,46 @@
                 infourl : 'http://blindsidenetworks.com',
                 version : "1.0"
             };
+        },
+
+        addCommand : function(ed, type) {
+            var typeparams = ed.getParam(type, {});
+            var viewparams = '';
+            for (key in typeparams) {
+                viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(typeparams[key]);
+            }
+            var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/' + type + '.php' + (viewparams != '' ? '?' + viewparams : '');
+            var onClose = function() {
+                ed.windowManager.onClose.remove(onClose);
+                ed.execCommand('mceForceRepaint');
+            };
+            ed.windowManager.onClose.add(onClose);
+            var vp = ed.dom.getViewPort(),
+                    width = 900 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    height = 600 + parseInt(ed.getLang('advimage.delta_height', 0)),
+                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+            if (maximizedmode) {
+                width = vp.w;
+                height = vp.h;
+            }
+            w = ed.windowManager.open({
+                file : viewurl ,
+                width : width,
+                height : height,
+                inline : 1
+            }, {
+                plugin_url : url // Plugin absolute URL.
+            });
+            if (maximizedmode) {
+                ed.execCommand('mceMaximizeWindow', w);
+            }
+
+        },
+
+        test : function(type) {
+            console.info("Testing " + type);
         }
+
     });
 
     // Register plugin.
