@@ -25,6 +25,8 @@
 
 $string['pluginname'] = 'RecordRTC';
 $string['recordrtc:desc'] = 'Insert a WebRTC recording';
+$string['recordrtc:audiortc'] = 'Insert audio recording';
+$string['recordrtc:videortc'] = 'Insert video recording';
 $string['settings'] = 'RecordRTC settings';
 $string['recording_ready'] = 'Recording ready';
 $string['recording_processing'] = 'Processing recording';
@@ -32,9 +34,9 @@ $string['action_annotation_annotate'] = 'Annotate';
 $string['action_annotation_cancel'] = 'Cancel';
 
 $string['allowedtypes'] = 'Allowed types';
-$string['onlyaudio'] = 'Only audio';
-$string['onlyvideo'] = 'Only video';
-$string['both'] = 'Both audio and video';
+$string['onlyaudio'] = 'Audio only';
+$string['onlyvideo'] = 'Video only';
+$string['both'] = 'Audio and Video';
 $string['audio'] = 'Audio';
 $string['video'] = 'Video';
 $string['timelimit'] = 'Time limit in seconds';
