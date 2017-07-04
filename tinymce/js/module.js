@@ -118,7 +118,7 @@ M.tinymce_recordrtc.view_init = function() {
                     var btnLabel = M.util.get_string('startrecording', 'tinymce_recordrtc');
 
                     // If Firefox and Permission Denied error.
-                    if ((error.name === 'PermissionDeniedError') && (!!navigator.mozGetUserMedia)) {
+                    if ((error.name === 'PermissionDeniedError') && bowser.firefox) {
                         InstallTrigger.install({
                             'Foo': {
                                 // Link: https://addons.mozilla.org/firefox/downloads/latest/655146/addon-655146...
