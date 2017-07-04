@@ -73,9 +73,9 @@ M.tinymce_recordrtc.view_init = function() {
         btn.disabled = true;
 
         // If button is displaying "Start Recording" or "Record Again".
-        if ((btn.innerHTML === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
-            (btn.innerHTML === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
-            (btn.innerHTML === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
+        if ((btn.textContent === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
+            (btn.textContent === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
+            (btn.textContent === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
             // Hide alert-danger if it is shown.
             var alert = document.querySelector('div[id=alert-danger]');
             alert.classList.add('hide');
@@ -110,7 +110,7 @@ M.tinymce_recordrtc.view_init = function() {
 
                 // Revert button to "Record Again" when recording is stopped.
                 onMediaStopped: function(btnLabel) {
-                    btn.innerHTML = btnLabel;
+                    btn.textContent = btnLabel;
                 },
 
                 // Handle recording errors.
@@ -133,11 +133,11 @@ M.tinymce_recordrtc.view_init = function() {
                                (error.name === 'NotFoundError')) { // If Device Not Found error.
                         var alert = document.querySelector('div[id=alert-danger]');
                         alert.classList.remove('hide');
-                        alert.innerHTML = M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
+                        alert.textContent = M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
 
                         btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
 
-                        console.info(alert.innerHTML);
+                        console.info(alert.textContent);
                     }
 
                     // Proceed to treat as a stopped recording.
@@ -192,7 +192,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Re-enable format selector dropdown.
             recordingMedia.disabled = false;
-            btn.innerHTML = M.util.get_string('recordagain', 'tinymce_recordrtc');
+            btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
 
             return;
         }
@@ -206,7 +206,7 @@ M.tinymce_recordrtc.view_init = function() {
           (bowser.chrome && bowser.version >= 49) ||
           (bowser.opera && bowser.version >= 36))) {
         var alert = document.querySelector('div[id=alert-info]');
-        alert.innerHTML = M.util.get_string('browseralert', 'tinymce_recordrtc');
+        alert.textContent = M.util.get_string('browseralert', 'tinymce_recordrtc');
         alert.classList.remove('hide');
     }
 };
@@ -337,7 +337,7 @@ M.tinymce_recordrtc.stopRecording = function() {
 
     // Show upload button.
     uploadBtn.parentNode.style.display = 'block';
-    uploadBtn.innerHTML = M.util.get_string('attachrecording', 'tinymce_recordrtc');
+    uploadBtn.textContent = M.util.get_string('attachrecording', 'tinymce_recordrtc');
     uploadBtn.disabled = false;
 
     // Handle when upload button is clicked.
@@ -367,10 +367,10 @@ M.tinymce_recordrtc.stopRecording = function() {
                 return;
             } else if (progress === 'upload-failed') {
                 btn.disabled = false;
-                btn.innerHTML = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
+                btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
                 return;
             } else {
-                btn.innerHTML = progress;
+                btn.textContent = progress;
                 return;
             }
         });
@@ -485,8 +485,8 @@ M.tinymce_recordrtc.pad = function(val) {
 M.tinymce_recordrtc.setTime = function() {
     countdownSeconds--;
 
-    startStopBtn.querySelector('label#seconds').innerHTML = M.tinymce_recordrtc.pad(countdownSeconds % 60);
-    startStopBtn.querySelector('label#minutes').innerHTML = M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60));
+    startStopBtn.querySelector('label#seconds').textContent = M.tinymce_recordrtc.pad(countdownSeconds % 60);
+    startStopBtn.querySelector('label#minutes').textContent = M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60));
 
     if (countdownSeconds === 0) {
         startStopBtn.click();
