@@ -28,11 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
-const MOODLE_TINYMCE_RECORDRTC_URL = '/lib/editor/tinymce/plugins/recordrtc/recordrtc.php';
 
 class tinymce_recordrtc extends editor_tinymce_plugin {
     /** @var array list of buttons defined by this plugin */
-    protected $buttons = array('recordrtc');
+    protected $buttons = array('recordrtc','audiortc','videortc');
 
     /**
      * Adjusts TinyMCE init parameters for tinymce_recordrtc
@@ -53,11 +52,21 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         // Add JS file, which uses default name.
         $this->add_js_plugin($params);
 
-        // Add parameters for recordrtc.
-        $params['recordrtc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey() );
+        // Add audio button at the end of the first row.
+        $allowedtypes = $this->get_config('allowedtypes', '');
+        if ( $allowedtypes == 'both' || $allowedtypes == 'audio') {
+            // Add parameters for audiortc.
+            $params['audiortc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey(), 'type' => 'audiortc');
+            $this->add_button_after($params, 0, 'audiortc');
+        }
 
-        // Add button in the end of the first row.
-        $this->add_button_after($params, 0, 'recordrtc');
+        // Add video button at the end of the first row.
+        if ( $allowedtypes == 'both' || $allowedtypes == 'video') {
+            // Add parameters for audiortc.
+            $params['videortc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey(), 'type' => 'videortc');
+            $this->add_button_after($params, 0, 'videortc');
+        }
+        error_log($params['theme_advanced_buttons1']);
     }
 
     protected function get_sort_order() {

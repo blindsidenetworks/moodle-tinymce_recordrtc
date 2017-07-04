@@ -511,7 +511,7 @@ M.tinymce_recordrtc.create_annotation = function(recording_url) {
     // Create an icon linked to file in both editor text area and submission page:
     // var annotation = '<div id="recordrtc_annotation" class="text-center">...
     // ...<a target="_blank" href="' + recording_url + '"><img alt="RecordRTC Annotation"...
-    // ...title="RecordRTC Annotation" src="' + recordrtc.recording_icon32 + '" /></a></div>';.
+    // ...title="RecordRTC Annotation" src="' + recordrtc.icon32 + '" /></a></div>';.
 
     // Create link to file in editor text area and audio/video player in submission page.
     var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">RecordRTC Annotation</a></div>';
