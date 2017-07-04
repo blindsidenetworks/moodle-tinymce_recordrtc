@@ -51,14 +51,13 @@
             });
 
             var audiortc = ed.getParam('audiortc', {});
-            console.info(audiortc);
-            if ( typeof audiortc.id !== 'undefined' ) {
-                this.addButton(audiortc);
+            if ( typeof audiortc.type !== 'undefined' ) {
+                this.test('audiortc');
             }
+
             var videortc = ed.getParam('videortc', {});
-            console.info(videortc);
-            if ( typeof videortc.id !== 'videortc' ) {
-                this.addButton(videortc);
+            if ( typeof videortc.type !== 'undefined' ) {
+                this.test('videortc');
             }
 
             ed.addCommand('mceAudioRTC', function() {
@@ -160,10 +159,42 @@
             };
         },
 
-        addCommand : function(params) {
+        addCommand : function(ed, type) {
+            var typeparams = ed.getParam(type, {});
+            var viewparams = '';
+            for (key in typeparams) {
+                viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(typeparams[key]);
+            }
+            var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/' + type + '.php' + (viewparams != '' ? '?' + viewparams : '');
+            var onClose = function() {
+                ed.windowManager.onClose.remove(onClose);
+                ed.execCommand('mceForceRepaint');
+            };
+            ed.windowManager.onClose.add(onClose);
+            var vp = ed.dom.getViewPort(),
+                    width = 900 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    height = 600 + parseInt(ed.getLang('advimage.delta_height', 0)),
+                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+            if (maximizedmode) {
+                width = vp.w;
+                height = vp.h;
+            }
+            w = ed.windowManager.open({
+                file : viewurl ,
+                width : width,
+                height : height,
+                inline : 1
+            }, {
+                plugin_url : url // Plugin absolute URL.
+            });
+            if (maximizedmode) {
+                ed.execCommand('mceMaximizeWindow', w);
+            }
+
         },
 
-        addButton : function(params) {
+        test : function(type) {
+            console.info("Testing " + type);
         }
 
     });

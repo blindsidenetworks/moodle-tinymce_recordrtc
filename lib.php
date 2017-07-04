@@ -53,20 +53,29 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         $this->add_js_plugin($params);
 
         // Add audio button at the end of the first row.
-        $allowedtypes = $this->get_config('allowedtypes', '');
+        $allowedtypes = $this->get_config('allowedtypes', 'both');
         if ( $allowedtypes == 'both' || $allowedtypes == 'audio') {
             // Add parameters for audiortc.
-            $params['audiortc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey(), 'type' => 'audiortc');
+            $params['audiortc'] = array(
+                'contextid' => $options['context']->id,
+                'sesskey' => sesskey(),
+                'type' => 'audiortc',
+                'timelimit' => $this->get_config('timelimit'), '120'
+              );
             $this->add_button_after($params, 0, 'audiortc');
         }
 
         // Add video button at the end of the first row.
         if ( $allowedtypes == 'both' || $allowedtypes == 'video') {
             // Add parameters for audiortc.
-            $params['videortc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey(), 'type' => 'videortc');
+            $params['videortc'] = array(
+                'contextid' => $options['context']->id,
+                'sesskey' => sesskey(),
+                'type' => 'videortc',
+                'timelimit' => $this->get_config('timelimit'), '120'
+              );
             $this->add_button_after($params, 0, 'videortc');
         }
-        error_log($params['theme_advanced_buttons1']);
     }
 
     protected function get_sort_order() {
