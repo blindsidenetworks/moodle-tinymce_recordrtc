@@ -15,26 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tinymce_recordrtc', language 'en'.
- *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2016 to present Blindside Networks Inc.
+ * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'RecordRTC';
-$string['recordrtc:desc'] = 'Insert a WebRTC recording';
-$string['settings'] = 'RecordRTC settings';
-$string['recording_ready'] = 'Recording ready';
-$string['recording_processing'] = 'Processing recording';
-$string['action_annotation_annotate'] = 'Annotate';
-$string['action_annotation_cancel'] = 'Cancel';
+defined('MOODLE_INTERNAL') || die;
 
-$string['allowedtypes'] = 'Allowed types';
-$string['onlyaudio'] = 'Only audio';
-$string['onlyvideo'] = 'Only video';
-$string['both'] = 'Both audio and video';
-$string['audio'] = 'Audio';
-$string['video'] = 'Video';
-$string['timelimit'] = 'Time limit in seconds';
+if ($ADMIN->fulltree) {
+    $options = array(
+        'both'=>get_string('both', 'tinymce_recordrtc'),
+        'audio'=>get_string('onlyaudio', 'tinymce_recordrtc'),
+        'video'=>get_string('onlyvideo', 'tinymce_recordrtc')
+      );
+    $settings->add(new admin_setting_configselect('tinymce_recordrtc/allowedtypes',
+        get_string('allowedtypes', 'tinymce_recordrtc'), '', '', $options));
+    $settings->add(new admin_setting_configtext_with_maxlength('tinymce_recordrtc/timelimit',
+        get_string('timelimit', 'tinymce_recordrtc'), '',
+        '120', PARAM_RAW, 4, 4));
+}

@@ -56,21 +56,8 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         // Add parameters for recordrtc.
         $params['recordrtc'] = array('contextid' => $options['context']->id, 'sesskey' => sesskey() );
 
-        // Position button in toolbar.
-        if ($row = $this->find_button($params, 'moodlemedia')) {
-            // Add button after 'moodlemedia' button.
-            $this->add_button_after($params, $row, 'recordrtc', 'moodlemedia');
-            return;
-        }
-
-        if ($row = $this->find_button($params, 'image')) {
-            // If 'moodlemedia' is not found add after 'image'.
-            $this->add_button_after($params, $row, 'recordrtc', 'image');
-            return;
-        }
-
-        // OTherwise add button in the end of the last row.
-        $this->add_button_after($params, $this->count_button_rows($params), 'recordrtc');
+        // Add button in the end of the first row.
+        $this->add_button_after($params, 0, 'recordrtc');
     }
 
     protected function get_sort_order() {
