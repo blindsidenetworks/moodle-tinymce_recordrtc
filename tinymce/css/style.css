@@ -20,17 +20,8 @@ div.alert {
     line-height: 10px;
 }
 
-button, input[type=button] {
-    display: inline-block;
-    line-height: 1.3;
-    text-align: center;
-    text-shadow: 1px 1px 1px #076bd2;
-}
-
 audio {
-    vertical-align: bottom;
     width: 40em;
-    padding: 0 0 3px 3px;
 }
 
 .hide {
