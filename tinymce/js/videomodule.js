@@ -188,8 +188,11 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
     M.tinymce_recordrtc.captureUserMedia(
         // Media constraints.
         {
-            video: true,
-            audio: true
+            audio: true,
+            video: {
+              width: {ideal: 640},
+              height: {ideal: 480}
+            }
         },
 
         // Success callback.
@@ -251,7 +254,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
 
     // Set source of video player, then show it with controls enabled.
     var blob = new Blob(chunks, {
-        type: 'video/webm'
+        type: 'video/webm;codecs=vp8'
     });
     player.src = URL.createObjectURL(blob);
 

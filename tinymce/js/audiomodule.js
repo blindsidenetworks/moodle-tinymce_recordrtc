@@ -255,7 +255,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     }
     */
     var blob = new Blob(chunks, {
-        type: 'audio/webm'
+        type: 'audio/ogg;codecs=opus'
     });
     player.src = URL.createObjectURL(blob);
 
