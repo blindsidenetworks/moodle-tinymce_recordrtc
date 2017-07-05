@@ -12,7 +12,7 @@
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
-// Extraction of parameters.
+// Extract plugin settings to params hash.
 (function() {
     var params = {};
     var r = /([^&=]+)=?([^&]*)/g;
@@ -146,7 +146,7 @@ M.tinymce_recordrtc.view_init = function() {
             };
 
             // If user has selected to record only audio.
-            if (recordingMedia.value === 'record-audio') {
+            if (params['type'] === 'audio') {
                 // Hide audio and video tags if previously shown.
                 audioPlayer.classList.add('hide');
                 videoPlayer.classList.add('hide');
@@ -161,7 +161,7 @@ M.tinymce_recordrtc.view_init = function() {
             }
 
             // If user has selected to record video and audio.
-            if (recordingMedia.value === 'record-video') {
+            if (params['type'] === 'video') {
                 // Hide audio tag if previously shown.
                 // Show video tag without controls to view webcam stream.
                 audioPlayer.classList.add('hide');
