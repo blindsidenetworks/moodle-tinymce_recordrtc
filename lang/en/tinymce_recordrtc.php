@@ -50,6 +50,7 @@ $string['recordagain'] = 'Record Again';
 $string['stoprecording'] = 'Stop Recording';
 $string['recordingfailed'] = 'Recording failed, try again';
 $string['attachrecording'] = 'Attach Recording as Annotation';
+$string['norecordingfound'] = 'No recording was found';
 $string['uploadprogress'] = 'completed';
 $string['uploadfailed'] = 'Upload failed, try again';
 $string['uploadaborted'] = 'Upload aborted';

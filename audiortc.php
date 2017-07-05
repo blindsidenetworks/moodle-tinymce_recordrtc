@@ -81,11 +81,11 @@ function get_output() {
     $out .= '        <div class="header">'."\n";
     $out .= '          <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'.get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
     $out .= '        </div>'."\n";
-    $out .= '        <div>'."\n";
+    $out .= '        <div class="hide">'."\n";
     $out .= '          <button id="upload" class="btn btn-primary">'.get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
     $out .= '        </div>'."\n";
     $out .= '        <br>'."\n";
-    $out .= '        <audio id="player"></audio>'."\n";
+    $out .= '        <audio id="player" class="hide"></audio>'."\n";
     $out .= '      </div>'."\n";
     $out .= '    </div>'."\n";
     $out .= '  </div>'."\n";

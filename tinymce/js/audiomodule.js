@@ -55,10 +55,6 @@ M.tinymce_recordrtc.view_init = function() {
     startStopBtn = document.querySelector('button#start-stop');
     uploadBtn = document.querySelector('button#upload');
 
-    // Initially do not display audio player and upload button.
-    player.classList.add('hide');
-    uploadBtn.parentElement.classList.add('hide');
-
     // Display "consider switching browsers" message if not using:
     // - Firefox 29+;
     // - Chrome 49+;
@@ -173,7 +169,7 @@ M.tinymce_recordrtc.view_init = function() {
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stopRecording();
+            M.tinymce_recordrtc.stopRecording(btn.stream);
 
             // Change button to offer to record again.
             btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
@@ -244,8 +240,13 @@ M.tinymce_recordrtc.startRecording = function(stream) {
     console.log('MediaRecorder started:', mediaRecorder);
 };
 
-M.tinymce_recordrtc.stopRecording = function() {
+M.tinymce_recordrtc.stopRecording = function(stream) {
     mediaRecorder.stop();
+
+    stream.getTracks().forEach(function(track) {
+        track.stop();
+        console.log('MediaTrack stopped:', track);
+    });
 
     // Set source of audio player, then show it with controls enabled.
     // Not sure if necessary, need to figure out what formats the different browsers record in.
@@ -279,7 +280,7 @@ M.tinymce_recordrtc.stopRecording = function() {
     uploadBtn.onclick = function() {
         // Trigger error if no recording has been made.
         if (!player.src || chunks === []) {
-            return alert('No recording found.');
+            return alert(M.util.get_string('norecordingfound', 'tinymce_recordrtc'));
         }
 
         var btn = uploadBtn;
@@ -317,8 +318,6 @@ M.tinymce_recordrtc.uploadToServer = function(callback) {
 
             // Variable blob is now the blob that the audio tag's src pointed to.
             var blob = this.response;
-            // Determine if video or audio.
-            var fileType = blob.type.split('/')[0];
             // Generate filename with random ID and file extension.
             var fileName = (Math.random() * 1000).toString().replace('.', '');
             // Not sure if necessary, need to figure out what formats the different browsers record in:
@@ -329,10 +328,8 @@ M.tinymce_recordrtc.uploadToServer = function(callback) {
             var formData = new FormData();
             formData.append('contextid', recordrtc.contextid);
             formData.append('sesskey', parent.M.cfg.sesskey);
-            formData.append(fileType + '-filename', fileName);
-            formData.append(fileType + '-blob', blob);
-
-            callback('Uploading ' + fileType + ' recording to server.');
+            formData.append('audio-filename', fileName);
+            formData.append('audio-blob', blob);
 
             // Pass FormData to PHP script using XHR.
             M.tinymce_recordrtc.makeXMLHttpRequest('save.php', formData, function(progress, responseText) {

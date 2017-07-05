@@ -79,13 +79,13 @@ function get_output() {
     $out .= '      <div id="alert-danger" class="alert alert-danger h5 hide"></div>'."\n";
     $out .= '      <div class="recordrtc">'."\n";
     $out .= '        <div class="header">'."\n";
-    $out .= '          <button id="start-stop" class="btn btn-primary btn-lg btn-danger">'.get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
+    $out .= '          <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'.get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
     $out .= '        </div>'."\n";
-    $out .= '        <div style="display:none;">'."\n";
-    $out .= '          <button id="upload" class="btn btn-primary btn-md">'.get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
+    $out .= '        <div class="hide">'."\n";
+    $out .= '          <button id="upload" class="btn btn-primary">'.get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
     $out .= '        </div>'."\n";
     $out .= '        <br>'."\n";
-    $out .= '        <video id="player" width="640" height="480"></video>'."\n";
+    $out .= '        <video id="player" class="hide" width="640" height="480"></video>'."\n";
     $out .= '      </div>'."\n";
     $out .= '    </div>'."\n";
     $out .= '  </div>'."\n";
