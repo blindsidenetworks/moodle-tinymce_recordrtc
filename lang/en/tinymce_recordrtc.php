@@ -50,5 +50,7 @@ $string['recordagain'] = 'Record Again';
 $string['stoprecording'] = 'Stop Recording';
 $string['recordingfailed'] = 'Recording failed, try again';
 $string['attachrecording'] = 'Attach Recording as Annotation';
+$string['uploadprogress'] = 'completed';
 $string['uploadfailed'] = 'Upload failed, try again';
+$string['uploadaborted'] = 'Upload aborted';
 $string['annotation'] = 'RecordRTC Annotation';

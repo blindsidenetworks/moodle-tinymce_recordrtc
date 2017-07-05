@@ -50,5 +50,7 @@ $string['recordagain'] = 'Enregistrer encore';
 $string['stoprecording'] = 'Arrêter l\'enregistrement';
 $string['recordingfailed'] = 'Échec de l\'enregistrement, essayez encore';
 $string['attachrecording'] = 'Attacher l\'enregistrement en tant qu\'annotation';
+$string['uploadprogress'] = 'complet';
 $string['uploadfailed'] = 'Échec lors de la sauvegarde, essayez encore';
+$string['uploadaborted'] = 'Sauvegarde annulée';
 $string['annotation'] = 'Annotation RecordRTC';

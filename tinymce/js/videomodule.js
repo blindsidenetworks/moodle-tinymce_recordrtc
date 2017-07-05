@@ -1,14 +1,13 @@
 // TinyMCE recordrtc library functions.
 // @package    tinymce_recordrtc.
 // @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com).
-// @copyright  2017 Blindside Networks Inc.
+// @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
 /** global: M */
-/** global: Blob */
 /** global: URL */
-/** global: webrtcDetectedBrowser */
-/** global: webrtcDetectedVersion */
+/** global: params */
+/** global: initialized variables */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
