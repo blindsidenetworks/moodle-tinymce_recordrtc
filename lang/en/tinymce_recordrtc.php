@@ -33,13 +33,15 @@ $string['recording_processing'] = 'Processing recording';
 $string['action_annotation_annotate'] = 'Annotate';
 $string['action_annotation_cancel'] = 'Cancel';
 
-$string['allowedtypes'] = 'Allowed types';
 $string['onlyaudio'] = 'Audio only';
 $string['onlyvideo'] = 'Video only';
 $string['both'] = 'Audio and Video';
 $string['audio'] = 'Audio';
 $string['video'] = 'Video';
+$string['allowedtypes'] = 'Allowed types';
+$string['allowedtypes_desc'] = 'Which recording buttons should appear in TinyMCE';
 $string['timelimit'] = 'Time limit in seconds';
+$string['timelimit_desc'] = 'Maximum recording length allowed for the audio/video clips';
 
 $string['inputdevicealert'] = 'There is no input device enabled';
 $string['browseralert'] = 'Use Firefox >= 29, Chrome >= 49 or Opera >= 36 for best experience';

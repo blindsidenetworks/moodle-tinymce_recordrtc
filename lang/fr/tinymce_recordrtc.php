@@ -25,19 +25,23 @@
 
 $string['pluginname'] = 'RecordRTC';
 $string['recordrtc:desc'] = 'Insérez un enregistrement WebRTC';
+$string['recordrtc:audiortc'] = 'Insérez un enregistrement audio';
+$string['recordrtc:videortc'] = 'Insérez un enregistrement vidéo';
 $string['settings'] = 'Paramètres pour RecordRTC';
 $string['recording_ready'] = 'Enregistrement prêt';
 $string['recording_processing'] = 'Traitement de l\'enregistrement';
 $string['action_annotation_annotate'] = 'Annoter';
 $string['action_annotation_cancel'] = 'Annuler';
 
-$string['allowedtypes'] = 'Formats acceptés';
-$string['onlyaudio'] = 'Seulement audio';
-$string['onlyvideo'] = 'Seulement vidéo';
+$string['onlyaudio'] = 'Audio uniquement';
+$string['onlyvideo'] = 'Vidéo uniquement';
 $string['both'] = 'Audio et vidéo';
 $string['audio'] = 'Audio';
 $string['video'] = 'Vidéo';
-$string['timelimit'] = 'Durée maximum de l\'enregistrement en secondes';
+$string['allowedtypes'] = 'Formats acceptés';
+$string['allowedtypes_desc'] = 'Les boutons d\'enregistrement qui devraient apparaître dans TinyMCE';
+$string['timelimit'] = 'Temps limite en secondes';
+$string['timelimit_desc'] = 'Durée maximum permise pour l\'enregistrement des clips audio/vidéo';
 
 $string['inputdevicealert'] = 'Aucun appareil d\'entrée n\'a été détecté';
 $string['browseralert'] = 'Utilisez Firefox >= 29, Chrome >= 49 ou Opera >= 36 pour la meilleur expérience';
