@@ -101,16 +101,6 @@ M.tinymce_recordrtc.view_init = function() {
                     if (btn.mediaCapturedCallback) {
                         btn.mediaCapturedCallback();
                     }
-
-                    // Set recording timer to the time specified in the settings.
-                    countdownSeconds = params['timelimit'];
-                    var minutes = M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60));
-                    var seconds = M.tinymce_recordrtc.pad(countdownSeconds % 60);
-                    btn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc') +
-                                    ' (<span id="minutes">' + minutes + '</span>:<span id="seconds">' +
-                                    seconds + '</span>)';
-                    btn.disabled = false;
-                    countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
                 },
 
                 // Revert button to "Record Again" when recording is stopped.
@@ -230,14 +220,21 @@ M.tinymce_recordrtc.handleStop = function(event) {
 M.tinymce_recordrtc.startRecording = function(stream) {
     // Initialize recording of stream.
     mediaRecorder = new MediaRecorder(stream);
-
     console.log('Created MediaRecorder:', mediaRecorder);
 
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
     mediaRecorder.onstop = M.tinymce_recordrtc.handleStop;
     mediaRecorder.start(10); // Capture in 10ms chunks. Must be set to work with Firefox.
-
     console.log('MediaRecorder started:', mediaRecorder);
+
+    // Set recording timer to the time specified in the settings.
+    countdownSeconds = params['timelimit'];
+    countdownSeconds++;
+    startStopBtn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc') +
+                             ' (<span id="minutes"></span>:<span id="seconds"></span>)';
+    M.tinymce_recordrtc.setTime();
+    startStopBtn.disabled = false;
+    countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
 };
 
 M.tinymce_recordrtc.stopRecording = function(stream) {
