@@ -31,7 +31,7 @@ require_login($course, false, $cm);
 require_sesskey();
 
 $PAGE->set_context($context);
-$PAGE->set_url(MOODLE_TINYMCE_RECORDRTC_ROOT.'audio.php');
+$PAGE->set_url(MOODLE_TINYMCE_RECORDRTC_ROOT.'audiortc.php');
 $PAGE->set_cacheable(false);
 $title = '';
 if (isset($cm->name)) {
@@ -49,13 +49,13 @@ $PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.
 
 $jsvars = array(
     'contextid' => $contextid,
-    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc-32.png'
+    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc.png'
 );
 $PAGE->requires->data_for_js('recordrtc', $jsvars);
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',
-    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/module.js'
+    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/audiomodule.js'
 );
 $PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
 
