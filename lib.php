@@ -59,8 +59,8 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
             $params['audiortc'] = array(
                 'contextid' => $options['context']->id,
                 'sesskey' => sesskey(),
-                'type' => 'audiortc',
-                'timelimit' => $this->get_config('timelimit'), '120'
+                'type' => $this->get_config('allowedtypes'),
+                'timelimit' => $this->get_config('timelimit')
               );
             $this->add_button_after($params, 0, 'audiortc');
         }
@@ -71,8 +71,8 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
             $params['videortc'] = array(
                 'contextid' => $options['context']->id,
                 'sesskey' => sesskey(),
-                'type' => 'videortc',
-                'timelimit' => $this->get_config('timelimit'), '120'
+                'type' => $this->get_config('allowedtypes'),
+                'timelimit' => $this->get_config('timelimit')
               );
             $this->add_button_after($params, 0, 'videortc');
         }
