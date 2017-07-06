@@ -43,7 +43,10 @@ $string['allowedtypes_desc'] = 'Les boutons d\'enregistrement qui devraient appa
 $string['timelimit'] = 'Temps limite en secondes';
 $string['timelimit_desc'] = 'Durée maximum permise pour l\'enregistrement des clips audio/vidéo';
 
+
+$string['inputdevicealert_title'] = 'Erreur!';
 $string['inputdevicealert'] = 'Aucun appareil d\'entrée n\'a été détecté';
+$string['browseralert_title'] = 'Attention!';
 $string['browseralert'] = 'Utilisez Firefox >= 29, Chrome >= 49 ou Opera >= 36 pour la meilleur expérience';
 $string['startrecording'] = 'Commencer l\'enregistrement';
 $string['recordagain'] = 'Enregistrer encore';

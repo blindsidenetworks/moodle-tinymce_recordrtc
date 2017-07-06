@@ -1,27 +1,23 @@
-.alert {
-    font-family: inherit;
-    text-align: center;
-    margin: 10px 15px 20px 20px;
-}
-
-.recordrtc, .recordrtc .header {
-    display: block;
-    text-align: center;
-    padding-top: 0;
-}
-
 div {
     font-weight: normal;
     line-height: 40px;
     padding: 3px 0 3px 0;
 }
 
-div.alert {
+.alert {
     line-height: 10px;
 }
 
 audio {
-    width: 40em;
+    display: block;
+    width: 100%;
+}
+
+video {
+    display: block;
+    width: 640px;
+    height: 480px;
+    margin: 0 auto;
 }
 
 .hide {
