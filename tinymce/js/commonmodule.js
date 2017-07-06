@@ -52,7 +52,7 @@ M.tinymce_recordrtc.captureUserMedia = function(mediaConstraints, successCallbac
     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 };
 
-// Add chunks of video to array when made available.
+// Add chunks of audio/video to array when made available.
 M.tinymce_recordrtc.handleDataAvailable = function(event) {
     chunks.push(event.data);
 };
@@ -85,11 +85,11 @@ M.tinymce_recordrtc.startRecording = function(stream) {
     countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
 };
 
-// Upload recorded audio to server.
+// Upload recorded audio/video to server.
 M.tinymce_recordrtc.uploadToServer = function(type, callback) {
     var xhr = new XMLHttpRequest();
 
-    // Get src URL of audio tag.
+    // Get src URL of audio/video tag.
     xhr.open('GET', player.src, true);
     xhr.responseType = 'blob';
 
@@ -97,7 +97,7 @@ M.tinymce_recordrtc.uploadToServer = function(type, callback) {
         if (xhr.status === 200) {
             var date = new Date();
 
-            // Variable blob is now the blob that the audio tag's src pointed to.
+            // Variable blob is now the blob that the audio/video tag's src pointed to.
             var blob = this.response;
             // Generate filename with random ID and file extension.
             var fileName = (Math.random() * 1000).toString().replace('.', '');
@@ -195,7 +195,7 @@ M.tinymce_recordrtc.create_annotation = function(recording_url) {
     // ...<a target="_blank" href="' + recording_url + '"><img alt="RecordRTC Annotation"...
     // ...title="RecordRTC Annotation" src="' + recordrtc.icon32 + '" /></a></div>';.
 
-    // Create link to file in editor text area and audio player in submission page.
+    // Create link to file in editor text area and audio/video player in submission page.
     var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' +
                      M.util.get_string('annotation', 'tinymce_recordrtc') + '</a></div>';
 

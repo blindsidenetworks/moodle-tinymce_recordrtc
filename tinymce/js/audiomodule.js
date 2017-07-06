@@ -71,7 +71,7 @@ M.tinymce_recordrtc.view_init = function() {
             var alert = document.querySelector('div[id=alert-danger]');
             alert.parentElement.parentElement.classList.add('hide');
 
-            // Make sure the audio player and upload button is not shown.
+            // Make sure the audio player and upload button are not shown.
             player.parentElement.parentElement.classList.add('hide');
             uploadBtn.parentElement.parentElement.classList.add('hide');
 
@@ -178,9 +178,8 @@ M.tinymce_recordrtc.captureAudio = function(config) {
         function(audioStream) {
             console.log('getUserMedia() got stream:', audioStream);
 
-            // Set audio player to play microphone stream.
+            // Set audio player source to microphone stream.
             player.srcObject = audioStream;
-            player.play();
 
             config.onMediaCaptured(audioStream);
         },
@@ -210,11 +209,6 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     player.muted = false;
     player.controls = true;
     player.parentElement.parentElement.classList.remove('hide');
-    player.play();
-
-    player.onended = function() {
-        player.pause();
-    };
 
     // Show upload button.
     uploadBtn.parentElement.parentElement.classList.remove('hide');

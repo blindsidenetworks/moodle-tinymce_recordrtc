@@ -185,7 +185,7 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
         function(audioVideoStream) {
             console.log('getUserMedia() got stream:', audioVideoStream);
 
-            // Set video player to play microphone+webcam stream.
+            // Set video player source to microphone+webcam stream, and play it back as it's recording.
             player.srcObject = audioVideoStream;
             player.play();
 
@@ -216,11 +216,6 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
 
     player.muted = false;
     player.controls = true;
-    player.play();
-
-    player.onended = function() {
-        player.pause();
-    };
 
     // Show upload button.
     uploadBtn.parentElement.parentElement.classList.remove('hide');
