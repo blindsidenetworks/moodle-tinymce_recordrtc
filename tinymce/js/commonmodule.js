@@ -198,8 +198,8 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
 };
 
 // Inserts link to annotation in editor text area.
-M.tinymce_recordrtc.insert_annotation = function(recording_url) {
-    var annotation = M.tinymce_recordrtc.create_annotation(recording_url);
+M.tinymce_recordrtc.insert_annotation = function(type, recording_url) {
+    var annotation = M.tinymce_recordrtc.create_annotation(type, recording_url);
 
     tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
     tinyMCEPopup.close();
