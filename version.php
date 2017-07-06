@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016120103;
+$plugin->version   = 2016120105;
 $plugin->requires  = 2014051200;
 $plugin->component = 'tinymce_recordrtc';
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '1.0-a4';
+$plugin->release = '1.0-a5';
