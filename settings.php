@@ -25,9 +25,9 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
     $options = array(
-        'both'=>get_string('both', 'tinymce_recordrtc'),
-        'audio'=>get_string('onlyaudio', 'tinymce_recordrtc'),
-        'video'=>get_string('onlyvideo', 'tinymce_recordrtc')
+        'both' => get_string('both', 'tinymce_recordrtc'),
+        'audio' => get_string('onlyaudio', 'tinymce_recordrtc'),
+        'video' => get_string('onlyvideo', 'tinymce_recordrtc')
     );
     $settings->add(new admin_setting_configselect('tinymce_recordrtc/allowedtypes',
         get_string('allowedtypes', 'tinymce_recordrtc'), get_string('allowedtypes_desc', 'tinymce_recordrtc'),

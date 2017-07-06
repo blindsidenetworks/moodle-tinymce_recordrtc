@@ -31,7 +31,7 @@ const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
 
 class tinymce_recordrtc extends editor_tinymce_plugin {
     /** @var array list of buttons defined by this plugin */
-    protected $buttons = array('recordrtc','audiortc','videortc');
+    protected $buttons = array('audiortc', 'videortc');
 
     /**
      * Adjusts TinyMCE init parameters for tinymce_recordrtc

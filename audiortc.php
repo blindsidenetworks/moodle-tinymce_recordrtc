@@ -60,7 +60,7 @@ $jsmodule = array(
 );
 $PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
 
-// Get localized strings for use in JavaScript
+// Get localized strings for use in JavaScript.
 $stringmanager = get_string_manager();
 $strings = $stringmanager->load_component_strings('tinymce_recordrtc', $USER->lang);
 $PAGE->requires->strings_for_js(array_keys($strings), 'tinymce_recordrtc');
@@ -76,7 +76,9 @@ function get_output() {
     $out  = '<div class="container-fluid">'."\n";
     $out .= '  <div class="row hide">'."\n";
     $out .= '    <div class="col-sm-12">'."\n";
-    $out .= '      <div id="alert-warning" class="alert alert-warning"><strong>'.get_string('browseralert_title', 'tinymce_recordrtc').'</strong> '.get_string('browseralert', 'tinymce_recordrtc').'</div>'."\n";
+    $out .= '      <div id="alert-warning" class="alert alert-warning"><strong>'
+                   .get_string('browseralert_title', 'tinymce_recordrtc').'</strong> '
+                   .get_string('browseralert', 'tinymce_recordrtc').'</div>'."\n";
     $out .= '    </div>'."\n";
     $out .= '  </div>'."\n";
     $out .= '  <div class="row hide">'."\n";
@@ -97,7 +99,8 @@ function get_output() {
     $out .= '    <div class="col-sm-1">'."\n";
     $out .= '    </div>'."\n";
     $out .= '    <div class="col-sm-10">'."\n";
-    $out .= '      <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block"><i class="fa fa-clock"></i>'.get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
+    $out .= '      <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'
+                   .get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
     $out .= '    </div>'."\n";
     $out .= '    <div class="col-sm-1">'."\n";
     $out .= '    </div>'."\n";
@@ -106,7 +109,8 @@ function get_output() {
     $out .= '    <div class="col-sm-3">'."\n";
     $out .= '    </div>'."\n";
     $out .= '    <div class="col-sm-6">'."\n";
-    $out .= '      <button id="upload" class="btn btn-primary btn-block">'.get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
+    $out .= '      <button id="upload" class="btn btn-primary btn-block">'
+                   .get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
     $out .= '    </div>'."\n";
     $out .= '    <div class="col-sm-3">'."\n";
     $out .= '    </div>'."\n";
