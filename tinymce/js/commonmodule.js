@@ -72,6 +72,9 @@ M.tinymce_recordrtc.startRecording = function(stream) {
     mediaRecorder.start(10); // Capture in 10ms chunks. Must be set to work with Firefox.
     console.log('MediaRecorder started:', mediaRecorder);
 
+    // Mute audio, distracting while recording.
+    player.muted = true;
+
     // Set recording timer to the time specified in the settings.
     countdownSeconds = params['timelimit'];
     countdownSeconds++;
