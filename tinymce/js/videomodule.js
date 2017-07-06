@@ -62,9 +62,8 @@ M.tinymce_recordrtc.view_init = function() {
     if (!((bowser.firefox && bowser.version >= 29) ||
           (bowser.chrome && bowser.version >= 49) ||
           (bowser.opera && bowser.version >= 36))) {
-        var alert = document.querySelector('div[id=alert-info]');
-        alert.textContent = M.util.get_string('browseralert', 'tinymce_recordrtc');
-        alert.classList.remove('hide');
+        var alert = document.querySelector('div[id=alert-warning]');
+        alert.parentElement.parentElement.classList.remove('hide');
     }
 
     // Run when user clicks on "record" button.
@@ -78,10 +77,10 @@ M.tinymce_recordrtc.view_init = function() {
             (btn.textContent === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
             // Hide alert-danger if it is shown.
             var alert = document.querySelector('div[id=alert-danger]');
-            alert.classList.add('hide');
+            alert.parentElement.parentElement.classList.add('hide');
 
             // Make sure the upload button is not shown.
-            uploadBtn.parentElement.classList.add('hide');
+            uploadBtn.parentElement.parentElement.classList.add('hide');
 
             // Change look of recording button.
             startStopBtn.classList.remove('btn-outline-danger');
@@ -128,8 +127,8 @@ M.tinymce_recordrtc.view_init = function() {
                     } else if ((error.name === 'DevicesNotFoundError') ||
                                (error.name === 'NotFoundError')) { // If Device Not Found error.
                         var alert = document.querySelector('div[id=alert-danger]');
-                        alert.classList.remove('hide');
-                        alert.textContent = M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
+                        alert.parentElement.parentElement.classList.remove('hide');
+                        alert.textContent = M.util.get_string('inputdevicealert', 'tinymce_recordrtc') + ' ' + M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
 
                         btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
                     }
@@ -140,7 +139,7 @@ M.tinymce_recordrtc.view_init = function() {
             };
 
             // Show video tag without controls to view webcam stream.
-            player.classList.remove('hide');
+            player.parentElement.parentElement.classList.remove('hide');
             player.controls = false;
 
             // Capture audio+video stream from webcam/microphone.
@@ -267,7 +266,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     };
 
     // Show upload button.
-    uploadBtn.parentElement.classList.remove('hide');
+    uploadBtn.parentElement.parentElement.classList.remove('hide');
     uploadBtn.textContent = M.util.get_string('attachrecording', 'tinymce_recordrtc');
     uploadBtn.disabled = false;
 
