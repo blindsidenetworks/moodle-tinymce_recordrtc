@@ -13,7 +13,7 @@
     * See useragents.js for examples of navigator.userAgent
     */
 
-  var t = true
+  var t = true;
 
   function detect(ua) {
 
@@ -576,5 +576,5 @@
    */
   bowser._detect = detect;
 
-  return bowser
+  return bowser;
 });

@@ -31,7 +31,7 @@ require_login($course, false, $cm);
 require_sesskey();
 
 $PAGE->set_context($context);
-$PAGE->set_url(MOODLE_TINYMCE_RECORDRTC_ROOT.'audio.php');
+$PAGE->set_url(MOODLE_TINYMCE_RECORDRTC_ROOT.'audiortc.php');
 $PAGE->set_cacheable(false);
 $title = '';
 if (isset($cm->name)) {
@@ -43,49 +43,76 @@ $PAGE->set_heading($title);
 // Reset page layout for inside editor.
 $PAGE->set_pagelayout('embedded');
 
-$PAGE->requires->css( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css') );
-$PAGE->requires->js( new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/detector.js') );
+$PAGE->requires->css(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css'));
+$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/bowser.js'), true);
+$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/adapter.js'), true);
+$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/commonmodule.js'), true);
 
 $jsvars = array(
     'contextid' => $contextid,
-    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc-32.png'
+    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc.png'
 );
 $PAGE->requires->data_for_js('recordrtc', $jsvars);
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',
-    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/module.js'
+    'fullpath' => MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/audiomodule.js'
 );
 $PAGE->requires->js_init_call('M.tinymce_recordrtc.view_init', array(), false, $jsmodule);
 
+// Get localized strings for use in JavaScript.
+$stringmanager = get_string_manager();
+$strings = $stringmanager->load_component_strings('tinymce_recordrtc', $USER->lang);
+$PAGE->requires->strings_for_js(array_keys($strings), 'tinymce_recordrtc');
+
 echo $OUTPUT->header();
 
-echo get_output();
+echo get_audiortc_output();
 
 echo $OUTPUT->footer();
 
 
-function get_output() {
+function get_audiortc_output() {
     $out  = '<div class="container-fluid">'."\n";
+    $out .= '  <div class="row hide">'."\n";
+    $out .= '    <div class="col-sm-12">'."\n";
+    $out .= '      <div id="alert-warning" class="alert alert-warning"><strong>'
+                   .get_string('browseralert_title', 'tinymce_recordrtc').'</strong> '
+                   .get_string('browseralert', 'tinymce_recordrtc').'</div>'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '  </div>'."\n";
+    $out .= '  <div class="row hide">'."\n";
+    $out .= '    <div class="col-sm-12">'."\n";
+    $out .= '      <div id="alert-danger" class="alert alert-danger"></div>'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '  </div>'."\n";
+    $out .= '  <div class="row hide">'."\n";
+    $out .= '    <div class="col-sm-1">'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '    <div class="col-sm-10">'."\n";
+    $out .= '      <audio id="player"></audio>'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '    <div class="col-sm-1">'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '  </div>'."\n";
     $out .= '  <div class="row">'."\n";
-    $out .= '    <div class="col-md-16">'."\n";
-    $out .= '      <div id="alert-info" class="alert alert-info h5 hide">Use Firefox for best experience</div>'."\n";
-    $out .= '      <div id="alert-danger" class="alert alert-danger h5 hide"></div>'."\n";
-    $out .= '      <div class="recordrtc">'."\n";
-    $out .= '        <div class="header">'."\n";
-    $out .= '          <select class="recording-media">'."\n";
-    $out .= '            <option value="record-video">Video</option>'."\n";
-    $out .= '            <option value="record-audio">Audio</option>'."\n";
-    $out .= '          </select>'."\n";
-    $out .= '          <button id="start-stop" class="btn btn-primary btn-lg btn-danger">Start Recording</button>'."\n";
-    $out .= '        </div>'."\n";
-    $out .= '        <div style="display:none;">'."\n";
-    $out .= '          <button id="upload" class="btn btn-primary btn-md">Attach Recording as Annotation</button>'."\n";
-    $out .= '        </div>'."\n";
-    $out .= '        <br>'."\n";
-    $out .= '        <audio id="audio-player" muted></audio>'."\n";
-    $out .= '        <video id="video-player" width="320" height="240" muted></video>'."\n";
-    $out .= '      </div>'."\n";
+    $out .= '    <div class="col-sm-1">'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '    <div class="col-sm-10">'."\n";
+    $out .= '      <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'
+                   .get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '    <div class="col-sm-1">'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '  </div>'."\n";
+    $out .= '  <div class="row hide">'."\n";
+    $out .= '    <div class="col-sm-3">'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '    <div class="col-sm-6">'."\n";
+    $out .= '      <button id="upload" class="btn btn-primary btn-block">'
+                   .get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
+    $out .= '    </div>'."\n";
+    $out .= '    <div class="col-sm-3">'."\n";
     $out .= '    </div>'."\n";
     $out .= '  </div>'."\n";
     $out .= '</div>'."\n";

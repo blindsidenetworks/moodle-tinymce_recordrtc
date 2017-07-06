@@ -7,9 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-(function() {
-    var each = tinymce.each;
+ /** global: tinymce */
 
+(function() {
     tinymce.PluginManager.requireLangPack('recordrtc');
 
     tinymce.create('tinymce.plugins.RecordRTC', {
@@ -23,10 +23,10 @@
          */
         init : function(ed, url) {
             ed.addCommand('mceForceRepaint', function() {
-                var root = ed.dom.getRoot();
-                items = root.getElementsByTagName("img");
+                var root = ed.dom.getRoot(),
+                    items = root.getElementsByTagName("img");
                 for (var i = 0; i < items.length; i++) {
-                    src = items[i].getAttribute('src').replace(/\?\d+$/, '');
+                    var src = items[i].getAttribute('src').replace(/\?\d+$/, '');
                     items[i].setAttribute('src', src + '?' + (new Date().getTime()))
                 }
                 ed.execCommand('mceRepaint');
@@ -50,21 +50,13 @@
                 ed.dom.addClass(id + '_wrapper', 'mceMaximized');
             });
 
-            var audiortc = ed.getParam('audiortc', {});
-            if ( typeof audiortc.type !== 'undefined' ) {
-                this.test('audiortc');
-            }
-
-            var videortc = ed.getParam('videortc', {});
-            if ( typeof videortc.type !== 'undefined' ) {
-                this.test('videortc');
-            }
-
             ed.addCommand('mceAudioRTC', function() {
                 var audiortc = ed.getParam('audiortc', {});
                 var viewparams = '';
-                for (key in audiortc) {
-                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
+                for (var key in audiortc) {
+                    if (audiortc.hasOwnProperty(key)) {
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
+                    }
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php' + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
@@ -73,18 +65,21 @@
                 };
                 ed.windowManager.onClose.add(onClose);
                 var vp = ed.dom.getViewPort(),
-                        width = 900 + parseInt(ed.getLang('advimage.delta_width', 0)),
-                        height = 600 + parseInt(ed.getLang('advimage.delta_height', 0)),
-                        maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+                    baseWidth = 640 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    percentOfViewportWidth = vp.w * 0.75,
+                    width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
+                    height = 200 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
                 if (maximizedmode) {
                     width = vp.w;
                     height = vp.h;
                 }
-                w = ed.windowManager.open({
+                var w = ed.windowManager.open({
                     file : viewurl ,
                     width : width,
                     height : height,
-                    inline : 1
+                    inline : 1,
+                    popup_css : ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
                 }, {
                     plugin_url : url // Plugin absolute URL.
                 });
@@ -93,7 +88,7 @@
                 }
             });
 
-            // Register audiortc button.
+            // Register AudioRTC button.
             ed.addButton('audiortc', {
                 title : 'recordrtc.audiortc',
                 cmd : 'mceAudioRTC',
@@ -103,8 +98,10 @@
             ed.addCommand('mceVideoRTC', function() {
                 var videortc = ed.getParam('videortc', {});
                 var viewparams = '';
-                for (key in videortc) {
-                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
+                for (var key in videortc) {
+                    if (videortc.hasOwnProperty(key)) {
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
+                    }
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php' + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
@@ -113,18 +110,21 @@
                 };
                 ed.windowManager.onClose.add(onClose);
                 var vp = ed.dom.getViewPort(),
-                        width = 900 + parseInt(ed.getLang('advimage.delta_width', 0)),
-                        height = 600 + parseInt(ed.getLang('advimage.delta_height', 0)),
-                        maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+                    baseWidth = 720 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    percentOfViewportWidth = vp.w * 0.75,
+                    width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
+                    height = 640 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
                 if (maximizedmode) {
                     width = vp.w;
                     height = vp.h;
                 }
-                w = ed.windowManager.open({
+                var w = ed.windowManager.open({
                     file : viewurl ,
                     width : width,
                     height : height,
-                    inline : 1
+                    inline : 1,
+                    popup_css : ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
                 }, {
                     plugin_url : url // Plugin absolute URL.
                 });
@@ -133,14 +133,14 @@
                 }
             });
 
-            // Register videortc button.
+            // Register VideoRTC button.
             ed.addButton('videortc', {
                 title : 'recordrtc.videortc',
                 cmd : 'mceVideoRTC',
                 image : url + '/img/videortc.png'
             });
         },
-        createControl : function(n, cm) {
+        createControl : function() {
             return null;
         },
 
@@ -158,45 +158,6 @@
                 version : "1.0"
             };
         },
-
-        addCommand : function(ed, type) {
-            var typeparams = ed.getParam(type, {});
-            var viewparams = '';
-            for (key in typeparams) {
-                viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(typeparams[key]);
-            }
-            var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/' + type + '.php' + (viewparams != '' ? '?' + viewparams : '');
-            var onClose = function() {
-                ed.windowManager.onClose.remove(onClose);
-                ed.execCommand('mceForceRepaint');
-            };
-            ed.windowManager.onClose.add(onClose);
-            var vp = ed.dom.getViewPort(),
-                    width = 900 + parseInt(ed.getLang('advimage.delta_width', 0)),
-                    height = 600 + parseInt(ed.getLang('advimage.delta_height', 0)),
-                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
-            if (maximizedmode) {
-                width = vp.w;
-                height = vp.h;
-            }
-            w = ed.windowManager.open({
-                file : viewurl ,
-                width : width,
-                height : height,
-                inline : 1
-            }, {
-                plugin_url : url // Plugin absolute URL.
-            });
-            if (maximizedmode) {
-                ed.execCommand('mceMaximizeWindow', w);
-            }
-
-        },
-
-        test : function(type) {
-            console.info("Testing " + type);
-        }
-
     });
 
     // Register plugin.
