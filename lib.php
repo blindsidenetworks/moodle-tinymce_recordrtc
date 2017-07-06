@@ -31,7 +31,7 @@ const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
 
 class tinymce_recordrtc extends editor_tinymce_plugin {
     /** @var array list of buttons defined by this plugin */
-    protected $buttons = array('recordrtc','audiortc','videortc');
+    protected $buttons = array('audiortc', 'videortc');
 
     /**
      * Adjusts TinyMCE init parameters for tinymce_recordrtc
@@ -54,25 +54,25 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
 
         // Add audio button at the end of the first row.
         $allowedtypes = $this->get_config('allowedtypes', 'both');
-        if ( $allowedtypes == 'both' || $allowedtypes == 'audio') {
+        if ($allowedtypes == 'both' || $allowedtypes == 'audio') {
             // Add parameters for audiortc.
             $params['audiortc'] = array(
                 'contextid' => $options['context']->id,
                 'sesskey' => sesskey(),
-                'type' => 'audiortc',
-                'timelimit' => $this->get_config('timelimit'), '120'
+                'type' => $this->get_config('allowedtypes'),
+                'timelimit' => $this->get_config('timelimit')
               );
             $this->add_button_after($params, 0, 'audiortc');
         }
 
         // Add video button at the end of the first row.
-        if ( $allowedtypes == 'both' || $allowedtypes == 'video') {
+        if ($allowedtypes == 'both' || $allowedtypes == 'video') {
             // Add parameters for audiortc.
             $params['videortc'] = array(
                 'contextid' => $options['context']->id,
                 'sesskey' => sesskey(),
-                'type' => 'videortc',
-                'timelimit' => $this->get_config('timelimit'), '120'
+                'type' => $this->get_config('allowedtypes'),
+                'timelimit' => $this->get_config('timelimit')
               );
             $this->add_button_after($params, 0, 'videortc');
         }

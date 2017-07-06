@@ -28,4 +28,4 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once(dirname(__FILE__).'/lib.php');
-require_once($CFG->libdir . '/filelib.php');
+require_once($CFG->libdir.'/filelib.php');

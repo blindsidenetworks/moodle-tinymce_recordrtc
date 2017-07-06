@@ -2,7 +2,7 @@
 <libraries>
     <library>
         <location>tinymce/js</location>
-        <name>Bowser.js</name>
+        <name>Bowser</name>
         <version>1.6.0</version>
         <license>MIT</license>
         <licenseversion></licenseversion>
