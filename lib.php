@@ -54,7 +54,7 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
 
         // Add audio button at the end of the first row.
         $allowedtypes = $this->get_config('allowedtypes', 'both');
-        if ( $allowedtypes == 'both' || $allowedtypes == 'audio') {
+        if ($allowedtypes == 'both' || $allowedtypes == 'audio') {
             // Add parameters for audiortc.
             $params['audiortc'] = array(
                 'contextid' => $options['context']->id,
@@ -66,7 +66,7 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         }
 
         // Add video button at the end of the first row.
-        if ( $allowedtypes == 'both' || $allowedtypes == 'video') {
+        if ($allowedtypes == 'both' || $allowedtypes == 'video') {
             // Add parameters for audiortc.
             $params['videortc'] = array(
                 'contextid' => $options['context']->id,
