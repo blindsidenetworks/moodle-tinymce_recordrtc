@@ -50,7 +50,7 @@ M.tinymce_recordrtc.check_secure = function() {
                          (window.location.host.indexOf('localhost') !== -1);
 
     if (!isSecureOrigin) {
-        window.alert('You must use this plugin either over HTTPS or from localhost!');
+        window.alert(M.util.get_string('insecurealert', 'tinymce_recordrtc'));
         tinyMCEPopup.close();
     }
 }
