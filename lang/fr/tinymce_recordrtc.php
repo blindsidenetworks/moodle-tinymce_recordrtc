@@ -27,21 +27,14 @@ $string['pluginname'] = 'RecordRTC';
 $string['recordrtc:audiortc'] = 'Insérez un enregistrement audio';
 $string['recordrtc:videortc'] = 'Insérez un enregistrement vidéo';
 $string['settings'] = 'Paramètres pour RecordRTC';
-$string['recording_ready'] = 'Enregistrement prêt';
-$string['recording_processing'] = 'Traitement de l\'enregistrement';
-$string['action_annotation_annotate'] = 'Annoter';
-$string['action_annotation_cancel'] = 'Annuler';
 
 $string['onlyaudio'] = 'Audio uniquement';
 $string['onlyvideo'] = 'Vidéo uniquement';
 $string['both'] = 'Audio et vidéo';
-$string['audio'] = 'Audio';
-$string['video'] = 'Vidéo';
 $string['allowedtypes'] = 'Formats acceptés';
 $string['allowedtypes_desc'] = 'Les boutons d\'enregistrement qui devraient apparaître dans TinyMCE';
 $string['timelimit'] = 'Temps limite en secondes';
 $string['timelimit_desc'] = 'Durée maximum permise pour l\'enregistrement des clips audio/vidéo';
-
 
 $string['inputdevicealert_title'] = 'Erreur!';
 $string['inputdevicealert'] = 'Aucun appareil d\'entrée n\'a été détecté';
