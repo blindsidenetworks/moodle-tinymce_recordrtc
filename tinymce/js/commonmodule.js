@@ -7,6 +7,7 @@
 /** global: M */
 /** global: tinyMCEPopup */
 /** global: bowser */
+/** global: params */
 /** global: recordrtc */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
