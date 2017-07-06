@@ -67,12 +67,12 @@ $PAGE->requires->strings_for_js(array_keys($strings), 'tinymce_recordrtc');
 
 echo $OUTPUT->header();
 
-echo get_output();
+echo get_audiortc_output();
 
 echo $OUTPUT->footer();
 
 
-function get_output() {
+function get_audiortc_output() {
     $out  = '<div class="container-fluid">'."\n";
     $out .= '  <div class="row hide">'."\n";
     $out .= '    <div class="col-sm-12">'."\n";

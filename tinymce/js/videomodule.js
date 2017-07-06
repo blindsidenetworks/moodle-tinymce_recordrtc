@@ -4,9 +4,15 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
-/** global: bowser */
 /** global: M */
-/** global: params */
+/** global: bowser */
+/** global: player */
+/** global: startStopBtn */
+/** global: uploadBtn */
+/** global: countdownSeconds */
+/** global: countdownTicker */
+/** global: mediaRecorder */
+/** global: chunks */
 
 /**
  * This function is initialized from PHP
@@ -197,14 +203,11 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
             if (progress === 'ended') {
                 btn.disabled = false;
                 M.tinymce_recordrtc.insert_annotation(fileURL);
-                return;
             } else if (progress === 'upload-failed') {
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
-                return;
             } else {
                 btn.textContent = progress;
-                return;
             }
         });
     };

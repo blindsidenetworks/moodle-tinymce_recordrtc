@@ -4,9 +4,10 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
-/** global: bowser */
 /** global: M */
-/** global: params */
+/** global: tinyMCEPopup */
+/** global: bowser */
+/** global: recordrtc */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
@@ -104,7 +105,7 @@ M.tinymce_recordrtc.uploadToServer = function(type, callback) {
     xhr.open('GET', player.src, true);
     xhr.responseType = 'blob';
 
-    xhr.onload = function(e) {
+    xhr.onload = function() {
         if (xhr.status === 200) { // If src media was successfully retrieved.
             // blob is now the media that the audio/video tag's src pointed to.
             var blob = this.response;
@@ -129,10 +130,8 @@ M.tinymce_recordrtc.uploadToServer = function(type, callback) {
                 if (progress === 'upload-ended') {
                     var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
                     callback('ended', initialURL + responseText);
-                    return;
                 } else {
                     callback(progress);
-                    return;
                 }
             });
         }
