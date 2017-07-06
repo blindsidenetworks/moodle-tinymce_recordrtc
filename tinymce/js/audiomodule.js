@@ -191,7 +191,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
         M.tinymce_recordrtc.uploadToServer('audio', function(progress, fileURL) {
             if (progress === 'ended') { // Insert annotation in text.
                 btn.disabled = false;
-                M.tinymce_recordrtc.insert_annotation(fileURL);
+                M.tinymce_recordrtc.insert_annotation('audio', fileURL);
             } else if (progress === 'upload-failed') { // Show error message in upload button.
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');

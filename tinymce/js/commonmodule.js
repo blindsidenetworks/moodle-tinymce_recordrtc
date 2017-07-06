@@ -190,9 +190,9 @@ M.tinymce_recordrtc.setTime = function() {
 };
 
 // Generates link to recorded annotation to be inserted.
-M.tinymce_recordrtc.create_annotation = function(recording_url) {
+M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' +
-                     M.util.get_string('annotation', 'tinymce_recordrtc') + '</a></div>';
+                     M.util.get_string('annotation:' + type, 'tinymce_recordrtc') + '</a></div>';
 
     return annotation;
 };

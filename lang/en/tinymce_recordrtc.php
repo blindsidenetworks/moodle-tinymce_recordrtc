@@ -49,4 +49,5 @@ $string['norecordingfound'] = 'No recording was found';
 $string['uploadprogress'] = 'completed';
 $string['uploadfailed'] = 'Upload failed, try again';
 $string['uploadaborted'] = 'Upload aborted';
-$string['annotation'] = 'RecordRTC Annotation';
+$string['annotation:audio'] = 'Audio annotation';
+$string['annotation:video'] = 'Video annotation';

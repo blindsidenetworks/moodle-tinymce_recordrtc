@@ -198,7 +198,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
         M.tinymce_recordrtc.uploadToServer('video', function(progress, fileURL) {
             if (progress === 'ended') {
                 btn.disabled = false;
-                M.tinymce_recordrtc.insert_annotation(fileURL);
+                M.tinymce_recordrtc.insert_annotation('video', fileURL);
             } else if (progress === 'upload-failed') {
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
