@@ -24,7 +24,6 @@
  */
 
 $string['pluginname'] = 'RecordRTC';
-$string['recordrtc:desc'] = 'Insérez un enregistrement WebRTC';
 $string['recordrtc:audiortc'] = 'Insérez un enregistrement audio';
 $string['recordrtc:videortc'] = 'Insérez un enregistrement vidéo';
 $string['settings'] = 'Paramètres pour RecordRTC';
