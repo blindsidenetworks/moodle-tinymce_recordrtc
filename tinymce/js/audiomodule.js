@@ -4,42 +4,9 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+/** global: bowser */
 /** global: M */
 /** global: params */
-
-M.tinymce_recordrtc = M.tinymce_recordrtc || {};
-
-// Extract plugin settings to params hash.
-(function() {
-    var params = {};
-    var r = /([^&=]+)=?([^&]*)/g;
-
-    var d = function(s) {
-        return decodeURIComponent(s.replace(/\+/g, ' '));
-    };
-
-    var search = window.location.search;
-    var match = r.exec(search.substring(1));
-    while (match) {
-        params[d(match[1])] = d(match[2]);
-
-        if (d(match[2]) === 'true' || d(match[2]) === 'false') {
-            params[d(match[1])] = d(match[2]) === 'true' ? true : false;
-        }
-        match = r.exec(search.substring(1));
-    }
-
-    window.params = params;
-})();
-
-// Initialize some variables.
-var player = null;
-var startStopBtn = null;
-var uploadBtn = null;
-var countdownSeconds = null;
-var countdownTicker = null;
-var mediaRecorder = null;
-var chunks = null;
 
 /**
  * This function is initialized from PHP
@@ -136,8 +103,6 @@ M.tinymce_recordrtc.view_init = function() {
             btn.mediaCapturedCallback = function() {
                 M.tinymce_recordrtc.startRecording(btn.stream);
             };
-
-            return;
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
             clearInterval(countdownTicker);
@@ -154,8 +119,6 @@ M.tinymce_recordrtc.view_init = function() {
             btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
             startStopBtn.classList.remove('btn-danger');
             startStopBtn.classList.add('btn-outline-danger');
-
-            return;
         }
     };
 };

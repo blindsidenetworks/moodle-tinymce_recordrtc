@@ -54,7 +54,9 @@
                 var audiortc = ed.getParam('audiortc', {});
                 var viewparams = '';
                 for (var key in audiortc) {
-                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
+                    if (audiortc.hasOwnProperty(key)) {
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
+                    }
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php' + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
@@ -97,7 +99,9 @@
                 var videortc = ed.getParam('videortc', {});
                 var viewparams = '';
                 for (var key in videortc) {
-                    viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
+                    if (videortc.hasOwnProperty(key)) {
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
+                    }
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php' + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {

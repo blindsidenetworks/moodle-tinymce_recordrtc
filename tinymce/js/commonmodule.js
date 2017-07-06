@@ -4,6 +4,7 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+/** global: bowser */
 /** global: M */
 /** global: params */
 
@@ -31,6 +32,15 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
     window.params = params;
 })();
+
+// Initialize some variables.
+var player = null;
+var startStopBtn = null;
+var uploadBtn = null;
+var countdownSeconds = null;
+var countdownTicker = null;
+var mediaRecorder = null;
+var chunks = null;
 
 // Display "consider switching browsers" message if not using:
 // - Firefox 29+;
