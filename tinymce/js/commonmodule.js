@@ -44,6 +44,17 @@ var countdownTicker = null;
 var mediaRecorder = null;
 var chunks = null;
 
+// Notify and redirect user if plugin is used from insecure location.
+M.tinymce_recordrtc.check_secure = function() {
+    var isSecureOrigin = (window.location.protocol === 'https:') ||
+                         (window.location.host.indexOf('localhost') !== -1);
+
+    if (!isSecureOrigin) {
+        window.alert('You must use this plugin either over HTTPS or from localhost!');
+        tinyMCEPopup.close();
+    }
+}
+
 // Display "consider switching browsers" message if not using:
 // - Firefox 29+;
 // - Chrome 49+;

@@ -26,6 +26,8 @@ M.tinymce_recordrtc.view_init = function() {
     startStopBtn = document.querySelector('button#start-stop');
     uploadBtn = document.querySelector('button#upload');
 
+    // Show alert and redirect user if connection is not secure.
+    M.tinymce_recordrtc.check_secure();
     // Show alert if using non-ideal browser.
     M.tinymce_recordrtc.check_browser();
 
