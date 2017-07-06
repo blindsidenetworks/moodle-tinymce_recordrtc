@@ -162,10 +162,6 @@ M.tinymce_recordrtc.view_init = function() {
     };
 };
 
-/////////////////////////
-// Functions for capturing, recording, and uploading stream.
-/////////////////////////
-
 // Setup to get audio stream from microphone.
 M.tinymce_recordrtc.captureAudio = function(config) {
     M.tinymce_recordrtc.captureUserMedia(
@@ -193,19 +189,22 @@ M.tinymce_recordrtc.captureAudio = function(config) {
 };
 
 M.tinymce_recordrtc.stopRecording = function(stream) {
+    // Stop recording microphone stream.
     mediaRecorder.stop();
 
+    // Stop each individual MediaTrack.
     stream.getTracks().forEach(function(track) {
         track.stop();
         console.log('MediaTrack stopped:', track);
     });
 
-    // Set source of audio player, then show it with controls enabled.
+    // Set source of audio player.
     var blob = new Blob(chunks, {
         type: 'audio/ogg;codecs=opus'
     });
     player.src = URL.createObjectURL(blob);
 
+    // Show audio player with controls enabled, and unmute.
     player.muted = false;
     player.controls = true;
     player.parentElement.parentElement.classList.remove('hide');
@@ -227,11 +226,11 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
 
         // Upload recording to server.
         M.tinymce_recordrtc.uploadToServer('audio', function(progress, fileURL) {
-            if (progress === 'ended') {
+            if (progress === 'ended') { // Insert annotation in text.
                 btn.disabled = false;
                 M.tinymce_recordrtc.insert_annotation(fileURL);
                 return;
-            } else if (progress === 'upload-failed') {
+            } else if (progress === 'upload-failed') { // Show error message in upload button.
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
                 return;

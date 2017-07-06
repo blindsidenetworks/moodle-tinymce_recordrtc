@@ -165,10 +165,6 @@ M.tinymce_recordrtc.view_init = function() {
     };
 };
 
-/////////////////////////
-// Functions for capturing, recording, and uploading stream.
-/////////////////////////
-
 // Setup to get audio+video stream from microphone/webcam.
 M.tinymce_recordrtc.captureAudioVideo = function(config) {
     M.tinymce_recordrtc.captureUserMedia(
@@ -201,19 +197,22 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
 };
 
 M.tinymce_recordrtc.stopRecording = function(stream) {
+    // Stop recording microphone stream.
     mediaRecorder.stop();
 
+    // Stop each individual MediaTrack.
     stream.getTracks().forEach(function(track) {
         track.stop();
         console.log('MediaTrack stopped:', track);
     });
 
-    // Set source of video player, then show it with controls enabled.
+    // Set source of video player.
     var blob = new Blob(chunks, {
         type: 'video/webm;codecs=vp8'
     });
     player.src = URL.createObjectURL(blob);
 
+    // Enable controls for video player, and unmute.
     player.muted = false;
     player.controls = true;
 
