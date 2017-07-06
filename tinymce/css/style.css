@@ -6,6 +6,7 @@ div {
 
 .alert {
     line-height: 10px;
+    text-align: center;
 }
 
 audio {
