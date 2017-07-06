@@ -146,8 +146,6 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
 
         // Success callback.
         function(audioVideoStream) {
-            console.log('getUserMedia() got stream:', audioVideoStream);
-
             // Set video player source to microphone+webcam stream, and play it back as it's recording.
             player.srcObject = audioVideoStream;
             player.play();
@@ -157,7 +155,6 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
 
         // Error callback.
         function(error) {
-            console.log('getUserMedia() error:', error);
             config.onMediaCapturingFailed(error);
         }
     );
@@ -170,7 +167,6 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     // Stop each individual MediaTrack.
     stream.getTracks().forEach(function(track) {
         track.stop();
-        console.log('MediaTrack stopped:', track);
     });
 
     // Set source of video player.

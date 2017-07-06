@@ -139,8 +139,6 @@ M.tinymce_recordrtc.captureAudio = function(config) {
 
         // Success callback.
         function(audioStream) {
-            console.log('getUserMedia() got stream:', audioStream);
-
             // Set audio player source to microphone stream.
             player.srcObject = audioStream;
 
@@ -149,7 +147,6 @@ M.tinymce_recordrtc.captureAudio = function(config) {
 
         // Error callback.
         function(error) {
-            console.log('getUserMedia() error:', error);
             config.onMediaCapturingFailed(error);
         }
     );
@@ -162,7 +159,6 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     // Stop each individual MediaTrack.
     stream.getTracks().forEach(function(track) {
         track.stop();
-        console.log('MediaTrack stopped:', track);
     });
 
     // Set source of audio player.

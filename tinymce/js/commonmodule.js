@@ -67,21 +67,13 @@ M.tinymce_recordrtc.handleDataAvailable = function(event) {
     chunks.push(event.data);
 };
 
-// Output information to console when recording stopped.
-M.tinymce_recordrtc.handleStop = function(event) {
-    console.log('MediaRecorder stopped:', event);
-};
-
 // Get everything set up to start recording.
 M.tinymce_recordrtc.startRecording = function(stream) {
     mediaRecorder = new MediaRecorder(stream);
-    console.log('Created MediaRecorder:', mediaRecorder);
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
-    mediaRecorder.onstop = M.tinymce_recordrtc.handleStop;
     mediaRecorder.start(10); // Capture in 10ms chunks. Must be set to work with Firefox.
-    console.log('MediaRecorder started:', mediaRecorder);
 
     // Mute audio, distracting while recording.
     player.muted = true;
