@@ -5,9 +5,7 @@
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
 /** global: M */
-/** global: URL */
 /** global: params */
-/** global: initialized variables */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 

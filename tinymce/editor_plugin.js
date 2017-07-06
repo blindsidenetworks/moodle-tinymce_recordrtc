@@ -7,9 +7,9 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-(function() {
-    var each = tinymce.each;
+ /** global: tinymce */
 
+(function() {
     tinymce.PluginManager.requireLangPack('recordrtc');
 
     tinymce.create('tinymce.plugins.RecordRTC', {
@@ -23,10 +23,10 @@
          */
         init : function(ed, url) {
             ed.addCommand('mceForceRepaint', function() {
-                var root = ed.dom.getRoot();
-                items = root.getElementsByTagName("img");
+                var root = ed.dom.getRoot(),
+                    items = root.getElementsByTagName("img");
                 for (var i = 0; i < items.length; i++) {
-                    src = items[i].getAttribute('src').replace(/\?\d+$/, '');
+                    var src = items[i].getAttribute('src').replace(/\?\d+$/, '');
                     items[i].setAttribute('src', src + '?' + (new Date().getTime()))
                 }
                 ed.execCommand('mceRepaint');
@@ -53,7 +53,7 @@
             ed.addCommand('mceAudioRTC', function() {
                 var audiortc = ed.getParam('audiortc', {});
                 var viewparams = '';
-                for (key in audiortc) {
+                for (var key in audiortc) {
                     viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php' + (viewparams != '' ? '?' + viewparams : '');
@@ -72,7 +72,7 @@
                     width = vp.w;
                     height = vp.h;
                 }
-                w = ed.windowManager.open({
+                var w = ed.windowManager.open({
                     file : viewurl ,
                     width : width,
                     height : height,
@@ -96,7 +96,7 @@
             ed.addCommand('mceVideoRTC', function() {
                 var videortc = ed.getParam('videortc', {});
                 var viewparams = '';
-                for (key in videortc) {
+                for (var key in videortc) {
                     viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php' + (viewparams != '' ? '?' + viewparams : '');
@@ -115,7 +115,7 @@
                     width = vp.w;
                     height = vp.h;
                 }
-                w = ed.windowManager.open({
+                var w = ed.windowManager.open({
                     file : viewurl ,
                     width : width,
                     height : height,
@@ -136,7 +136,7 @@
                 image : url + '/img/videortc.png'
             });
         },
-        createControl : function(n, cm) {
+        createControl : function() {
             return null;
         },
 

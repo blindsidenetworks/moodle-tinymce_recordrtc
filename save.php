@@ -34,14 +34,14 @@ list($context, $course, $cm) = get_context_info_array($contextid);
 require_login($course, false, $cm);
 require_sesskey();
 
-if (!isset($_FILES["audio-blob"]) && !isset($_FILES["video-blob"])) {
+if (!(isset($_FILES["audio-blob"]) || isset($_FILES["video-blob"]))) {
     $error = "Blob not included";
     debugging($error, DEBUG_DEVELOPER);
     header("HTTP/1.0 400 Bad Request");
     return;
 }
 
-if (!isset($_POST["audio-filename"]) && !isset($_POST["video-filename"])) {
+if (!(isset($_POST["audio-filename"]) || isset($_POST["video-filename"]))) {
     $error = "Filename not included";
     debugging($error, DEBUG_DEVELOPER);
     header("HTTP/1.0 400 Bad Request");
