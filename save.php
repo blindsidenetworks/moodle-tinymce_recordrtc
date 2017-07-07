@@ -49,7 +49,7 @@ if (!(isset($_POST["audio-filename"]) || isset($_POST["video-filename"]))) {
 }
 
 
-if (!(isset($_FILES["video-blob"]) && isset($_POST["video-filename"]))) {
+if (!(isset($_POST["video-filename"]) && isset($_FILES["video-blob"]))) {
     $filename = $_POST["audio-filename"];
     $filetmp = $_FILES["audio-blob"]["tmp_name"];
 } else {
