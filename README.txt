@@ -14,6 +14,6 @@ conflicting configuration or individual web apps that set the header to another 
 as a browser will default to setting it to DENY if this is the case.
 
 NOTE: The maximum size of uploads may need to be increased in the PHP settings. Edit the
-php.ini file with the following values (recommended for 2:00 recordings):
-- upload_max_filesize = 50M
-- post_max_size = 50M
+php.ini file with the following values (recommended for a 2:00 time limit):
+- upload_max_filesize = 40M
+- post_max_size = 40M
