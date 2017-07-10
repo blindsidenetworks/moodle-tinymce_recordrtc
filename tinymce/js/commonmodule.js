@@ -257,9 +257,10 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     var linkText = window.prompt(M.util.get_string('annotationprompt', 'tinymce_recordrtc'),
                                  M.util.get_string('annotation:' + type, 'tinymce_recordrtc'));
 
-    // Return HTML for annotation link.
-    // If user pressed "Cancel", just go back to main recording screen.
-    if (linkText) {
+    // Return HTML for annotation link, if user did not press "Cancel".
+    if (!linkText) {
+        return undefined;
+    } else {
         var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
         return annotation;
     }
