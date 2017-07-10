@@ -219,6 +219,8 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
                     btn.textContent = progress;
                 }
             });
+
+            return undefined;
         }
     };
 };
