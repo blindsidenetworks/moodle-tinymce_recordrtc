@@ -241,16 +241,30 @@ M.tinymce_recordrtc.setTime = function() {
 
 // Generates link to recorded annotation to be inserted.
 M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
-    var linkText = window.prompt('What should the annotation appear as?', M.util.get_string('annotation:' + type, 'tinymce_recordrtc'));
-    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
+    var linkText = window.prompt(M.util.get_string('annotationprompt', 'tinymce_recordrtc'),
+                                 M.util.get_string('annotation:' + type, 'tinymce_recordrtc'));
 
-    return annotation;
+    // Return HTML for annotation link.
+    // If user pressed "Cancel", just go back to main recording screen.
+    if (!linkText) {
+        return undefined;
+    } else {
+        var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
+        return annotation;
+    }
 };
 
 // Inserts link to annotation in editor text area.
 M.tinymce_recordrtc.insert_annotation = function(type, recording_url) {
     var annotation = M.tinymce_recordrtc.create_annotation(type, recording_url);
 
-    tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
-    tinyMCEPopup.close();
+    // Insert annotation link.
+    // If user pressed "Cancel", just go back to main recording screen.
+    if (!annotation) {
+        uploadBtn.textContent = M.util.get_string('attachrecording', 'tinymce_recordrtc');
+        return undefined;
+    } else {
+        tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
+        tinyMCEPopup.close();
+    }
 };
