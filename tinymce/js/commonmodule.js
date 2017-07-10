@@ -83,9 +83,15 @@ M.tinymce_recordrtc.handleDataAvailable = function(event) {
 
     // Push recording slice to array.
     // If total size of recording so far exceeds max upload limit, stop recording.
-    if (blobSize >= maxUploadSize) {
+    if ((blobSize >= maxUploadSize) &&
+        (document.cookie.replace(/(?:(?:^|.*;\s*)alerted\s*\=\s*([^;]*).*$)|^.*$/, '$1') !== 'true')) {
+        document.cookie = 'alerted=true';
+
         startStopBtn.click();
         window.alert(M.util.get_string('nearingmaxsize', 'tinymce_recordrtc'));
+    } else if ((blobSize >= maxUploadSize) &&
+               (document.cookie.replace(/(?:(?:^|.*;\s*)alerted\s*\=\s*([^;]*).*$)|^.*$/, '$1') === 'true')) {
+        document.cookie = 'alerted=false';
     } else {
         chunks.push(event.data);
     }
