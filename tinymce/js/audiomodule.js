@@ -6,6 +6,7 @@
 
 /** global: M */
 /** global: bowser */
+/** global: recordrtc */
 /** global: player */
 /** global: startStopBtn */
 /** global: uploadBtn */

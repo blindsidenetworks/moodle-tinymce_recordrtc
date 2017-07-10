@@ -259,9 +259,7 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
 
     // Return HTML for annotation link.
     // If user pressed "Cancel", just go back to main recording screen.
-    if (!linkText) {
-        return undefined;
-    } else {
+    if (linkText) {
         var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
         return annotation;
     }
@@ -275,7 +273,6 @@ M.tinymce_recordrtc.insert_annotation = function(type, recording_url) {
     // If user pressed "Cancel", just go back to main recording screen.
     if (!annotation) {
         uploadBtn.textContent = M.util.get_string('attachrecording', 'tinymce_recordrtc');
-        return undefined;
     } else {
         tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
         tinyMCEPopup.close();
