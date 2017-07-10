@@ -44,6 +44,8 @@ var countdownTicker = null;
 var recType = null;
 var mediaRecorder = null;
 var chunks = null;
+var blobSize = null;
+var maxUploadSize = null;
 
 // Notify and redirect user if plugin is used from insecure location.
 M.tinymce_recordrtc.check_secure = function() {
