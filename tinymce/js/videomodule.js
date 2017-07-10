@@ -148,8 +148,8 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
         {
             audio: true,
             video: {
-              width: {ideal: 640},
-              height: {ideal: 480}
+                width: {ideal: 640},
+                height: {ideal: 480}
             }
         },
 
@@ -209,7 +209,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
             } else if (progress === 'upload-failed') { // Show error message in upload button.
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError;
-            } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle
+            } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed404', 'tinymce_recordrtc');
             } else if (progress === 'upload-aborted') {

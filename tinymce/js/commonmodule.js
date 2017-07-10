@@ -148,8 +148,7 @@ M.tinymce_recordrtc.startRecording = function(type, stream) {
     // Set recording timer to the time specified in the settings.
     countdownSeconds = params['timelimit'];
     countdownSeconds++;
-    startStopBtn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc') +
-                             ' (<span id="minutes"></span>:<span id="seconds"></span>)';
+    startStopBtn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc') + ' (<span id="minutes"></span>:<span id="seconds"></span>)';
     M.tinymce_recordrtc.setTime();
     countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
 
@@ -173,9 +172,9 @@ M.tinymce_recordrtc.uploadToServer = function(type, callback) {
             // Generate filename with random ID and file extension.
             var fileName = (Math.random() * 1000).toString().replace('.', '');
             if (type === 'audio') {
-              fileName += '-audio.ogg';
+                fileName += '-audio.ogg';
             } else {
-              fileName += '-video.webm';
+                fileName += '-video.webm';
             }
 
             // Create FormData to send to PHP upload/save script.
@@ -213,8 +212,7 @@ M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
     };
 
     xhr.upload.onprogress = function(event) {
-        callback(Math.round(event.loaded / event.total * 100) + "% " +
-                 M.util.get_string('uploadprogress', 'tinymce_recordrtc'));
+        callback(Math.round(event.loaded / event.total * 100) + "% " + M.util.get_string('uploadprogress', 'tinymce_recordrtc'));
     };
 
     xhr.upload.onerror = function(error) {

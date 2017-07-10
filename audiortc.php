@@ -49,11 +49,11 @@ $PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'
 $PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/commonmodule.js'), true);
 
 // Get max file upload size.
-$max_upload_size = ini_get('upload_max_filesize');
+$maxuploadsize = ini_get('upload_max_filesize');
 $jsvars = array(
     'contextid' => $contextid,
     'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc32.png',
-    'maxfilesize' => $max_upload_size
+    'maxfilesize' => $maxuploadsize
 );
 $PAGE->requires->data_for_js('recordrtc', $jsvars);
 
