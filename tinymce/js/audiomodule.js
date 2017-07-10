@@ -14,6 +14,8 @@
 /** global: recType */
 /** global: mediaRecorder */
 /** global: chunks */
+/** global: blobSize */
+/** global: maxUploadSize */
 
 /**
  * This function is initialized from PHP
@@ -27,6 +29,8 @@ M.tinymce_recordrtc.view_init = function() {
     startStopBtn = document.querySelector('button#start-stop');
     uploadBtn = document.querySelector('button#upload');
     recType = 'audio';
+    // Extract the numbers from the string, and convert to bytes.
+    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0]) * Math.pow(1024, 2);
 
     // Show alert and redirect user if connection is not secure.
     M.tinymce_recordrtc.check_secure();
@@ -56,6 +60,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Empty the array containing the previously recorded chunks.
             chunks = [];
+            blobSize = 0;
 
             // Initialize common configurations.
             var commonConfig = {
@@ -183,7 +188,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     uploadBtn.onclick = function() {
         // Trigger error if no recording has been made.
         if (!player.src || chunks === []) {
-            return alert(M.util.get_string('norecordingfound', 'tinymce_recordrtc'));
+            return window.alert(M.util.get_string('norecordingfound', 'tinymce_recordrtc'));
         }
 
         var btn = uploadBtn;
