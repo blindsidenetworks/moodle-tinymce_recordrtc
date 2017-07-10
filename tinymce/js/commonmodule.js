@@ -83,6 +83,7 @@ M.tinymce_recordrtc.handleDataAvailable = function(event) {
 
     // Push recording slice to array.
     // If total size of recording so far exceeds max upload limit, stop recording.
+    // An extra condition exists to avoid displaying alert twice.
     if ((blobSize >= maxUploadSize) && (!localStorage.getItem('alerted'))) {
         localStorage.setItem('alerted', 'true');
 
