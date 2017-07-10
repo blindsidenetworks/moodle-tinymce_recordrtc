@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <libraries>
     <library>
-        <location>tinymce/js</location>
+        <location>vendor/js</location>
         <name>Bowser</name>
         <version>1.6.0</version>
         <license>MIT</license>
         <licenseversion></licenseversion>
     </library>
     <library>
-        <location>tinymce/js</location>
+        <location>vendor/js</location>
         <name>WebRTC adapter</name>
         <version>4.1.0</version>
         <license>BSD</license>
