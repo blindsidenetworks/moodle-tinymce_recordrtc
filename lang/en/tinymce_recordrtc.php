@@ -33,6 +33,10 @@ $string['onlyvideo'] = 'Video only';
 $string['both'] = 'Audio and Video';
 $string['allowedtypes'] = 'Allowed types';
 $string['allowedtypes_desc'] = 'Which recording buttons should appear in TinyMCE';
+$string['audiobitrate'] = 'Audio bitrate';
+$string['audiobitrate_desc'] = 'Quality of audio recording (larger number means higher quality)';
+$string['videobitrate'] = 'Video bitrate';
+$string['videobitrate_desc'] = 'Quality of video recording (larger number means higher quality)';
 $string['timelimit'] = 'Time limit in seconds';
 $string['timelimit_desc'] = 'Maximum recording length allowed for the audio/video clips';
 
