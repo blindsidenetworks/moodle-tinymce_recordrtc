@@ -41,6 +41,7 @@ var startStopBtn = null;
 var uploadBtn = null;
 var countdownSeconds = null;
 var countdownTicker = null;
+var recType = null;
 var mediaRecorder = null;
 var chunks = null;
 
@@ -79,8 +80,46 @@ M.tinymce_recordrtc.handleDataAvailable = function(event) {
 };
 
 // Get everything set up to start recording.
-M.tinymce_recordrtc.startRecording = function(stream) {
-    mediaRecorder = new MediaRecorder(stream);
+M.tinymce_recordrtc.startRecording = function(type, stream) {
+    // The options for the recording codecs and bitrates.
+    var options = null;
+    if (type === 'audio') {
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+            options = {
+                audioBitsPerSecond: params['audiobitrate'],
+                mimeType: 'audio/webm;codecs=opus'
+            };
+        } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+            options = {
+                audioBitsPerSecond: params['audiobitrate'],
+                mimeType: 'audio/ogg;codecs=opus'
+            };
+        }
+    } else {
+        if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
+            options = {
+                audioBitsPerSecond: params['audiobitrate'],
+                videoBitsPerSecond: params['videobitrate'],
+                mimeType: 'video/webm;codecs=vp9,opus'
+            };
+        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
+            options = {
+                audioBitsPerSecond: params['audiobitrate'],
+                videoBitsPerSecond: params['videobitrate'],
+                mimeType: 'video/webm;codecs=h264,opus'
+            };
+        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
+            options = {
+                audioBitsPerSecond: params['audiobitrate'],
+                videoBitsPerSecond: params['videobitrate'],
+                mimeType: 'video/webm;codecs=vp8,opus'
+            };
+        }
+    }
+
+    // If none of the options above are supported, fall back on browser defaults.
+    mediaRecorder = options ? new MediaRecorder(stream)
+                            : new MediaRecorder(stream, options);
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
@@ -202,8 +241,8 @@ M.tinymce_recordrtc.setTime = function() {
 
 // Generates link to recorded annotation to be inserted.
 M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
-    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' +
-                     M.util.get_string('annotation:' + type, 'tinymce_recordrtc') + '</a></div>';
+    var linkText = window.prompt('What should the annotation appear as?', M.util.get_string('annotation:' + type, 'tinymce_recordrtc'));
+    var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
 
     return annotation;
 };

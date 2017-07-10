@@ -11,6 +11,7 @@
 /** global: uploadBtn */
 /** global: countdownSeconds */
 /** global: countdownTicker */
+/** global: recType */
 /** global: mediaRecorder */
 /** global: chunks */
 
@@ -25,6 +26,7 @@ M.tinymce_recordrtc.view_init = function() {
     player = document.querySelector('audio#player');
     startStopBtn = document.querySelector('button#start-stop');
     uploadBtn = document.querySelector('button#upload');
+    recType = 'audio';
 
     // Show alert and redirect user if connection is not secure.
     M.tinymce_recordrtc.check_secure();
@@ -109,7 +111,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // When audio stream is successfully captured, start recording.
             btn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.startRecording(btn.stream);
+                M.tinymce_recordrtc.startRecording(recType, btn.stream);
             };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
@@ -164,9 +166,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     });
 
     // Set source of audio player.
-    var blob = new Blob(chunks, {
-        type: 'audio/ogg;codecs=opus'
-    });
+    var blob = new Blob(chunks);
     player.src = URL.createObjectURL(blob);
 
     // Show audio player with controls enabled, and unmute.
@@ -190,10 +190,10 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
         btn.disabled = true;
 
         // Upload recording to server.
-        M.tinymce_recordrtc.uploadToServer('audio', function(progress, fileURL) {
+        M.tinymce_recordrtc.uploadToServer(recType, function(progress, fileURL) {
             if (progress === 'ended') { // Insert annotation in text.
                 btn.disabled = false;
-                M.tinymce_recordrtc.insert_annotation('audio', fileURL);
+                M.tinymce_recordrtc.insert_annotation(recType, fileURL);
             } else if (progress === 'upload-failed') { // Show error message in upload button.
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
