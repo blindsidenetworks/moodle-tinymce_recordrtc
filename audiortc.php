@@ -44,13 +44,16 @@ $PAGE->set_heading($title);
 $PAGE->set_pagelayout('embedded');
 
 $PAGE->requires->css(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css'));
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/bowser.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/adapter.js'), true);
+$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/bowser.js'), true);
+$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/adapter.js'), true);
 $PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/commonmodule.js'), true);
 
+// Get max file upload size.
+$maxuploadsize = ini_get('upload_max_filesize');
 $jsvars = array(
     'contextid' => $contextid,
-    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc.png'
+    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/audiortc32.png',
+    'maxfilesize' => $maxuploadsize
 );
 $PAGE->requires->data_for_js('recordrtc', $jsvars);
 

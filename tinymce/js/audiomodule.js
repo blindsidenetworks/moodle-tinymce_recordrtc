@@ -6,13 +6,17 @@
 
 /** global: M */
 /** global: bowser */
+/** global: recordrtc */
 /** global: player */
 /** global: startStopBtn */
 /** global: uploadBtn */
 /** global: countdownSeconds */
 /** global: countdownTicker */
+/** global: recType */
 /** global: mediaRecorder */
 /** global: chunks */
+/** global: blobSize */
+/** global: maxUploadSize */
 
 /**
  * This function is initialized from PHP
@@ -25,7 +29,12 @@ M.tinymce_recordrtc.view_init = function() {
     player = document.querySelector('audio#player');
     startStopBtn = document.querySelector('button#start-stop');
     uploadBtn = document.querySelector('button#upload');
+    recType = 'audio';
+    // Extract the numbers from the string, and convert to bytes.
+    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0]) * Math.pow(1024, 2);
 
+    // Show alert and redirect user if connection is not secure.
+    M.tinymce_recordrtc.check_secure();
     // Show alert if using non-ideal browser.
     M.tinymce_recordrtc.check_browser();
 
@@ -52,6 +61,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Empty the array containing the previously recorded chunks.
             chunks = [];
+            blobSize = 0;
 
             // Initialize common configurations.
             var commonConfig = {
@@ -107,7 +117,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // When audio stream is successfully captured, start recording.
             btn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.startRecording(btn.stream);
+                M.tinymce_recordrtc.startRecording(recType, btn.stream);
             };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
@@ -162,9 +172,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     });
 
     // Set source of audio player.
-    var blob = new Blob(chunks, {
-        type: 'audio/ogg;codecs=opus'
-    });
+    var blob = new Blob(chunks);
     player.src = URL.createObjectURL(blob);
 
     // Show audio player with controls enabled, and unmute.
@@ -181,23 +189,31 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     uploadBtn.onclick = function() {
         // Trigger error if no recording has been made.
         if (!player.src || chunks === []) {
-            return alert(M.util.get_string('norecordingfound', 'tinymce_recordrtc'));
+            return window.alert(M.util.get_string('norecordingfound', 'tinymce_recordrtc'));
+        } else {
+            var btn = uploadBtn;
+            btn.disabled = true;
+
+            // Upload recording to server.
+            M.tinymce_recordrtc.uploadToServer(recType, function(progress, fileURLOrError) {
+                if (progress === 'ended') { // Insert annotation in text.
+                    btn.disabled = false;
+                    M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
+                } else if (progress === 'upload-failed') { // Show error message in upload button.
+                    btn.disabled = false;
+                    btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError;
+                } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
+                    btn.disabled = false;
+                    btn.textContent = M.util.get_string('uploadfailed404', 'tinymce_recordrtc');
+                } else if (progress === 'upload-aborted') {
+                    btn.disabled = false;
+                    btn.textContent = M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError;
+                } else {
+                    btn.textContent = progress;
+                }
+            });
+
+            return undefined;
         }
-
-        var btn = uploadBtn;
-        btn.disabled = true;
-
-        // Upload recording to server.
-        M.tinymce_recordrtc.uploadToServer('audio', function(progress, fileURL) {
-            if (progress === 'ended') { // Insert annotation in text.
-                btn.disabled = false;
-                M.tinymce_recordrtc.insert_annotation(fileURL);
-            } else if (progress === 'upload-failed') { // Show error message in upload button.
-                btn.disabled = false;
-                btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
-            } else {
-                btn.textContent = progress;
-            }
-        });
     };
 };
