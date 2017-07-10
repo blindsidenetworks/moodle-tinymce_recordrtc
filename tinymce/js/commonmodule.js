@@ -78,7 +78,17 @@ M.tinymce_recordrtc.captureUserMedia = function(mediaConstraints, successCallbac
 
 // Add chunks of audio/video to array when made available.
 M.tinymce_recordrtc.handleDataAvailable = function(event) {
-    chunks.push(event.data);
+    // Size of all recorded data so far.
+    blobSize += event.data.size;
+
+    // Push recording slice to array.
+    // If total size of recording so far exceeds max upload limit, stop recording.
+    if (blobSize >= maxUploadSize) {
+        startStopBtn.click();
+        window.alert(M.util.get_string('nearingmaxsize', 'tinymce_recordrtc'));
+    } else {
+        chunks.push(event.data);
+    }
 };
 
 // Get everything set up to start recording.
