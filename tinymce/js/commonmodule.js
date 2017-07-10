@@ -191,7 +191,7 @@ M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
         if ((xhr.readyState === 4) && (xhr.status === 200)) { // When request is finished and successful.
             callback('upload-ended', xhr.responseText);
         } else if (xhr.status === 404) { // When request returns 404 Not Found.
-            callback('upload-failed');
+            callback('upload-failed-404');
         }
     };
 
@@ -201,13 +201,11 @@ M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
     };
 
     xhr.upload.onerror = function(error) {
-        callback('upload-failed');
-        console.error('XMLHttpRequest failed:', error);
+        callback('upload-failed', error);
     };
 
     xhr.upload.onabort = function(error) {
-        callback(M.util.get_string('uploadaborted', 'tinymce_recordrtc'));
-        console.error('XMLHttpRequest aborted:', error);
+        callback('upload-aborted', error);
     };
 
     // POST FormData to PHP script that handles uploading/saving.

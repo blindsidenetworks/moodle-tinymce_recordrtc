@@ -196,7 +196,13 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
                 M.tinymce_recordrtc.insert_annotation(recType, fileURL);
             } else if (progress === 'upload-failed') { // Show error message in upload button.
                 btn.disabled = false;
-                btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc');
+                btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc'), fileURL;
+            } else if (progress === 'upload-failed-404') {
+                btn.disabled = false;
+                btn.textContent = M.util.get_string('uploadfailed404', 'tinymce_recordrtc');
+            } else if (progress === 'upload-aborted') {
+                btn.disabled = false;
+                btn.textContent = M.util.get_string('uploadaborted', 'tinymce_recordrtc'), fileURL;
             } else {
                 btn.textContent = progress;
             }
