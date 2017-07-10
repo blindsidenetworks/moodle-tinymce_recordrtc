@@ -16,7 +16,9 @@ as a browser will default to setting it to DENY if this is the case.
 NOTE: The maximum size of uploads may need to be increased in the PHP settings. Edit the
 php.ini file with the following values (recommended for a 2:00 time limit):
 - upload_max_filesize = 40M
-- post_max_size = 40M
+- post_max_size = 50M
+If this is not done, recording will automatically stop after hitting the currently-set
+limit and an alert will be shown to the user.
 
 WARNING: Video filesize in Firefox will likely be twice that of Opera or Chrome, due to
 the writing library used by the browser for recording. Audio filesize should be similar
