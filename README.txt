@@ -17,3 +17,7 @@ NOTE: The maximum size of uploads may need to be increased in the PHP settings. 
 php.ini file with the following values (recommended for a 2:00 time limit):
 - upload_max_filesize = 40M
 - post_max_size = 40M
+
+WARNING: Video filesize in Firefox will likely be twice that of Opera or Chrome, due to
+the writing library used by the browser for recording. Audio filesize should be similar
+across all browsers.
