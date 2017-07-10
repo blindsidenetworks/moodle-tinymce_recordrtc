@@ -197,19 +197,19 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
         btn.disabled = true;
 
         // Upload recording to server.
-        M.tinymce_recordrtc.uploadToServer(recType, function(progress, fileURL) {
+        M.tinymce_recordrtc.uploadToServer(recType, function(progress, fileURLOrError) {
             if (progress === 'ended') { // Insert annotation in text.
                 btn.disabled = false;
-                M.tinymce_recordrtc.insert_annotation(recType, fileURL);
+                M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
             } else if (progress === 'upload-failed') { // Show error message in upload button.
                 btn.disabled = false;
-                btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURL;
+                btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError;
             } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle
                 btn.disabled = false;
                 btn.textContent = M.util.get_string('uploadfailed404', 'tinymce_recordrtc');
             } else if (progress === 'upload-aborted') {
                 btn.disabled = false;
-                btn.textContent = M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURL;
+                btn.textContent = M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError;
             } else {
                 btn.textContent = progress;
             }
