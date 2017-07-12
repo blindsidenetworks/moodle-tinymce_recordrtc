@@ -75,6 +75,7 @@ echo get_audiortc_output();
 echo $OUTPUT->footer();
 
 function get_audiortc_output() {
+    global $CFG;
     $currentversion = intval($CFG->version);
     $baseversion = 2016120500;
 

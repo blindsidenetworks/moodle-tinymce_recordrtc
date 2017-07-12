@@ -75,6 +75,7 @@ echo get_videortc_output();
 echo $OUTPUT->footer();
 
 function get_videortc_output() {
+    global $CFG;
     $currentversion = intval($CFG->version);
     $baseversion = 2016120500;
 
