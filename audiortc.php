@@ -124,9 +124,9 @@ to work out correct path from the .js files from TinyMCE. Only files
 inside this plugin can be included with relative path (below).
 -->
 <script type="text/javascript">
-    var editor_tinymce_include = function(path) {
-        document.write('<script type="text/javascript" src="' + parent.tinyMCE.baseURL + '/' + path + '"></script>');
-    };
+    function editor_tinymce_include(path) {
+        document.write('<script type="text/javascript" src="' + parent.tinyMCE.baseURL + '/' + path + '"><\/script>');
+    }
     editor_tinymce_include('tiny_mce_popup.js');
     editor_tinymce_include('utils/validate.js');
     editor_tinymce_include('utils/form_utils.js');
