@@ -13,6 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
+
+$contextid = required_param('contextid', PARAM_INT);
+
+list($context, $course, $cm) = get_context_info_array($contextid);
+require_login($course, false, $cm);
+require_sesskey();
+
 /**
  * Moodle renderer used to display special elements of the lesson module
  *
@@ -47,12 +56,13 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
         if ($oldermoodle) {
             $output .= html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span12'));
-            $output .= html_writer::start_tag('div', array('id' => 'alert-danger', 'class' => 'alert alert-error')).html_writer::end_tag('div');
+            $output .= html_writer::start_tag('div', array('id' => 'alert-danger', 'class' => 'alert alert-error'));
         } else {
             $output .= html_writer::start_tag('div', array('class' => 'row hide'));
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-12'));
-            $output .= html_writer::start_tag('div', array('id' => 'alert-danger', 'class' => 'alert alert-danger')).html_writer::end_tag('div');
+            $output .= html_writer::start_tag('div', array('id' => 'alert-danger', 'class' => 'alert alert-danger'));
         }
+        $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
 
@@ -111,7 +121,10 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
             $output = html_writer::start_tag('div', array('class' => 'row-fluid'));
             $output .= html_writer::start_tag('div', array('class' => 'span1')).html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'span10'));
-            $output .= html_writer::start_tag('button', array('id' => 'start-stop', 'class' => 'btn btn-large btn-danger btn-block'));
+            $output .= html_writer::start_tag('button', array(
+                    'id' => 'start-stop',
+                    'class' => 'btn btn-large btn-danger btn-block'
+            ));
             $output .= get_string('startrecording', 'tinymce_recordrtc');
             $output .= html_writer::end_tag('button');
             $output .= html_writer::end_tag('div');
@@ -130,7 +143,10 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
             $output = html_writer::start_tag('div', array('class' => 'row'));
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-1')).html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-10'));
-            $output .= html_writer::start_tag('button', array('id' => 'start-stop', 'class' => 'btn btn-lg btn-outline-danger btn-block'));
+            $output .= html_writer::start_tag('button', array(
+                    'id' => 'start-stop',
+                    'class' => 'btn btn-lg btn-outline-danger btn-block'
+            ));
             $output .= get_string('startrecording', 'tinymce_recordrtc');
             $output .= html_writer::end_tag('button');
             $output .= html_writer::end_tag('div');
@@ -157,9 +173,9 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
      */
     public function render_audiortc_index($oldermoodle) {
         $output = html_writer::start_tag('div', array('class' => 'container-fluid'));
-        $output .= tinymce_recordrtc_renderer::render_alerts($oldermoodle);
-        $output .= tinymce_recordrtc_renderer::render_player($oldermoodle, 'audio');
-        $output .= tinymce_recordrtc_renderer::render_buttons($oldermoodle);
+        $output .= self::render_alerts($oldermoodle);
+        $output .= self::render_player($oldermoodle, 'audio');
+        $output .= self::render_buttons($oldermoodle);
         $output .= html_writer::end_tag('div');
 
         return $output;
@@ -170,15 +186,15 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
      * @param boolean $oldermoodle True if Moodle >= 3.2, else False.
      * @return string
      */
-     public function render_videortc_index($oldermoodle) {
-         $output = html_writer::start_tag('div', array('class' => 'container-fluid'));
-         $output .= tinymce_recordrtc_renderer::render_alerts($oldermoodle);
-         $output .= tinymce_recordrtc_renderer::render_player($oldermoodle, 'video');
-         $output .= tinymce_recordrtc_renderer::render_buttons($oldermoodle);
-         $output .= html_writer::end_tag('div');
+    public function render_videortc_index($oldermoodle) {
+        $output = html_writer::start_tag('div', array('class' => 'container-fluid'));
+        $output .= self::render_alerts($oldermoodle);
+        $output .= self::render_player($oldermoodle, 'video');
+        $output .= self::render_buttons($oldermoodle);
+        $output .= html_writer::end_tag('div');
 
-         return $output;
-     }
+        return $output;
+    }
 
     /**
      * Renders the HTML to include the necessary scripts.
@@ -187,7 +203,8 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
     public function render_scripts() {
         $output = html_writer::start_tag('script', array('type' => 'text/javascript'));
         $output .= 'var editor_tinymce_include = function(path) {'."\n";
-        $output .= 'document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' + \'script>\');'."\n";
+        $output .= 'document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' +
+                    path + \'"></\' + \'script>\');'."\n";
         $output .= '};'."\n";
         $output .= 'editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
         $output .= 'editor_tinymce_include(\'utils/validate.js\');'."\n";
