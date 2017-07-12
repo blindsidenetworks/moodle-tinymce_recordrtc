@@ -14,13 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once(dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))).'/config.php');
-
-$contextid = required_param('contextid', PARAM_INT);
-
-list($context, $course, $cm) = get_context_info_array($contextid);
-require_login($course, false, $cm);
-require_sesskey();
+defined('MOODLE_INTERNAL') || die;
 
 /**
  * Moodle renderer used to display special elements of the lesson module
