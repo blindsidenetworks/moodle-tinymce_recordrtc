@@ -70,68 +70,68 @@ $PAGE->requires->strings_for_js(array_keys($strings), 'tinymce_recordrtc');
 
 echo $OUTPUT->header();
 
-echo get_audiortc_output();
+?>
+<div class="container-fluid">
+    <div class="row hide">
+        <div class="col-sm-12">
+            <div id="alert-warning" class="alert alert-warning">
+                <strong><?php get_string('browseralert_title', 'tinymce_recordrtc') ?></strong>
+                <?php get_string('browseralert', 'tinymce_recordrtc') ?>
+            </div>
+        </div>
+    </div>
+    <div class="row hide">
+        <div class="col-sm-12">
+            <div id="alert-danger" class="alert alert-danger"></div>
+        </div>
+    </div>
+    <div class="row hide">
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-10">
+            <audio id="player"></audio>
+        </div>
+        <div class="col-sm-1">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-10">
+            <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">
+                <?php get_string('startrecording', 'tinymce_recordrtc') ?>
+            </button>
+        </div>
+        <div class="col-sm-1">
+        </div>
+    </div>
+    <div class="row hide">
+        <div class="col-sm-3">
+        </div>
+        <div class="col-sm-6">
+            <button id="upload" class="btn btn-primary btn-block">
+                <?php get_string('attachrecording', 'tinymce_recordrtc') ?>
+            </button>
+        </div>
+        <div class="col-sm-3">
+        </div>
+    </div>
+</div>
+
+<!--
+Because there is no relative path to TinyMCE, we have to use JavaScript
+to work out correct path from the .js files from TinyMCE. Only files
+inside this plugin can be included with relative path (below).
+-->
+<script type="text/javascript">
+    var editor_tinymce_include = function(path) {
+        document.write('<script type="text/javascript" src="' + parent.tinyMCE.baseURL + '/' + path + '"></script>');
+    };
+    editor_tinymce_include('tiny_mce_popup.js');
+    editor_tinymce_include('utils/validate.js');
+    editor_tinymce_include('utils/form_utils.js');
+    editor_tinymce_include('utils/editable_selects.js');
+</script>
+<?php
 
 echo $OUTPUT->footer();
-
-
-function get_audiortc_output() {
-    $out  = '<div class="container-fluid">'."\n";
-    $out .= '  <div class="row hide">'."\n";
-    $out .= '    <div class="col-sm-12">'."\n";
-    $out .= '      <div id="alert-warning" class="alert alert-warning"><strong>'
-                   .get_string('browseralert_title', 'tinymce_recordrtc').'</strong> '
-                   .get_string('browseralert', 'tinymce_recordrtc').'</div>'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '  </div>'."\n";
-    $out .= '  <div class="row hide">'."\n";
-    $out .= '    <div class="col-sm-12">'."\n";
-    $out .= '      <div id="alert-danger" class="alert alert-danger"></div>'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '  </div>'."\n";
-    $out .= '  <div class="row hide">'."\n";
-    $out .= '    <div class="col-sm-1">'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '    <div class="col-sm-10">'."\n";
-    $out .= '      <audio id="player"></audio>'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '    <div class="col-sm-1">'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '  </div>'."\n";
-    $out .= '  <div class="row">'."\n";
-    $out .= '    <div class="col-sm-1">'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '    <div class="col-sm-10">'."\n";
-    $out .= '      <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'
-                   .get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '    <div class="col-sm-1">'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '  </div>'."\n";
-    $out .= '  <div class="row hide">'."\n";
-    $out .= '    <div class="col-sm-3">'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '    <div class="col-sm-6">'."\n";
-    $out .= '      <button id="upload" class="btn btn-primary btn-block">'
-                   .get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '    <div class="col-sm-3">'."\n";
-    $out .= '    </div>'."\n";
-    $out .= '  </div>'."\n";
-    $out .= '</div>'."\n";
-
-    // Because there is no relative path to TinyMCE, we have to use JavaScript
-    // to work out correct path from the .js files from TinyMCE. Only files
-    // inside this plugin can be included with relative path (below).
-    $out .= '<script type="text/javascript">'."\n";
-    $out .= '   var editor_tinymce_include = function(path) {'."\n";
-    $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' +
-                                   \'script>\');'."\n";
-    $out .= '   };'."\n";
-    $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
-    $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
-    $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
-    $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
-    $out .= '</script>'."\n";
-    return $out;
-}
