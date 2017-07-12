@@ -50,10 +50,15 @@ $PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'
 
 // Get max file upload size.
 $maxuploadsize = ini_get('upload_max_filesize');
+// Determine if the current version of Moodle is 3.2+.
+$currentversion = intval($CFG->version);
+$baseversion = 2016120500;
+$oldermoodle = $currentversion <= $baseversion;
 $jsvars = array(
     'contextid' => $contextid,
     'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/videortc32.png',
-    'maxfilesize' => $maxuploadsize
+    'maxfilesize' => $maxuploadsize,
+    'oldermoodle' => $oldermoodle
 );
 $PAGE->requires->data_for_js('recordrtc', $jsvars);
 
@@ -75,11 +80,9 @@ echo get_videortc_output();
 echo $OUTPUT->footer();
 
 function get_videortc_output() {
-    global $CFG;
-    $currentversion = intval($CFG->version);
-    $baseversion = 2016120500;
+    global $oldermoodle;
 
-    if ($currentversion >= $baseversion) {
+    if (!$oldermoodle) {
         $out  = '<div class="container-fluid">'."\n";
         $out .= '  <div class="row hide">'."\n";
         $out .= '    <div class="col-sm-12">'."\n";
@@ -119,31 +122,18 @@ function get_videortc_output() {
         $out .= '    </div>'."\n";
         $out .= '  </div>'."\n";
         $out .= '</div>'."\n";
-        // Because there is no relative path to TinyMCE, we have to use JavaScript
-        // to work out correct path from the .js files from TinyMCE. Only files
-        // inside this plugin can be included with relative path (below).
-        $out .= '<script type="text/javascript">'."\n";
-        $out .= '   var editor_tinymce_include = function(path) {'."\n";
-        $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' +
-                                       \'script>\');'."\n";
-        $out .= '   };'."\n";
-        $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
-        $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
-        $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
-        $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
-        $out .= '</script>'."\n";
     } else {
         $out  = '<div class="container-fluid">'."\n";
         $out .= '  <div class="row-fluid hide">'."\n";
         $out .= '    <div class="span12">'."\n";
-        $out .= '      <div id="alert-warning" class="alert alert-warning"><strong>'
+        $out .= '      <div id="alert-warning" class="alert"><strong>'
                        .get_string('browseralert_title', 'tinymce_recordrtc').'</strong> '
                        .get_string('browseralert', 'tinymce_recordrtc').'</div>'."\n";
         $out .= '    </div>'."\n";
         $out .= '  </div>'."\n";
         $out .= '  <div class="row-fluid hide">'."\n";
         $out .= '    <div class="span12">'."\n";
-        $out .= '      <div id="alert-danger" class="alert alert-danger"></div>'."\n";
+        $out .= '      <div id="alert-danger" class="alert alert-error"></div>'."\n";
         $out .= '    </div>'."\n";
         $out .= '  </div>'."\n";
         $out .= '  <div class="row-fluid hide">'."\n";
@@ -155,7 +145,7 @@ function get_videortc_output() {
         $out .= '    <div class="span1">'."\n";
         $out .= '    </div>'."\n";
         $out .= '    <div class="span10">'."\n";
-        $out .= '      <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'
+        $out .= '      <button id="start-stop" class="btn btn-large btn-danger btn-block">'
                        .get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
         $out .= '    </div>'."\n";
         $out .= '    <div class="span1">'."\n";
@@ -172,20 +162,21 @@ function get_videortc_output() {
         $out .= '    </div>'."\n";
         $out .= '  </div>'."\n";
         $out .= '</div>'."\n";
-        // Because there is no relative path to TinyMCE, we have to use JavaScript
-        // to work out correct path from the .js files from TinyMCE. Only files
-        // inside this plugin can be included with relative path (below).
-        $out .= '<script type="text/javascript">'."\n";
-        $out .= '   var editor_tinymce_include = function(path) {'."\n";
-        $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' +
-                                       \'script>\');'."\n";
-        $out .= '   };'."\n";
-        $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
-        $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
-        $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
-        $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
-        $out .= '</script>'."\n";
     }
+
+    // Because there is no relative path to TinyMCE, we have to use JavaScript
+    // to work out correct path from the .js files from TinyMCE. Only files
+    // inside this plugin can be included with relative path (below).
+    $out .= '<script type="text/javascript">'."\n";
+    $out .= '   var editor_tinymce_include = function(path) {'."\n";
+    $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' +
+                                   \'script>\');'."\n";
+    $out .= '   };'."\n";
+    $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
+    $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
+    $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
+    $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
+    $out .= '</script>'."\n";
 
     return $out;
 }
