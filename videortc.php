@@ -132,8 +132,59 @@ function get_videortc_output() {
         $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
         $out .= '</script>'."\n";
     } else {
-
+        $out  = '<div class="container-fluid">'."\n";
+        $out .= '  <div class="row-fluid hide">'."\n";
+        $out .= '    <div class="span12">'."\n";
+        $out .= '      <div id="alert-warning" class="alert alert-warning"><strong>'
+                       .get_string('browseralert_title', 'tinymce_recordrtc').'</strong> '
+                       .get_string('browseralert', 'tinymce_recordrtc').'</div>'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '  </div>'."\n";
+        $out .= '  <div class="row-fluid hide">'."\n";
+        $out .= '    <div class="span12">'."\n";
+        $out .= '      <div id="alert-danger" class="alert alert-danger"></div>'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '  </div>'."\n";
+        $out .= '  <div class="row-fluid hide">'."\n";
+        $out .= '    <div class="span12">'."\n";
+        $out .= '      <video id="player"></video>'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '  </div>'."\n";
+        $out .= '  <div class="row-fluid">'."\n";
+        $out .= '    <div class="span1">'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '    <div class="span10">'."\n";
+        $out .= '      <button id="start-stop" class="btn btn-lg btn-outline-danger btn-block">'
+                       .get_string('startrecording', 'tinymce_recordrtc').'</button>'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '    <div class="span1">'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '  </div>'."\n";
+        $out .= '  <div class="row-fluid hide">'."\n";
+        $out .= '    <div class="span3">'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '    <div class="span6">'."\n";
+        $out .= '      <button id="upload" class="btn btn-primary btn-block">'
+                       .get_string('attachrecording', 'tinymce_recordrtc').'</button>'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '    <div class="span3">'."\n";
+        $out .= '    </div>'."\n";
+        $out .= '  </div>'."\n";
+        $out .= '</div>'."\n";
+        // Because there is no relative path to TinyMCE, we have to use JavaScript
+        // to work out correct path from the .js files from TinyMCE. Only files
+        // inside this plugin can be included with relative path (below).
+        $out .= '<script type="text/javascript">'."\n";
+        $out .= '   var editor_tinymce_include = function(path) {'."\n";
+        $out .= '       document.write(\'<script type="text/javascript" src="\' + parent.tinyMCE.baseURL + \'/\' + path + \'"></\' +
+                                       \'script>\');'."\n";
+        $out .= '   };'."\n";
+        $out .= '   editor_tinymce_include(\'tiny_mce_popup.js\');'."\n";
+        $out .= '   editor_tinymce_include(\'utils/validate.js\');'."\n";
+        $out .= '   editor_tinymce_include(\'utils/form_utils.js\');'."\n";
+        $out .= '   editor_tinymce_include(\'utils/editable_selects.js\');'."\n";
+        $out .= '</script>'."\n";
     }
-    
+
     return $out;
 }
