@@ -55,12 +55,12 @@
                 var viewparams = '';
                 for (var key in audiortc) {
                     if (audiortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "="
-                                      + encodeURIComponent(audiortc[key]);
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key);
+                        viewparams += '=' + encodeURIComponent(audiortc[key]);
                     }
                 }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php'
-                              + (viewparams != '' ? '?' + viewparams : '');
+                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php';
+                viewurl += (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
                     ed.windowManager.onClose.remove(onClose);
                     ed.execCommand('mceForceRepaint');
@@ -102,12 +102,12 @@
                 var viewparams = '';
                 for (var key in videortc) {
                     if (videortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "="
-                                      + encodeURIComponent(videortc[key]);
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key);
+                        viewparams += '=' + encodeURIComponent(videortc[key]);
                     }
                 }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php'
-                              + (viewparams != '' ? '?' + viewparams : '');
+                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php';
+                viewurl += (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
                     ed.windowManager.onClose.remove(onClose);
                     ed.execCommand('mceForceRepaint');

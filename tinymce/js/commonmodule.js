@@ -148,8 +148,9 @@ M.tinymce_recordrtc.startRecording = function(type, stream) {
     // Set recording timer to the time specified in the settings.
     countdownSeconds = params.timelimit;
     countdownSeconds++;
-    startStopBtn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc')
-                             + ' (<span id="minutes"></span>:<span id="seconds"></span>)';
+    var timerLabel = M.util.get_string('stoprecording', 'tinymce_recordrtc') + ' ';
+    timerLabel += '(<span id="minutes"></span>:<span id="seconds"></span>)';
+    startStopBtn.innerHTML = timerLabel;
     M.tinymce_recordrtc.setTime();
     countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
 
@@ -262,8 +263,8 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     if (!linkText) {
         return undefined;
     } else {
-        var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">'
-                         + linkText + '</a></div>';
+        var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">';
+        annotation += linkText + '</a></div>';
         return annotation;
     }
 };
