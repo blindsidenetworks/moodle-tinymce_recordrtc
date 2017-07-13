@@ -15,7 +15,6 @@ There are currently two ways to install the plugin:
    * Under the `Install plugin from ZIP file` section, either select the above archive, or drag and drop it into the specified box on the page
    * Click the installation button
 
-![screenshot from 2017-07-13 11-32-30](https://user-images.githubusercontent.com/2160185/28174790-7babc750-67c0-11e7-8a86-f58fedcd23ea.png)
 
 2. Installing manually (if the user does not have necessary permissions for installing the first way):
 
@@ -24,17 +23,25 @@ There are currently two ways to install the plugin:
    * Log into a Moodle account with administration capabilities
    * A screen should appear asking the install the plugin, similar to above
 
-![screenshot from 2017-07-13 11-33-07](https://user-images.githubusercontent.com/2160185/28174852-a40f1f30-67c0-11e7-8ca2-8bc64dd206f5.png)
-
 Soon, there will also be the possibility to install easily via the Moodle Plugins Directory.
 
-### Usage
+### Usage 
 
 To use the plugin, just click on one of the recording buttons (either the microphone or the video camera), and a popup will appear with a big "Start Recording" button. When clicked, the browser will probably ask for permission to use the webcam/microphone.
 
+![screenshot from 2017-07-13 11-47-41](https://user-images.githubusercontent.com/2160185/28175664-ddbba8be-67c2-11e7-8afb-eaa47d1ffcf1.png)
+
 After the recording starts, a timer will begin counting down, indicating how much time is left to record; when the timer hits 0, the recording will automatically stop (this will also happen if approaching the maximum upload size determined in the server settings).
 
+![screenshot from 2017-07-13 11-48-10](https://user-images.githubusercontent.com/2160185/28175782-3958a992-67c3-11e7-8a76-4eb99a5dbdbc.png)
+
 When the recording is finished, the user can play it back to see/hear if it is what they want. To embed the file, the user must click "Attach Recording as Annotation". A dialog box will pop up asking the user what the link should appear as in the text editor. After that, the file gets embedded right where the cursor was in the text.
+
+![screenshot from 2017-07-13 11-48-37](https://user-images.githubusercontent.com/2160185/28175825-5312bc38-67c3-11e7-9bac-ef5bee8e9e16.png)
+
+![screenshot from 2017-07-13 11-48-48](https://user-images.githubusercontent.com/2160185/28175838-618e1a14-67c3-11e7-82e1-954af24e8d34.png)
+
+![screenshot from 2017-07-13 11-49-14](https://user-images.githubusercontent.com/2160185/28175858-7129047a-67c3-11e7-9398-98012f95577d.png)
 
 ### Configuration
 
