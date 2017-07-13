@@ -9,15 +9,22 @@ Add audio and video annotations to text, anywhere a TinyMCE text editor is prese
 There are currently two ways to install the plugin:
 
 1. Installing via zip file:
+
    * Download the project's repository as a zip archive from GitHub: https://github.com/blindsidenetworks/moodle-tinymce_recordrtc/archive/master.zip
    * In Moodle, go to `Site administration` > `Plugins` > `Install plugins`
    * Under the `Install plugin from ZIP file` section, either select the above archive, or drag and drop it into the specified box on the page
    * Click the installation button
+
+![screenshot from 2017-07-13 11-32-30](https://user-images.githubusercontent.com/2160185/28174790-7babc750-67c0-11e7-8a86-f58fedcd23ea.png)
+
 2. Installing manually (if the user does not have necessary permissions for installing the first way):
+
    * Navigate to `moodle_root_path/lib/editor/tinymce/plugins`, where `moodle_root_path` is the location where Moodle is installed (ex.: `/var/www/html/moodle`)
    * Execute `sudo git clone https://github.com/blindsidenetworks/moodle-tinymce_recordrtc.git recordrtc`
    * Log into a Moodle account with administration capabilities
    * A screen should appear asking the install the plugin, similar to above
+
+![screenshot from 2017-07-13 11-33-07](https://user-images.githubusercontent.com/2160185/28174852-a40f1f30-67c0-11e7-8ca2-8bc64dd206f5.png)
 
 Soon, there will also be the possibility to install easily via the Moodle Plugins Directory.
 
