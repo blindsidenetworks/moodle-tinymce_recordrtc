@@ -16,6 +16,8 @@
 
 
 /**
+ * Functionality for saving recordings to the server.
+ *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  * @copyright  2016 to present, Blindside Networks Inc.

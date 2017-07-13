@@ -14,16 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
- * Moodle renderer used to display special elements of the lesson module
+ * Moodle renderer used to display special elements of the lesson module.
  *
- * @package    mod_questionnaire
+ * @package    tinymce_recordrtc
  * @copyright  2016 Mike Churchward (mike.churchward@poetgroup.org)
  * @author     Mike Churchward
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
+
+defined('MOODLE_INTERNAL') || die;
+
 class tinymce_recordrtc_renderer extends plugin_renderer_base {
     /**
      * Renders the HTML for the plugin, for the alerts section.

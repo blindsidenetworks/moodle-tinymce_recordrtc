@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * The audio recording module for RecordRTC.
+ *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  * @copyright  2016 to present, Blindside Networks Inc.
