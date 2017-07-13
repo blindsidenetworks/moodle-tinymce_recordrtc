@@ -56,8 +56,10 @@ M.tinymce_recordrtc.view_init = function() {
             uploadBtn.parentElement.parentElement.classList.add('hide');
 
             // Change look of recording button.
-            startStopBtn.classList.remove('btn-outline-danger');
-            startStopBtn.classList.add('btn-danger');
+            if (!recordrtc.oldermoodle) {
+                startStopBtn.classList.remove('btn-outline-danger');
+                startStopBtn.classList.add('btn-danger');
+            }
 
             // Empty the array containing the previously recorded chunks.
             chunks = [];
@@ -133,8 +135,10 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Change button to offer to record again.
             btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
-            startStopBtn.classList.remove('btn-danger');
-            startStopBtn.classList.add('btn-outline-danger');
+            if (!recordrtc.oldermoodle) {
+                startStopBtn.classList.remove('btn-danger');
+                startStopBtn.classList.add('btn-outline-danger');
+            }
         }
     };
 };
