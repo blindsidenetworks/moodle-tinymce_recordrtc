@@ -70,12 +70,8 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
      * @return string
      */
     public function render_player($oldermoodle, $type) {
-        if ($oldermoodle) {
-            $output = html_writer::start_tag('div', array('class' => 'row-fluid hide'));
-        } else {
-            $output = html_writer::start_tag('div', array('class' => 'row hide'));
-        }
         if ($oldermoodle && $type === 'audio') {
+            $output = html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span1')).html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'span10'));
             $output .= html_writer::start_tag('audio', array('id' => 'player'));
@@ -83,11 +79,13 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
             $output .= html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'span1')).html_writer::end_tag('div');
         } else if ($oldermoodle && $type === 'video') {
+            $output = html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span12'));
             $output .= html_writer::start_tag('video', array('id' => 'player'));
             $output .= html_writer::end_tag('video');
             $output .= html_writer::end_tag('div');
         } else if ($type === 'audio') {
+            $output = html_writer::start_tag('div', array('class' => 'row hide'));
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-1')).html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-10'));
             $output .= html_writer::start_tag('audio', array('id' => 'player'));
@@ -95,6 +93,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
             $output .= html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-1')).html_writer::end_tag('div');
         } else {
+            $output = html_writer::start_tag('div', array('class' => 'row hide'));
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-12'));
             $output .= html_writer::start_tag('video', array('id' => 'player'));
             $output .= html_writer::end_tag('video');
