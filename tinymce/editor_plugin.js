@@ -21,13 +21,13 @@
          * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
          * @param {string} url Absolute URL to where the plugin is located.
          */
-        init : function(ed, url) {
+        init: function(ed, url) {
             ed.addCommand('mceForceRepaint', function() {
                 var root = ed.dom.getRoot(),
                     items = root.getElementsByTagName("img");
                 for (var i = 0; i < items.length; i++) {
                     var src = items[i].getAttribute('src').replace(/\?\d+$/, '');
-                    items[i].setAttribute('src', src + '?' + (new Date().getTime()))
+                    items[i].setAttribute('src', src + '?' + (new Date().getTime()));
                 }
                 ed.execCommand('mceRepaint');
                 ed.focus();
@@ -46,7 +46,7 @@
 
                 w.element.moveTo(vp.x, vp.y);
                 w.element.resizeTo(vp.w, vp.h);
-                ed.dom.setStyles(id + '_ifr', {width : vp.w - w.deltaWidth, height : vp.h - w.deltaHeight});
+                ed.dom.setStyles(id + '_ifr', {width: vp.w - w.deltaWidth, height: vp.h - w.deltaHeight});
                 ed.dom.addClass(id + '_wrapper', 'mceMaximized');
             });
 
@@ -55,10 +55,12 @@
                 var viewparams = '';
                 for (var key in audiortc) {
                     if (audiortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(audiortc[key]);
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "="
+                                      + encodeURIComponent(audiortc[key]);
                     }
                 }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php' + (viewparams != '' ? '?' + viewparams : '');
+                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php'
+                              + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
                     ed.windowManager.onClose.remove(onClose);
                     ed.execCommand('mceForceRepaint');
@@ -75,13 +77,13 @@
                     height = vp.h;
                 }
                 var w = ed.windowManager.open({
-                    file : viewurl ,
-                    width : width,
-                    height : height,
-                    inline : 1,
-                    popup_css : ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
+                    file: viewurl,
+                    width: width,
+                    height: height,
+                    inline: 1,
+                    popup_css: ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
                 }, {
-                    plugin_url : url // Plugin absolute URL.
+                    plugin_url: url // Plugin absolute URL.
                 });
                 if (maximizedmode) {
                     ed.execCommand('mceMaximizeWindow', w);
@@ -90,9 +92,9 @@
 
             // Register AudioRTC button.
             ed.addButton('audiortc', {
-                title : 'recordrtc.audiortc',
-                cmd : 'mceAudioRTC',
-                image : url + '/img/audiortc.png'
+                title: 'recordrtc.audiortc',
+                cmd: 'mceAudioRTC',
+                image: url + '/img/audiortc.png'
             });
 
             ed.addCommand('mceVideoRTC', function() {
@@ -100,10 +102,12 @@
                 var viewparams = '';
                 for (var key in videortc) {
                     if (videortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "=" + encodeURIComponent(videortc[key]);
+                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key) + "="
+                                      + encodeURIComponent(videortc[key]);
                     }
                 }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php' + (viewparams != '' ? '?' + viewparams : '');
+                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php'
+                              + (viewparams != '' ? '?' + viewparams : '');
                 var onClose = function() {
                     ed.windowManager.onClose.remove(onClose);
                     ed.execCommand('mceForceRepaint');
@@ -120,13 +124,13 @@
                     height = vp.h;
                 }
                 var w = ed.windowManager.open({
-                    file : viewurl ,
-                    width : width,
-                    height : height,
-                    inline : 1,
-                    popup_css : ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
+                    file: viewurl,
+                    width: width,
+                    height: height,
+                    inline: 1,
+                    popup_css: ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
                 }, {
-                    plugin_url : url // Plugin absolute URL.
+                    plugin_url: url // Plugin absolute URL.
                 });
                 if (maximizedmode) {
                     ed.execCommand('mceMaximizeWindow', w);
@@ -135,12 +139,12 @@
 
             // Register VideoRTC button.
             ed.addButton('videortc', {
-                title : 'recordrtc.videortc',
-                cmd : 'mceVideoRTC',
-                image : url + '/img/videortc.png'
+                title: 'recordrtc.videortc',
+                cmd: 'mceVideoRTC',
+                image: url + '/img/videortc.png'
             });
         },
-        createControl : function() {
+        createControl: function() {
             return null;
         },
 
@@ -150,12 +154,12 @@
          *
          * @return {Object} Name/value array containing information about the plugin.
          */
-        getInfo : function() {
+        getInfo: function() {
             return {
-                longname : 'Moodle TinyMCE RecordRTC plugin',
-                author : 'Jesus Federico',
-                infourl : 'http://blindsidenetworks.com',
-                version : "1.0"
+                longname: 'Moodle TinyMCE RecordRTC plugin',
+                author: 'Jesus Federico',
+                infourl: 'http://blindsidenetworks.com',
+                version: "1.0"
             };
         },
     });
