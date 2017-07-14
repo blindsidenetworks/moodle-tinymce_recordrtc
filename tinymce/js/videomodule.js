@@ -103,7 +103,9 @@ M.tinymce_recordrtc.view_init = function() {
                                (error.name === 'NotFoundError')) { // If Device Not Found error.
                         var alert = document.querySelector('div[id=alert-danger]');
                         alert.parentElement.parentElement.classList.remove('hide');
-                        alert.textContent = M.util.get_string('inputdevicealert', 'tinymce_recordrtc') + ' ' + M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
+                        var alertMessage = M.util.get_string('inputdevicealert', 'tinymce_recordrtc') + ' ';
+                        alertMessage += M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
+                        alert.textContent = alertMessage;
 
                         btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
                     }

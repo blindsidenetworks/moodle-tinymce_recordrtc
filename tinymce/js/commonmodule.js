@@ -56,7 +56,7 @@ M.tinymce_recordrtc.check_secure = function() {
         window.alert(M.util.get_string('insecurealert', 'tinymce_recordrtc'));
         tinyMCEPopup.close();
     }
-}
+};
 
 // Display "consider switching browsers" message if not using:
 // - Firefox 29+;
@@ -103,32 +103,32 @@ M.tinymce_recordrtc.startRecording = function(type, stream) {
     if (type === 'audio') {
         if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
             options = {
-                audioBitsPerSecond: params['audiobitrate'],
+                audioBitsPerSecond: params.audiobitrate,
                 mimeType: 'audio/webm;codecs=opus'
             };
         } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
             options = {
-                audioBitsPerSecond: params['audiobitrate'],
+                audioBitsPerSecond: params.audiobitrate,
                 mimeType: 'audio/ogg;codecs=opus'
             };
         }
     } else {
         if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
             options = {
-                audioBitsPerSecond: params['audiobitrate'],
-                videoBitsPerSecond: params['videobitrate'],
+                audioBitsPerSecond: params.audiobitrate,
+                videoBitsPerSecond: params.videobitrate,
                 mimeType: 'video/webm;codecs=vp9,opus'
             };
         } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
             options = {
-                audioBitsPerSecond: params['audiobitrate'],
-                videoBitsPerSecond: params['videobitrate'],
+                audioBitsPerSecond: params.audiobitrate,
+                videoBitsPerSecond: params.videobitrate,
                 mimeType: 'video/webm;codecs=h264,opus'
             };
         } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
             options = {
-                audioBitsPerSecond: params['audiobitrate'],
-                videoBitsPerSecond: params['videobitrate'],
+                audioBitsPerSecond: params.audiobitrate,
+                videoBitsPerSecond: params.videobitrate,
                 mimeType: 'video/webm;codecs=vp8,opus'
             };
         }
@@ -146,9 +146,11 @@ M.tinymce_recordrtc.startRecording = function(type, stream) {
     player.muted = true;
 
     // Set recording timer to the time specified in the settings.
-    countdownSeconds = params['timelimit'];
+    countdownSeconds = params.timelimit;
     countdownSeconds++;
-    startStopBtn.innerHTML = M.util.get_string('stoprecording', 'tinymce_recordrtc') + ' (<span id="minutes"></span>:<span id="seconds"></span>)';
+    var timerLabel = M.util.get_string('stoprecording', 'tinymce_recordrtc') + ' ';
+    timerLabel += '(<span id="minutes"></span>:<span id="seconds"></span>)';
+    startStopBtn.innerHTML = timerLabel;
     M.tinymce_recordrtc.setTime();
     countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
 
@@ -261,7 +263,8 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     if (!linkText) {
         return undefined;
     } else {
-        var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
+        var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">';
+        annotation += linkText + '</a></div>';
         return annotation;
     }
 };

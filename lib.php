@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto recordrtc library functions
+ * TinyMCE RecordRTC library functions
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
@@ -27,8 +27,14 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
+/**
+ * The root path of the plugin, relative to the Moodle root.
+ */
 const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
 
+/**
+ * This class defines functions for the plugin.
+ */
 class tinymce_recordrtc extends editor_tinymce_plugin {
     /** @var array list of buttons defined by this plugin */
     protected $buttons = array('audiortc', 'videortc');
@@ -78,6 +84,9 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         }
     }
 
+    /**
+     * This function returns 310.
+     */
     protected function get_sort_order() {
         return 310;
     }
