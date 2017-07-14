@@ -25,23 +25,23 @@ There are currently two ways to install the plugin:
 
 Soon, there will also be the possibility to install easily via the Moodle Plugins Directory.
 
-### Usage 
+### Usage
 
 To use the plugin, just click on one of the recording buttons (either the microphone or the video camera), and a popup will appear with a big "Start Recording" button. When clicked, the browser will probably ask for permission to use the webcam/microphone.
 
-![screenshot from 2017-07-13 11-47-41](https://user-images.githubusercontent.com/2160185/28175664-ddbba8be-67c2-11e7-8afb-eaa47d1ffcf1.png)
+![Recording buttons](https://user-images.githubusercontent.com/2160185/28218824-bba0f7fa-6887-11e7-9d52-583a01aaff8d.png)
 
 After the recording starts, a timer will begin counting down, indicating how much time is left to record; when the timer hits 0, the recording will automatically stop (this will also happen if approaching the maximum upload size determined in the server settings).
 
-![screenshot from 2017-07-13 11-48-10](https://user-images.githubusercontent.com/2160185/28175782-3958a992-67c3-11e7-8a76-4eb99a5dbdbc.png)
+![Recording started](https://user-images.githubusercontent.com/2160185/28218855-d9917668-6887-11e7-8ffa-8f90323082c4.png)
 
 When the recording is finished, the user can play it back to see/hear if it is what they want. To embed the file, the user must click "Attach Recording as Annotation". A dialog box will pop up asking the user what the link should appear as in the text editor. After that, the file gets embedded right where the cursor was in the text.
 
-![screenshot from 2017-07-13 11-48-37](https://user-images.githubusercontent.com/2160185/28175825-5312bc38-67c3-11e7-9bac-ef5bee8e9e16.png)
+![Recording stopped](https://user-images.githubusercontent.com/2160185/28218885-f2c34436-6887-11e7-8604-99da6e62bf22.png)
 
-![screenshot from 2017-07-13 11-48-48](https://user-images.githubusercontent.com/2160185/28175838-618e1a14-67c3-11e7-82e1-954af24e8d34.png)
+![Name the annotation](https://user-images.githubusercontent.com/2160185/28218899-098680a2-6888-11e7-9918-21ad49d87f24.png)
 
-![screenshot from 2017-07-13 11-49-14](https://user-images.githubusercontent.com/2160185/28175858-7129047a-67c3-11e7-9398-98012f95577d.png)
+![Annotation in editor](https://user-images.githubusercontent.com/2160185/28218920-1ce627c4-6888-11e7-8914-59040c130590.png)
 
 ### Configuration
 
