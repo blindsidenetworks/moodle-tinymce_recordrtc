@@ -1,7 +1,7 @@
 # RecordRTC TinyMCE plugin for Moodle
 
-![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/quality-score.png?b=master)
-![Build Status](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/build.png?b=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/build.png?b=master)](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/build-status/master)
 
 ### Features
 
