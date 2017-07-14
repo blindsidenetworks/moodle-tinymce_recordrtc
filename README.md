@@ -1,5 +1,10 @@
 # RecordRTC TinyMCE plugin for Moodle
 
+<div align="left" markdown="1">
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/build.png?b=master)](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/build-status/master)
+</div>
+
 ### Features
 
 Add audio and video annotations to text, anywhere a TinyMCE text editor is present. This plugin adds buttons for recording audio or video (with audio) to the editor's toolbar. Using WebRTC technologies, all recording is done instantly in the browser. After recording, users can embed the annotation directly into the text they are currently editing. The recording will appear as an audio or video player in the published writing.
