@@ -1,9 +1,7 @@
 # RecordRTC TinyMCE plugin for Moodle
 
-<div align="left" markdown="1">
 ![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/quality-score.png?b=master)
 ![Build Status](https://scrutinizer-ci.com/g/blindsidenetworks/moodle-tinymce_recordrtc/badges/build.png?b=master)
-</div>
 
 ### Features
 
