@@ -18,8 +18,7 @@
  * Moodle renderer used to display special elements of the lesson module.
  *
  * @package    tinymce_recordrtc
- * @copyright  2016 Mike Churchward (mike.churchward@poetgroup.org)
- * @author     Mike Churchward
+ * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
