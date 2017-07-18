@@ -58,7 +58,6 @@ $baseversion = 2016120500;
 $oldermoodle = $currentversion <= $baseversion;
 $jsvars = array(
     'contextid' => $contextid,
-    'icon32' => $CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/img/videortc32.png',
     'maxfilesize' => $maxuploadsize,
     'oldermoodle' => $oldermoodle
 );
