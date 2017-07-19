@@ -72,12 +72,12 @@ M.tinymce_recordrtc.check_browser = function() {
 };
 
 // Capture webcam/microphone stream.
-M.tinymce_recordrtc.captureUserMedia = function(mediaConstraints, successCallback, errorCallback) {
+M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 };
 
 // Add chunks of audio/video to array when made available.
-M.tinymce_recordrtc.handleDataAvailable = function(event) {
+M.tinymce_recordrtc.handle_data_available = function(event) {
     // Size of all recorded data so far.
     blobSize += event.data.size;
 
@@ -97,7 +97,7 @@ M.tinymce_recordrtc.handleDataAvailable = function(event) {
 };
 
 // Get everything set up to start recording.
-M.tinymce_recordrtc.startRecording = function(type, stream) {
+M.tinymce_recordrtc.start_recording = function(type, stream) {
     // The options for the recording codecs and bitrates.
     var options = null;
     if (type === 'audio') {
@@ -139,7 +139,7 @@ M.tinymce_recordrtc.startRecording = function(type, stream) {
                             : new MediaRecorder(stream, options);
 
     // Initialize MediaRecorder events and start recording.
-    mediaRecorder.ondataavailable = M.tinymce_recordrtc.handleDataAvailable;
+    mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
     mediaRecorder.start(1000); // Capture in 10ms chunks. Must be set to work with Firefox.
 
     // Mute audio, distracting while recording.
@@ -151,15 +151,15 @@ M.tinymce_recordrtc.startRecording = function(type, stream) {
     var timerLabel = M.util.get_string('stoprecording', 'tinymce_recordrtc') + ' ';
     timerLabel += '(<span id="minutes"></span>:<span id="seconds"></span>)';
     startStopBtn.innerHTML = timerLabel;
-    M.tinymce_recordrtc.setTime();
-    countdownTicker = setInterval(M.tinymce_recordrtc.setTime, 1000);
+    M.tinymce_recordrtc.set_time();
+    countdownTicker = setInterval(M.tinymce_recordrtc.set_time, 1000);
 
     // Make button clickable again, to allow stopping recording.
     startStopBtn.disabled = false;
 };
 
 // Upload recorded audio/video to server.
-M.tinymce_recordrtc.uploadToServer = function(type, callback) {
+M.tinymce_recordrtc.upload_to_server = function(type, callback) {
     var xhr = new XMLHttpRequest();
 
     // Get src media of audio/video tag.
@@ -187,7 +187,7 @@ M.tinymce_recordrtc.uploadToServer = function(type, callback) {
             formData.append(type + '-blob', blob);
 
             // Pass FormData to PHP script using XHR.
-            M.tinymce_recordrtc.makeXMLHttpRequest('save.php', formData, function(progress, responseText) {
+            M.tinymce_recordrtc.make_xmlhttprequest('save.php', formData, function(progress, responseText) {
                 if (progress === 'upload-ended') {
                     var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
                     callback('ended', initialURL + responseText);
@@ -202,7 +202,7 @@ M.tinymce_recordrtc.uploadToServer = function(type, callback) {
 };
 
 // Handle XHR sending/receiving/status.
-M.tinymce_recordrtc.makeXMLHttpRequest = function(url, data, callback) {
+M.tinymce_recordrtc.make_xmlhttprequest = function(url, data, callback) {
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
@@ -243,7 +243,7 @@ M.tinymce_recordrtc.pad = function(val) {
 
 // Functionality to make recording timer count down.
 // Also makes recording stop when time limit is hit.
-M.tinymce_recordrtc.setTime = function() {
+M.tinymce_recordrtc.set_time = function() {
     countdownSeconds--;
 
     startStopBtn.querySelector('span#seconds').textContent = M.tinymce_recordrtc.pad(countdownSeconds % 60);

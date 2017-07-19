@@ -117,11 +117,11 @@ M.tinymce_recordrtc.view_init = function() {
             };
 
             // Capture audio stream from microphone.
-            M.tinymce_recordrtc.captureAudio(commonConfig);
+            M.tinymce_recordrtc.capture_audio(commonConfig);
 
             // When audio stream is successfully captured, start recording.
             btn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.startRecording(recType, btn.stream);
+                M.tinymce_recordrtc.start_recording(recType, btn.stream);
             };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
@@ -133,7 +133,7 @@ M.tinymce_recordrtc.view_init = function() {
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stopRecording(btn.stream);
+            M.tinymce_recordrtc.stop_recording_audio(btn.stream);
 
             // Change button to offer to record again.
             btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
@@ -146,8 +146,8 @@ M.tinymce_recordrtc.view_init = function() {
 };
 
 // Setup to get audio stream from microphone.
-M.tinymce_recordrtc.captureAudio = function(config) {
-    M.tinymce_recordrtc.captureUserMedia(
+M.tinymce_recordrtc.capture_audio = function(config) {
+    M.tinymce_recordrtc.capture_user_media(
         // Media constraints.
         {
             audio: true
@@ -168,7 +168,7 @@ M.tinymce_recordrtc.captureAudio = function(config) {
     );
 };
 
-M.tinymce_recordrtc.stopRecording = function(stream) {
+M.tinymce_recordrtc.stop_recording_audio = function(stream) {
     // Stop recording microphone stream.
     mediaRecorder.stop();
 
@@ -201,7 +201,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
             btn.disabled = true;
 
             // Upload recording to server.
-            M.tinymce_recordrtc.uploadToServer(recType, function(progress, fileURLOrError) {
+            M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
                 if (progress === 'ended') { // Insert annotation in text.
                     btn.disabled = false;
                     M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
