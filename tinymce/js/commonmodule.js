@@ -140,7 +140,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
-    mediaRecorder.start(1000); // Capture in 10ms chunks. Must be set to work with Firefox.
+    mediaRecorder.start(1000); // Capture in 1s chunks. Must be set to work with Firefox.
 
     // Mute audio, distracting while recording.
     player.muted = true;
