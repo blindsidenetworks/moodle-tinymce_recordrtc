@@ -135,8 +135,8 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     }
 
     // If none of the options above are supported, fall back on browser defaults.
-    mediaRecorder = options ? new MediaRecorder(stream)
-                            : new MediaRecorder(stream, options);
+    mediaRecorder = options ? new MediaRecorder(stream, options)
+                            : new MediaRecorder(stream);
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
