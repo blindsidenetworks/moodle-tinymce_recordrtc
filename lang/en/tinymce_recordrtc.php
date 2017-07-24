@@ -57,5 +57,5 @@ $string['uploadfailed'] = 'Upload failed:';
 $string['uploadfailed404'] = 'Upload failed: file too large';
 $string['uploadaborted'] = 'Upload aborted:';
 $string['annotationprompt'] = 'What should the annotation appear as?';
-$string['annotation:audio'] = 'Audio annotation';
-$string['annotation:video'] = 'Video annotation';
+$string['annotationaudio'] = 'Audio annotation';
+$string['annotationvideo'] = 'Video annotation';
