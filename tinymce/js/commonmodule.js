@@ -247,7 +247,7 @@ M.tinymce_recordrtc.set_time = function() {
     countdownSeconds--;
 
     startStopBtn.querySelector('span#seconds').textContent = M.tinymce_recordrtc.pad(countdownSeconds % 60);
-    startStopBtn.querySelector('span#minutes').textContent = M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60));
+    startStopBtn.querySelector('span#minutes').textContent = M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60, 10));
 
     if (countdownSeconds === 0) {
         startStopBtn.click();

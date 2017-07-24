@@ -31,7 +31,7 @@ M.tinymce_recordrtc.view_init = function() {
     uploadBtn = document.querySelector('button#upload');
     recType = 'video';
     // Extract the numbers from the string, and convert to bytes.
-    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0]) * Math.pow(1024, 2);
+    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0], 10) * Math.pow(1024, 2);
 
     // Show alert and redirect user if connection is not secure.
     M.tinymce_recordrtc.check_secure();
