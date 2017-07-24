@@ -178,7 +178,7 @@ M.tinymce_recordrtc.stop_recording_audio = function(stream) {
     });
 
     // Set source of audio player.
-    var blob = new Blob(chunks);
+    var blob = new Blob(chunks, {type: mediaRecorder.mimeType});
     player.src = URL.createObjectURL(blob);
 
     // Show audio player with controls enabled, and unmute.

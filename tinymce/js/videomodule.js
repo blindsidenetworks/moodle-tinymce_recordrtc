@@ -186,7 +186,7 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
     });
 
     // Set source of video player.
-    var blob = new Blob(chunks);
+    var blob = new Blob(chunks, {type: mediaRecorder.mimeType});
     player.src = URL.createObjectURL(blob);
 
     // Enable controls for video player, and unmute.
