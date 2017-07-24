@@ -263,8 +263,7 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     if (!linkText) {
         return undefined;
     } else {
-        var annotation = '<div id="recordrtc_annotation" class="text-center"><a target="_blank" href="' + recording_url + '">';
-        annotation += linkText + '</a></div>';
+        var annotation = '<div><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
         return annotation;
     }
 };
