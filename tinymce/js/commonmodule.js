@@ -257,7 +257,7 @@ M.tinymce_recordrtc.set_time = function() {
 // Generates link to recorded annotation to be inserted.
 M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     var linkText = window.prompt(M.util.get_string('annotationprompt', 'tinymce_recordrtc'),
-                                 M.util.get_string('annotation' + type, 'tinymce_recordrtc'));
+                                 M.util.get_string('annotation:' + type, 'tinymce_recordrtc'));
 
     // Return HTML for annotation link, if user did not press "Cancel".
     if (!linkText) {
