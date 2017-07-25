@@ -66,7 +66,7 @@ M.tinymce_recordrtc.check_browser = function() {
     if (!((bowser.firefox && bowser.version >= 29) ||
           (bowser.chrome && bowser.version >= 49) ||
           (bowser.opera && bowser.version >= 36))) {
-        var alert = document.querySelector('div[id=alert-warning]');
+        var alert = document.querySelector('div#alert-warning');
         alert.parentElement.parentElement.classList.remove('hide');
     }
 };
