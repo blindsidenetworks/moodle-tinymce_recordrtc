@@ -7,6 +7,7 @@
 /** global: M */
 /** global: bowser */
 /** global: recordrtc */
+/** global: Blob */
 /** global: player */
 /** global: startStopBtn */
 /** global: uploadBtn */
