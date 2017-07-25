@@ -40,8 +40,6 @@ After the recording starts, a timer will begin counting down, indicating how muc
 
 When the recording is finished, the user can play it back to see/hear if it is what they want. To embed the file, the user must click "Attach Recording as Annotation". A dialog box will pop up asking the user what the link should appear as in the text editor. After that, the file gets embedded right where the cursor was in the text.
 
-![Recording stopped](https://user-images.githubusercontent.com/2160185/28218885-f2c34436-6887-11e7-8604-99da6e62bf22.png)
-
 ![Name the annotation](https://user-images.githubusercontent.com/2160185/28218899-098680a2-6888-11e7-9918-21ad49d87f24.png)
 
 ![Annotation in editor](https://user-images.githubusercontent.com/2160185/28218920-1ce627c4-6888-11e7-8914-59040c130590.png)
