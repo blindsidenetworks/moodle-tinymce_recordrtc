@@ -5,7 +5,7 @@ div {
 }
 
 .alert {
-    line-height: 10px;
+    line-height: 40px;
     text-align: center;
 }
 
@@ -19,8 +19,4 @@ video {
     width: 640px;
     height: 480px;
     margin: 0 auto;
-}
-
-.hide {
-    display: none;
 }

@@ -7,6 +7,7 @@
 /** global: M */
 /** global: bowser */
 /** global: recordrtc */
+/** global: Blob */
 /** global: player */
 /** global: startStopBtn */
 /** global: uploadBtn */
@@ -31,7 +32,7 @@ M.tinymce_recordrtc.view_init = function() {
     uploadBtn = document.querySelector('button#upload');
     recType = 'video';
     // Extract the numbers from the string, and convert to bytes.
-    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0]) * Math.pow(1024, 2);
+    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0], 10) * Math.pow(1024, 2);
 
     // Show alert and redirect user if connection is not secure.
     M.tinymce_recordrtc.check_secure();
@@ -120,11 +121,11 @@ M.tinymce_recordrtc.view_init = function() {
             player.controls = false;
 
             // Capture audio+video stream from webcam/microphone.
-            M.tinymce_recordrtc.captureAudioVideo(commonConfig);
+            M.tinymce_recordrtc.capture_audio_video(commonConfig);
 
             // When audio+video stream is successfully captured, start recording.
             btn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.startRecording(recType, btn.stream);
+                M.tinymce_recordrtc.start_recording(recType, btn.stream);
             };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
@@ -136,7 +137,7 @@ M.tinymce_recordrtc.view_init = function() {
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stopRecording(btn.stream);
+            M.tinymce_recordrtc.stop_recording_video(btn.stream);
 
             // Change button to offer to record again.
             btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
@@ -149,8 +150,8 @@ M.tinymce_recordrtc.view_init = function() {
 };
 
 // Setup to get audio+video stream from microphone/webcam.
-M.tinymce_recordrtc.captureAudioVideo = function(config) {
-    M.tinymce_recordrtc.captureUserMedia(
+M.tinymce_recordrtc.capture_audio_video = function(config) {
+    M.tinymce_recordrtc.capture_user_media(
         // Media constraints.
         {
             audio: true,
@@ -176,7 +177,7 @@ M.tinymce_recordrtc.captureAudioVideo = function(config) {
     );
 };
 
-M.tinymce_recordrtc.stopRecording = function(stream) {
+M.tinymce_recordrtc.stop_recording_video = function(stream) {
     // Stop recording microphone stream.
     mediaRecorder.stop();
 
@@ -186,7 +187,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
     });
 
     // Set source of video player.
-    var blob = new Blob(chunks);
+    var blob = new Blob(chunks, {type: mediaRecorder.mimeType});
     player.src = URL.createObjectURL(blob);
 
     // Enable controls for video player, and unmute.
@@ -208,7 +209,7 @@ M.tinymce_recordrtc.stopRecording = function(stream) {
             btn.disabled = true;
 
             // Upload recording to server.
-            M.tinymce_recordrtc.uploadToServer(recType, function(progress, fileURLOrError) {
+            M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
                 if (progress === 'ended') { // Insert annotation in text.
                     btn.disabled = false;
                     M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
