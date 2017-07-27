@@ -70,9 +70,7 @@ M.tinymce_recordrtc.view_init = function() {
                     // Make audio stream available at a higher level by making it a property of startStopBtn.
                     startStopBtn.stream = stream;
 
-                    if (startStopBtn.mediaCapturedCallback) {
-                        startStopBtn.mediaCapturedCallback();
-                    }
+                    M.tinymce_recordrtc.start_recording(recType, startStopBtn.stream);
                 },
 
                 // Revert button to "Record Again" when recording is stopped.
@@ -164,11 +162,6 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Capture audio stream from microphone.
             M.tinymce_recordrtc.capture_audio(commonConfig);
-
-            // When audio stream is successfully captured, start recording.
-            startStopBtn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.start_recording(recType, startStopBtn.stream);
-            };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
             clearInterval(countdownTicker);
@@ -233,7 +226,7 @@ M.tinymce_recordrtc.stop_recording_audio = function(stream) {
 
     // Show upload button.
     uploadBtn.ancestor().ancestor().removeClass('hide');
-    uploadBtn.set('textContent', M.util.get_string('attachrecording', 'atto_recordrtc'));
+    uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
     uploadBtn.set('disabled', false);
 
     // Handle when upload button is clicked.

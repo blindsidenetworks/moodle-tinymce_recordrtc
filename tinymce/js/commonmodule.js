@@ -149,7 +149,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     mediaRecorder.start(1000); // Capture in 1s chunks. Must be set to work with Firefox.
 
     // Mute audio, distracting while recording.
-    player.set('muted', true);;
+    player.set('muted', true);
 
     // Set recording timer to the time specified in the settings.
     countdownSeconds = params.timelimit;
@@ -161,7 +161,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     countdownTicker = setInterval(M.tinymce_recordrtc.set_time, 1000);
 
     // Make button clickable again, to allow stopping recording.
-    startStopBtn.disabled = false;
+    startStopBtn.set('disabled', false);
 };
 
 // Upload recorded audio/video to server.
