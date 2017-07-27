@@ -40,7 +40,7 @@ $string['videobitrate_desc'] = 'Quality of video recording (larger number means 
 $string['timelimit'] = 'Time limit in seconds';
 $string['timelimit_desc'] = 'Maximum recording length allowed for the audio/video clips';
 
-$string['insecurealert'] = 'You must use this plugin either over HTTPS or from localhost!';
+$string['insecurealert'] = 'Your browser might not allow this plugin to work unless it is used either over HTTPS or from localhost!';
 $string['inputdevicealert_title'] = 'Error!';
 $string['inputdevicealert'] = 'There is no input device enabled';
 $string['browseralert_title'] = 'Warning!';
