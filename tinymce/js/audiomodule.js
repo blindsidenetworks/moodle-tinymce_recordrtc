@@ -67,8 +67,8 @@ M.tinymce_recordrtc.view_init = function() {
             var commonConfig = {
                 // When the stream is captured from the microphone/webcam.
                 onMediaCaptured: function(stream) {
-                    // Make audio stream available at a higher level by making it a property of window.
-                    window.stream = stream;
+                    // Make audio stream available at a higher level by making it a property of startStopBtn.
+                    startStopBtn.stream = stream;
 
                     if (startStopBtn.mediaCapturedCallback) {
                         startStopBtn.mediaCapturedCallback();
@@ -167,7 +167,7 @@ M.tinymce_recordrtc.view_init = function() {
 
             // When audio stream is successfully captured, start recording.
             startStopBtn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.start_recording(recType, window.stream);
+                M.tinymce_recordrtc.start_recording(recType, startStopBtn.stream);
             };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
@@ -179,7 +179,7 @@ M.tinymce_recordrtc.view_init = function() {
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stop_recording_audio(window.stream);
+            M.tinymce_recordrtc.stop_recording_audio(startStopBtn.stream);
 
             // Change button to offer to record again.
             startStopBtn.set('textContent', M.util.get_string('recordagain', 'tinymce_recordrtc'));

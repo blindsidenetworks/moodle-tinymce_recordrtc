@@ -156,7 +156,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     countdownSeconds++;
     var timerText = M.util.get_string('stoprecording', 'tinymce_recordrtc');
     timerText += ' (<span id="minutes"></span>:<span id="seconds"></span>)';
-    startStopBtn.setHTML(timerLabel);
+    startStopBtn.setHTML(timerText);
     M.tinymce_recordrtc.set_time();
     countdownTicker = setInterval(M.tinymce_recordrtc.set_time, 1000);
 
