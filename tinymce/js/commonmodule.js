@@ -53,12 +53,8 @@ M.tinymce_recordrtc.check_secure = function() {
                          (window.location.host.indexOf('localhost') !== -1);
 
     if (!isSecureOrigin) {
-        Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({
-                title: M.util.get_string('insecurealert_title', 'tinymce_recordrtc'),
-                message: M.util.get_string('insecurealert', 'tinymce_recordrtc')
-            });
-        });
+        var alert = document.querySelector('div#alert-danger');
+        alert.parentElement.parentElement.classList.remove('hide');
     }
 };
 

@@ -48,10 +48,6 @@ M.tinymce_recordrtc.view_init = function() {
         if ((btn.textContent === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
             (btn.textContent === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
             (btn.textContent === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
-            // Hide alert-danger if it is shown.
-            var alert = document.querySelector('div[id=alert-danger]');
-            alert.parentElement.parentElement.classList.add('hide');
-
             // Make sure the upload button is not shown.
             uploadBtn.parentElement.parentElement.classList.add('hide');
 
