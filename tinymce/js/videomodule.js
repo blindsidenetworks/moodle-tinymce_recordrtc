@@ -27,11 +27,12 @@
  */
 M.tinymce_recordrtc.view_init = function() {
     // Assignment of global variables.
-    alertWarning = document.querySelector('div#alert-warning');
-    alertDanger = document.querySelector('div#alert-danger');
-    player = document.querySelector('video#player');
-    startStopBtn = document.querySelector('button#start-stop');
-    uploadBtn = document.querySelector('button#upload');
+    alertWarning = Y.one('div#alert-warning');
+    alertDanger = Y.one('div#alert-danger');
+    player = Y.one('video#player');
+    playerDOM = document.querySelector('video#player');
+    startStopBtn = Y.one('button#start-stop');
+    uploadBtn = Y.one('button#upload');
     recType = 'video';
     // Extract the numbers from the string, and convert to bytes.
     maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0], 10) * Math.pow(1024, 2);
@@ -42,21 +43,20 @@ M.tinymce_recordrtc.view_init = function() {
     M.tinymce_recordrtc.check_browser();
 
     // Run when user clicks on "record" button.
-    startStopBtn.onclick = function() {
+    startStopBtn.on('click', function() {
         var btn = this;
-        btn.disabled = true;
+        btn.set('disabled', true);
 
         // If button is displaying "Start Recording" or "Record Again".
-        if ((btn.textContent === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
-            (btn.textContent === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
-            (btn.textContent === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
+        if ((btn.get('textContent') === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
+            (btn.get('textContent') === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
+            (btn.get('textContent') === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
             // Make sure the upload button is not shown.
-            uploadBtn.parentElement.parentElement.classList.add('hide');
+            uploadBtn.ancestor().ancestor().addClass('hide');
 
             // Change look of recording button.
             if (!recordrtc.oldermoodle) {
-                startStopBtn.classList.remove('btn-outline-danger');
-                startStopBtn.classList.add('btn-danger');
+                btn.replaceClass('btn-outline-danger', 'btn-danger');
             }
 
             // Empty the array containing the previously recorded chunks.
@@ -77,7 +77,7 @@ M.tinymce_recordrtc.view_init = function() {
 
                 // Revert button to "Record Again" when recording is stopped.
                 onMediaStopped: function(btnLabel) {
-                    btn.textContent = btnLabel;
+                    btn.set('textContent', btnLabel);
                 },
 
                 // Handle recording errors.
@@ -163,8 +163,8 @@ M.tinymce_recordrtc.view_init = function() {
             };
 
             // Show video tag without controls to view webcam stream.
-            player.parentElement.parentElement.classList.remove('hide');
-            player.controls = false;
+            player.ancestor().ancestor().removeClass('hide');
+            player.set('controls', false);
 
             // Capture audio+video stream from webcam/microphone.
             M.tinymce_recordrtc.capture_audio_video(commonConfig);
@@ -179,20 +179,19 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Disable "Record Again" button for 1s to allow background processing (closing streams).
             setTimeout(function() {
-                btn.disabled = false;
+                btn.set('disabled', false);
             }, 1000);
 
             // Stop recording.
             M.tinymce_recordrtc.stop_recording_video(btn.stream);
 
             // Change button to offer to record again.
-            btn.textContent = M.util.get_string('recordagain', 'tinymce_recordrtc');
+            btn.set('textContent', M.util.get_string('recordagain', 'tinymce_recordrtc'));
             if (!recordrtc.oldermoodle) {
-                startStopBtn.classList.remove('btn-danger');
-                startStopBtn.classList.add('btn-outline-danger');
+                btn.replaceClass('btn-danger', 'btn-outline-danger');
             }
         }
-    };
+    });
 };
 
 // Setup to get audio+video stream from microphone/webcam.
@@ -210,8 +209,8 @@ M.tinymce_recordrtc.capture_audio_video = function(config) {
         // Success callback.
         function(audioVideoStream) {
             // Set video player source to microphone+webcam stream, and play it back as it's recording.
-            player.srcObject = audioVideoStream;
-            player.play();
+            playerDOM.srcObject = audioVideoStream;
+            playerDOM.play();
 
             config.onMediaCaptured(audioVideoStream);
         },
@@ -234,21 +233,21 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
 
     // Set source of video player.
     var blob = new Blob(chunks, {type: mediaRecorder.mimeType});
-    player.src = URL.createObjectURL(blob);
+    player.set('src', URL.createObjectURL(blob));
 
     // Enable controls for video player, and unmute.
-    player.muted = false;
-    player.controls = true;
+    player.set('muted', false);
+    player.set('controls', true);
 
     // Show upload button.
-    uploadBtn.parentElement.parentElement.classList.remove('hide');
-    uploadBtn.textContent = M.util.get_string('attachrecording', 'tinymce_recordrtc');
-    uploadBtn.disabled = false;
+    uploadBtn.ancestor().ancestor().removeClass('hide');
+    uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
+    uploadBtn.set('disabled', false);
 
     // Handle when upload button is clicked.
-    uploadBtn.onclick = function() {
+    uploadBtn.on('click', function() {
         // Trigger error if no recording has been made.
-        if (!player.src || chunks === []) {
+        if (!player.getAttribute('src') || chunks === []) {
             Y.use('moodle-core-notification-alert', function() {
                 new M.core.alert({
                     title: M.util.get_string('norecordingfound_title', 'tinymce_recordrtc'),
@@ -257,26 +256,26 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
             });
         } else {
             var btn = uploadBtn;
-            btn.disabled = true;
+            btn.set('disabled', true);
 
             // Upload recording to server.
             M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
                 if (progress === 'ended') { // Insert annotation in text.
-                    btn.disabled = false;
+                    btn.set('disabled', false);
                     M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
                 } else if (progress === 'upload-failed') { // Show error message in upload button.
-                    btn.disabled = false;
-                    btn.textContent = M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError;
+                    btn.set('disabled', false);
+                    btn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
                 } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
-                    btn.disabled = false;
-                    btn.textContent = M.util.get_string('uploadfailed404', 'tinymce_recordrtc');
+                    btn.set('disabled', false);
+                    btn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
                 } else if (progress === 'upload-aborted') {
-                    btn.disabled = false;
-                    btn.textContent = M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError;
+                    btn.set('disabled', false);
+                    btn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
                 } else {
-                    btn.textContent = progress;
+                    btn.set('textContent', progress);
                 }
             });
         }
-    };
+    });
 };
