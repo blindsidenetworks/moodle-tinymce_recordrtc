@@ -44,19 +44,18 @@ M.tinymce_recordrtc.view_init = function() {
 
     // Run when user clicks on "record" button.
     startStopBtn.on('click', function() {
-        var btn = this;
-        btn.set('disabled', true);
+        startStopBtn.set('disabled', true);
 
         // If button is displaying "Start Recording" or "Record Again".
-        if ((btn.get('textContent') === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
-            (btn.get('textContent') === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
-            (btn.get('textContent') === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
+        if ((startStopBtn.get('textContent') === M.util.get_string('startrecording', 'tinymce_recordrtc')) ||
+            (startStopBtn.get('textContent') === M.util.get_string('recordagain', 'tinymce_recordrtc')) ||
+            (startStopBtn.get('textContent') === M.util.get_string('recordingfailed', 'tinymce_recordrtc'))) {
             // Make sure the upload button is not shown.
             uploadBtn.ancestor().ancestor().addClass('hide');
 
             // Change look of recording button.
             if (!recordrtc.oldermoodle) {
-                btn.replaceClass('btn-outline-danger', 'btn-danger');
+                startStopBtn.replaceClass('btn-outline-danger', 'btn-danger');
             }
 
             // Empty the array containing the previously recorded chunks.
@@ -68,16 +67,16 @@ M.tinymce_recordrtc.view_init = function() {
                 // When the stream is captured from the microphone/webcam.
                 onMediaCaptured: function(stream) {
                     // Make video stream available at a higher level by making it a property of btn.
-                    btn.stream = stream;
+                    startStopBtn.stream = stream;
 
-                    if (btn.mediaCapturedCallback) {
-                        btn.mediaCapturedCallback();
+                    if (startStopBtn.mediaCapturedCallback) {
+                        startStopBtn.mediaCapturedCallback();
                     }
                 },
 
                 // Revert button to "Record Again" when recording is stopped.
                 onMediaStopped: function(btnLabel) {
-                    btn.set('textContent', btnLabel);
+                    startStopBtn.set('textContent', btnLabel);
                 },
 
                 // Handle recording errors.
@@ -170,8 +169,8 @@ M.tinymce_recordrtc.view_init = function() {
             M.tinymce_recordrtc.capture_audio_video(commonConfig);
 
             // When audio+video stream is successfully captured, start recording.
-            btn.mediaCapturedCallback = function() {
-                M.tinymce_recordrtc.start_recording(recType, btn.stream);
+            startStopBtn.mediaCapturedCallback = function() {
+                M.tinymce_recordrtc.start_recording(recType, startStopBtn.stream);
             };
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
@@ -179,16 +178,16 @@ M.tinymce_recordrtc.view_init = function() {
 
             // Disable "Record Again" button for 1s to allow background processing (closing streams).
             setTimeout(function() {
-                btn.set('disabled', false);
+                startStopBtn.set('disabled', false);
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stop_recording_video(btn.stream);
+            M.tinymce_recordrtc.stop_recording_video(startStopBtn.stream);
 
             // Change button to offer to record again.
-            btn.set('textContent', M.util.get_string('recordagain', 'tinymce_recordrtc'));
+            startStopBtn.set('textContent', M.util.get_string('recordagain', 'tinymce_recordrtc'));
             if (!recordrtc.oldermoodle) {
-                btn.replaceClass('btn-danger', 'btn-outline-danger');
+                startStopBtn.replaceClass('btn-danger', 'btn-outline-danger');
             }
         }
     });
@@ -255,25 +254,24 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
                 });
             });
         } else {
-            var btn = uploadBtn;
-            btn.set('disabled', true);
+            uploadBtn.set('disabled', true);
 
             // Upload recording to server.
             M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
                 if (progress === 'ended') { // Insert annotation in text.
-                    btn.set('disabled', false);
+                    uploadBtn.set('disabled', false);
                     M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
                 } else if (progress === 'upload-failed') { // Show error message in upload button.
-                    btn.set('disabled', false);
-                    btn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
                 } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
-                    btn.set('disabled', false);
-                    btn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
                 } else if (progress === 'upload-aborted') {
-                    btn.set('disabled', false);
-                    btn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
                 } else {
-                    btn.set('textContent', progress);
+                    uploadBtn.set('textContent', progress);
                 }
             });
         }
