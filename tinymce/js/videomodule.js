@@ -247,7 +247,7 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
     // Handle when upload button is clicked.
     uploadBtn.on('click', function() {
         // Trigger error if no recording has been made.
-        if (!player.getAttribute('src') || chunks === []) {
+        if (!player.get('src') || chunks === []) {
             Y.use('moodle-core-notification-alert', function() {
                 new M.core.alert({
                     title: M.util.get_string('norecordingfound_title', 'tinymce_recordrtc'),

@@ -169,7 +169,7 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
     var xhr = new XMLHttpRequest();
 
     // Get src media of audio/video tag.
-    xhr.open('GET', player.getAttribute('src'), true);
+    xhr.open('GET', player.get('src'), true);
     xhr.responseType = 'blob';
 
     xhr.onload = function() {
