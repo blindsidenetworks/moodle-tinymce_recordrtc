@@ -36,6 +36,8 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 })();
 
 // Initialize some variables.
+var alertWarning = null;
+var alertDanger = null;
 var player = null;
 var startStopBtn = null;
 var uploadBtn = null;
@@ -53,8 +55,7 @@ M.tinymce_recordrtc.check_secure = function() {
                          (window.location.host.indexOf('localhost') !== -1);
 
     if (!isSecureOrigin) {
-        var alert = document.querySelector('div#alert-danger');
-        alert.parentElement.parentElement.classList.remove('hide');
+        alertDanger.parentElement.parentElement.classList.remove('hide');
     }
 };
 
@@ -66,8 +67,7 @@ M.tinymce_recordrtc.check_browser = function() {
     if (!((bowser.firefox && bowser.version >= 29) ||
           (bowser.chrome && bowser.version >= 49) ||
           (bowser.opera && bowser.version >= 36))) {
-        var alert = document.querySelector('div#alert-warning');
-        alert.parentElement.parentElement.classList.remove('hide');
+        alertWarning.parentElement.parentElement.classList.remove('hide');
     }
 };
 

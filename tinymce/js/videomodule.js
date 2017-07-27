@@ -27,6 +27,8 @@
  */
 M.tinymce_recordrtc.view_init = function() {
     // Assignment of global variables.
+    alertWarning = document.querySelector('div#alert-warning');
+    alertDanger = document.querySelector('div#alert-danger');
     player = document.querySelector('video#player');
     startStopBtn = document.querySelector('button#start-stop');
     uploadBtn = document.querySelector('button#upload');
