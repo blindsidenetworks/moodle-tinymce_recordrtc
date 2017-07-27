@@ -54,7 +54,10 @@ M.tinymce_recordrtc.check_secure = function() {
 
     if (!isSecureOrigin) {
         Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({message: M.util.get_string('insecurealert', 'tinymce_recordrtc')});
+            new M.core.alert({
+                title: M.util.get_string('insecurealert_title', 'tinymce_recordrtc'),
+                message: M.util.get_string('insecurealert', 'tinymce_recordrtc')
+            });
         });
     }
 };
@@ -90,7 +93,10 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
 
         startStopBtn.click();
         Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')});
+            new M.core.alert({
+                title: M.util.get_string('nearingmaxsize_title', 'tinymce_recordrtc'),
+                message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')
+            });
         });
     } else if ((blobSize >= maxUploadSize) && (localStorage.getItem('alerted') === 'true')) {
         localStorage.removeItem('alerted');

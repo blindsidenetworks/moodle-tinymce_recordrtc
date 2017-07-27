@@ -203,7 +203,10 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
         // Trigger error if no recording has been made.
         if (!player.src || chunks === []) {
             Y.use('moodle-core-notification-alert', function() {
-                new M.core.alert({message: M.util.get_string('norecordingfound', 'tinymce_recordrtc')});
+                new M.core.alert({
+                    title: M.util.get_string('norecordingfound_title', 'tinymce_recordrtc'),
+                    message: M.util.get_string('norecordingfound', 'tinymce_recordrtc')
+                });
             });
         } else {
             var btn = uploadBtn;
