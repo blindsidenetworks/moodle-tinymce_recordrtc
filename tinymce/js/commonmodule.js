@@ -88,7 +88,9 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
     if ((blobSize >= maxUploadSize) && (!localStorage.getItem('alerted'))) {
         localStorage.setItem('alerted', 'true');
 
-        startStopBtn.simulate('click');
+        Y.use('node-event-simulate', function() {
+            startStopBtn.simulate('click');
+        });
         Y.use('moodle-core-notification-alert', function() {
             new M.core.alert({
                 title: M.util.get_string('nearingmaxsize_title', 'tinymce_recordrtc'),
@@ -256,7 +258,9 @@ M.tinymce_recordrtc.set_time = function() {
     startStopBtn.one('span#minutes').set('textContent', M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60, 10)));
 
     if (countdownSeconds === 0) {
-        startStopBtn.simulate('click');
+        Y.use('node-event-simulate', function() {
+            startStopBtn.simulate('click');
+        });
     }
 };
 
