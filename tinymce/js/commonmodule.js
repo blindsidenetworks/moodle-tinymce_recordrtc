@@ -53,8 +53,9 @@ M.tinymce_recordrtc.check_secure = function() {
                          (window.location.host.indexOf('localhost') !== -1);
 
     if (!isSecureOrigin) {
-        window.alert(M.util.get_string('insecurealert', 'tinymce_recordrtc'));
-        tinyMCEPopup.close();
+        Y.use('moodle-core-notification-alert', function() {
+            new M.core.alert({message: M.util.get_string('insecurealert', 'tinymce_recordrtc')});
+        });
     }
 };
 
@@ -88,7 +89,9 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
         localStorage.setItem('alerted', 'true');
 
         startStopBtn.click();
-        window.alert(M.util.get_string('nearingmaxsize', 'tinymce_recordrtc'));
+        Y.use('moodle-core-notification-alert', function() {
+            new M.core.alert({message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')});
+        });
     } else if ((blobSize >= maxUploadSize) && (localStorage.getItem('alerted') === 'true')) {
         localStorage.removeItem('alerted');
     } else {

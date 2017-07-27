@@ -104,9 +104,8 @@ M.tinymce_recordrtc.view_init = function() {
                                (error.name === 'NotFoundError')) { // If Device Not Found error.
                         var alert = document.querySelector('div[id=alert-danger]');
                         alert.parentElement.parentElement.classList.remove('hide');
-                        var alertMessage = M.util.get_string('inputdevicealert', 'tinymce_recordrtc') + ' ';
-                        alertMessage += M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
-                        alert.textContent = alertMessage;
+                        alert.textContent = M.util.get_string('inputdevicealert_title', 'tinymce_recordrtc') + ' ';
+                        alert.textContent += M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
 
                         btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
                     }
@@ -203,7 +202,9 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
     uploadBtn.onclick = function() {
         // Trigger error if no recording has been made.
         if (!player.src || chunks === []) {
-            return window.alert(M.util.get_string('norecordingfound', 'tinymce_recordrtc'));
+            Y.use('moodle-core-notification-alert', function() {
+                new M.core.alert({message: M.util.get_string('norecordingfound', 'tinymce_recordrtc')});
+            });
         } else {
             var btn = uploadBtn;
             btn.disabled = true;
@@ -226,8 +227,6 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
                     btn.textContent = progress;
                 }
             });
-
-            return undefined;
         }
     };
 };
