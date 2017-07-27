@@ -57,6 +57,10 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
             $output .= html_writer::start_tag('div', array('class' => 'col-xs-12'));
             $output .= html_writer::start_tag('div', array('id' => 'alert-danger', 'class' => 'alert alert-danger'));
         }
+        $output .= html_writer::start_tag('strong');
+        $output .= get_string('insecurealert_title', 'tinymce_recordrtc');
+        $output .= html_writer::end_tag('strong');
+        $output .= get_string('insecurealert', 'tinymce_recordrtc');
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
