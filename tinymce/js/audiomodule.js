@@ -83,28 +83,77 @@ M.tinymce_recordrtc.view_init = function() {
                 onMediaCapturingFailed: function(error) {
                     var btnLabel = null;
 
-                    // If Firefox and Permission Denied error.
-                    if ((error.name === 'PermissionDeniedError') && bowser.firefox) {
-                        InstallTrigger.install({
-                            'Foo': {
-                                // Link: https://addons.mozilla.org/firefox/downloads/latest/655146/addon-655146...
-                                // ...-latest.xpi?src=dp-btn-primary.
-                                URL: 'https://addons.mozilla.org/en-US/firefox/addon/enable-screen-capturing/',
-                                toString: function() {
-                                    return this.URL;
-                                }
-                            }
-                        });
+                    // Handle getUserMedia-thrown errors.
+                    switch (error.name) {
+                        case 'AbortError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumabort_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumabort', 'tinymce_recordrtc')
+                                });
+                            });
 
-                        btnLabel = M.util.get_string('startrecording', 'tinymce_recordrtc');
-                    } else if ((error.name === 'DevicesNotFoundError') ||
-                               (error.name === 'NotFoundError')) { // If Device Not Found error.
-                        var alert = document.querySelector('div[id=alert-danger]');
-                        alert.parentElement.parentElement.classList.remove('hide');
-                        alert.textContent = M.util.get_string('inputdevicealert_title', 'tinymce_recordrtc') + ' ';
-                        alert.textContent += M.util.get_string('inputdevicealert', 'tinymce_recordrtc');
+                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            break;
+                        case 'NotAllowedError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumnotallowed_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumnotallowed', 'tinymce_recordrtc')
+                                });
+                            });
 
-                        btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            break;
+                        case 'NotFoundError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumnotfound_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumnotfound', 'tinymce_recordrtc')
+                                });
+                            });
+
+                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            break;
+                        case 'NotReadableError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumnotreadable_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumnotreadable', 'tinymce_recordrtc')
+                                });
+                            });
+
+                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            break;
+                        case 'OverConstrainedError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumoverconstrained_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumoverconstrained', 'tinymce_recordrtc')
+                                });
+                            });
+
+                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            break;
+                        case 'SecurityError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumsecurity_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumsecurity', 'tinymce_recordrtc')
+                                });
+                            });
+
+                            cm.editorScope.closeDialogue(cm.editorScope);
+                            break;
+                        case 'TypeError':
+                            Y.use('moodle-core-notification-alert', function() {
+                                new M.core.alert({
+                                    title: M.util.get_string('gumtype_title', 'tinymce_recordrtc'),
+                                    message: M.util.get_string('gumtype', 'tinymce_recordrtc')
+                                });
+                            });
+
+                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
                     }
 
                     // Proceed to treat as a stopped recording.
