@@ -36,7 +36,10 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 })();
 
 // Initialize some variables.
+var alertWarning = null;
+var alertDanger = null;
 var player = null;
+var playerDOM = null;
 var startStopBtn = null;
 var uploadBtn = null;
 var countdownSeconds = null;
@@ -53,8 +56,7 @@ M.tinymce_recordrtc.check_secure = function() {
                          (window.location.host.indexOf('localhost') !== -1);
 
     if (!isSecureOrigin) {
-        window.alert(M.util.get_string('insecurealert', 'tinymce_recordrtc'));
-        tinyMCEPopup.close();
+        alertDanger.ancestor().ancestor().removeClass('hide');
     }
 };
 
@@ -66,8 +68,7 @@ M.tinymce_recordrtc.check_browser = function() {
     if (!((bowser.firefox && bowser.version >= 29) ||
           (bowser.chrome && bowser.version >= 49) ||
           (bowser.opera && bowser.version >= 36))) {
-        var alert = document.querySelector('div#alert-warning');
-        alert.parentElement.parentElement.classList.remove('hide');
+        alertWarning.ancestor().ancestor().removeClass('hide');
     }
 };
 
@@ -87,8 +88,15 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
     if ((blobSize >= maxUploadSize) && (!localStorage.getItem('alerted'))) {
         localStorage.setItem('alerted', 'true');
 
-        startStopBtn.click();
-        window.alert(M.util.get_string('nearingmaxsize', 'tinymce_recordrtc'));
+        Y.use('node-event-simulate', function() {
+            startStopBtn.simulate('click');
+        });
+        Y.use('moodle-core-notification-alert', function() {
+            new M.core.alert({
+                title: M.util.get_string('nearingmaxsize_title', 'tinymce_recordrtc'),
+                message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')
+            });
+        });
     } else if ((blobSize >= maxUploadSize) && (localStorage.getItem('alerted') === 'true')) {
         localStorage.removeItem('alerted');
     } else {
@@ -143,19 +151,19 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     mediaRecorder.start(1000); // Capture in 1s chunks. Must be set to work with Firefox.
 
     // Mute audio, distracting while recording.
-    player.muted = true;
+    player.set('muted', true);
 
     // Set recording timer to the time specified in the settings.
     countdownSeconds = params.timelimit;
     countdownSeconds++;
-    var timerLabel = M.util.get_string('stoprecording', 'tinymce_recordrtc') + ' ';
-    timerLabel += '(<span id="minutes"></span>:<span id="seconds"></span>)';
-    startStopBtn.innerHTML = timerLabel;
+    var timerText = M.util.get_string('stoprecording', 'tinymce_recordrtc');
+    timerText += ' (<span id="minutes"></span>:<span id="seconds"></span>)';
+    startStopBtn.setHTML(timerText);
     M.tinymce_recordrtc.set_time();
     countdownTicker = setInterval(M.tinymce_recordrtc.set_time, 1000);
 
     // Make button clickable again, to allow stopping recording.
-    startStopBtn.disabled = false;
+    startStopBtn.set('disabled', false);
 };
 
 // Upload recorded audio/video to server.
@@ -163,7 +171,7 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
     var xhr = new XMLHttpRequest();
 
     // Get src media of audio/video tag.
-    xhr.open('GET', player.src, true);
+    xhr.open('GET', player.get('src'), true);
     xhr.responseType = 'blob';
 
     xhr.onload = function() {
@@ -246,11 +254,13 @@ M.tinymce_recordrtc.pad = function(val) {
 M.tinymce_recordrtc.set_time = function() {
     countdownSeconds--;
 
-    startStopBtn.querySelector('span#seconds').textContent = M.tinymce_recordrtc.pad(countdownSeconds % 60);
-    startStopBtn.querySelector('span#minutes').textContent = M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60, 10));
+    startStopBtn.one('span#seconds').set('textContent', M.tinymce_recordrtc.pad(countdownSeconds % 60));
+    startStopBtn.one('span#minutes').set('textContent', M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60, 10)));
 
     if (countdownSeconds === 0) {
-        startStopBtn.click();
+        Y.use('node-event-simulate', function() {
+            startStopBtn.simulate('click');
+        });
     }
 };
 
@@ -275,7 +285,7 @@ M.tinymce_recordrtc.insert_annotation = function(type, recording_url) {
     // Insert annotation link.
     // If user pressed "Cancel", just go back to main recording screen.
     if (!annotation) {
-        uploadBtn.textContent = M.util.get_string('attachrecording', 'tinymce_recordrtc');
+        uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
     } else {
         tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
         tinyMCEPopup.close();
