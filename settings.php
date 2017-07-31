@@ -40,7 +40,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('tinymce_recordrtc/videobitrate',
         get_string('videobitrate', 'tinymce_recordrtc'), get_string('videobitrate_desc', 'tinymce_recordrtc'),
         '2500000', PARAM_RAW, 7));
-    $settings->add(new admin_setting_configtext_with_maxlength('tinymce_recordrtc/timelimit',
+    $settings->add(new admin_setting_configtext('tinymce_recordrtc/timelimit',
         get_string('timelimit', 'tinymce_recordrtc'), get_string('timelimit_desc', 'tinymce_recordrtc'),
         '120', PARAM_RAW, 4, 4));
 }

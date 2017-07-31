@@ -7,24 +7,25 @@
 // Scrutinizer CI directives.
 /** global: M */
 /** global: tinyMCEPopup */
+/** global: Y */
+/** global: bowser */
 /** global: recordrtc */
-/** global: player */
-/** global: startStopBtn */
-/** global: uploadBtn */
+/** global: alertWarning */
+/** global: alertDanger */
+/** global: blobSize */
+/** global: chunks */
 /** global: countdownSeconds */
 /** global: countdownTicker */
-/** global: recType */
-/** global: mediaRecorder */
-/** global: chunks */
-/** global: blobSize */
 /** global: maxUploadSize */
+/** global: mediaRecorder */
+/** global: player */
+/** global: playerDOM */
+/** global: recType */
+/** global: startStopBtn */
+/** global: tinyMCEPopup */
+/** global: uploadBtn */
 
-/**
- * This function is initialized from PHP
- *
- * @param {Object}
- *            Y YUI instance
- */
+// This function is initialized from PHP.
 M.tinymce_recordrtc.view_init = function() {
     // Assignment of global variables.
     alertWarning = Y.one('div#alert-warning');
