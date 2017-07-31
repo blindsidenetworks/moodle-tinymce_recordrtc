@@ -86,8 +86,8 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
     // Push recording slice to array.
     // If total size of recording so far exceeds max upload limit, stop recording.
     // An extra condition exists to avoid displaying alert twice.
-    if ((blobSize >= maxUploadSize) && (!localStorage.getItem('alerted'))) {
-        localStorage.setItem('alerted', 'true');
+    if ((blobSize >= maxUploadSize) && (!window.localStorage.getItem('alerted'))) {
+        window.localStorage.setItem('alerted', 'true');
 
         Y.use('node-event-simulate', function() {
             startStopBtn.simulate('click');
@@ -98,8 +98,8 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
                 message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')
             });
         });
-    } else if ((blobSize >= maxUploadSize) && (localStorage.getItem('alerted') === 'true')) {
-        localStorage.removeItem('alerted');
+    } else if ((blobSize >= maxUploadSize) && (window.localStorage.getItem('alerted') === 'true')) {
+        window.localStorage.removeItem('alerted');
     } else {
         chunks.push(event.data);
     }
