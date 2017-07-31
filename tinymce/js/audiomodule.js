@@ -5,19 +5,24 @@
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
 /** global: M */
+/** global: Y */
+/** global: Blob */
 /** global: bowser */
 /** global: recordrtc */
-/** global: Blob */
-/** global: player */
-/** global: startStopBtn */
-/** global: uploadBtn */
+
+/** global: alertWarning */
+/** global: alertDanger */
+/** global: blobSize */
+/** global: chunks */
 /** global: countdownSeconds */
 /** global: countdownTicker */
-/** global: recType */
-/** global: mediaRecorder */
-/** global: chunks */
-/** global: blobSize */
 /** global: maxUploadSize */
+/** global: mediaRecorder */
+/** global: player */
+/** global: playerDOM */
+/** global: recType */
+/** global: startStopBtn */
+/** global: uploadBtn */
 
 /**
  * This function is initialized from PHP

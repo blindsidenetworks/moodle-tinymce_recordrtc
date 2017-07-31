@@ -5,10 +5,11 @@
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
 /** global: M */
-/** global: tinyMCEPopup */
+/** global: Y */
 /** global: bowser */
 /** global: params */
 /** global: recordrtc */
+/** global: tinyMCEPopup */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
@@ -38,17 +39,17 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 // Initialize some variables.
 var alertWarning = null;
 var alertDanger = null;
-var player = null;
-var playerDOM = null;
-var startStopBtn = null;
-var uploadBtn = null;
+var blobSize = null;
+var chunks = null;
 var countdownSeconds = null;
 var countdownTicker = null;
-var recType = null;
-var mediaRecorder = null;
-var chunks = null;
-var blobSize = null;
 var maxUploadSize = null;
+var mediaRecorder = null;
+var player = null;
+var playerDOM = null;
+var recType = null;
+var startStopBtn = null;
+var uploadBtn = null;
 
 // Notify and redirect user if plugin is used from insecure location.
 M.tinymce_recordrtc.check_secure = function() {
