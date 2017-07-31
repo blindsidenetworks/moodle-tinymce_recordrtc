@@ -6,6 +6,7 @@
 
 /** global: M */
 /** global: Y */
+/** global: URL */
 /** global: Blob */
 /** global: bowser */
 /** global: recordrtc */
@@ -22,14 +23,10 @@
 /** global: playerDOM */
 /** global: recType */
 /** global: startStopBtn */
+/** global: tinyMCEPopup */
 /** global: uploadBtn */
 
-/**
- * This function is initialized from PHP
- *
- * @param {Object}
- *            Y YUI instance
- */
+// This function is initialized from PHP.
 M.tinymce_recordrtc.view_init = function() {
     // Assignment of global variables.
     alertWarning = Y.one('div#alert-warning');
