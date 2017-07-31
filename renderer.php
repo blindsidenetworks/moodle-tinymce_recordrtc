@@ -18,17 +18,15 @@
  * Moodle renderer used to display special elements of the lesson module.
  *
  * @package    tinymce_recordrtc
- * @copyright  2017 Blindside Networks Inc.
  * @author     Jacob Prud'homme (jacob [dt] prudhomme [at] blindsidenetworks [dt] com)
+ * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * The custom renderer for this plugin.
- * @copyright  2017 Blindside Networks Inc.
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * This class defines the custom renderer for this plugin.
  */
 class tinymce_recordrtc_renderer extends plugin_renderer_base {
     /**
