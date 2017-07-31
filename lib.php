@@ -19,7 +19,7 @@
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
- * @copyright  2016 to present, Blindside Networks Inc.
+ * @copyright  2017 Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -34,6 +34,8 @@ const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
 
 /**
  * This class defines functions for the plugin.
+ * @copyright  2017 Blindside Networks Inc.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tinymce_recordrtc extends editor_tinymce_plugin {
     /** @var array list of buttons defined by this plugin */

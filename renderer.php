@@ -21,10 +21,15 @@
  * @copyright  2017 Blindside Networks Inc.
  * @author     Jacob Prud'homme (jacob [dt] prudhomme [at] blindsidenetworks [dt] com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- **/
+ */
 
 defined('MOODLE_INTERNAL') || die;
 
+/**
+ * The custom renderer for this plugin.
+ * @copyright  2017 Blindside Networks Inc.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class tinymce_recordrtc_renderer extends plugin_renderer_base {
     /**
      * Renders the HTML for the plugin, for the alerts section.
