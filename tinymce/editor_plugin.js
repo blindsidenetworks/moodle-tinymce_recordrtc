@@ -7,7 +7,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- /** global: tinymce */
+// Scrutinizer CI directives.
+/** global: tinymce */
 
 (function() {
     tinymce.PluginManager.requireLangPack('recordrtc');
@@ -55,8 +56,8 @@
                 var viewparams = '';
                 for (var key in audiortc) {
                     if (audiortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key);
-                        viewparams += '=' + encodeURIComponent(audiortc[key]);
+                        viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
+                        viewparams += '=' + window.encodeURIComponent(audiortc[key]);
                     }
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php';
@@ -67,10 +68,10 @@
                 };
                 ed.windowManager.onClose.add(onClose);
                 var vp = ed.dom.getViewPort(),
-                    baseWidth = 640 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    baseWidth = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                     percentOfViewportWidth = vp.w * 0.75,
                     width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-                    height = 200 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    height = 200 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                     maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
                 if (maximizedmode) {
                     width = vp.w;
@@ -102,8 +103,8 @@
                 var viewparams = '';
                 for (var key in videortc) {
                     if (videortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + encodeURIComponent(key);
-                        viewparams += '=' + encodeURIComponent(videortc[key]);
+                        viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
+                        viewparams += '=' + window.encodeURIComponent(videortc[key]);
                     }
                 }
                 var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php';
@@ -114,10 +115,10 @@
                 };
                 ed.windowManager.onClose.add(onClose);
                 var vp = ed.dom.getViewPort(),
-                    baseWidth = 720 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    baseWidth = 720 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                     percentOfViewportWidth = vp.w * 0.75,
                     width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-                    height = 640 + parseInt(ed.getLang('advimage.delta_width', 0)),
+                    height = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                     maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
                 if (maximizedmode) {
                     width = vp.w;
