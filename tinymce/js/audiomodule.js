@@ -4,13 +4,11 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+// Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
-/** global: URL */
-/** global: Blob */
-/** global: bowser */
+/** global: tinyMCEPopup */
 /** global: recordrtc */
-
 /** global: alertWarning */
 /** global: alertDanger */
 /** global: blobSize */
@@ -23,7 +21,6 @@
 /** global: playerDOM */
 /** global: recType */
 /** global: startStopBtn */
-/** global: tinyMCEPopup */
 /** global: uploadBtn */
 
 // This function is initialized from PHP.
@@ -37,7 +34,7 @@ M.tinymce_recordrtc.view_init = function() {
     uploadBtn = Y.one('button#upload');
     recType = 'audio';
     // Extract the numbers from the string, and convert to bytes.
-    maxUploadSize = parseInt(recordrtc.maxfilesize.match(/\d+/)[0], 10) * Math.pow(1024, 2);
+    maxUploadSize = window.parseInt(recordrtc.maxfilesize.match(/\d+/)[0], 10) * Math.pow(1024, 2);
 
     // Show alert and redirect user if connection is not secure.
     M.tinymce_recordrtc.check_secure();
@@ -82,7 +79,7 @@ M.tinymce_recordrtc.view_init = function() {
 
                 // Handle recording errors.
                 onMediaCapturingFailed: function(error) {
-                    var btnLabel = null;
+                    var btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
 
                     // Handle getUserMedia-thrown errors.
                     switch (error.name) {
@@ -94,7 +91,8 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            // Proceed to treat as a stopped recording.
+                            commonConfig.onMediaStopped(btnLabel);
                             break;
                         case 'NotAllowedError':
                             Y.use('moodle-core-notification-alert', function() {
@@ -104,7 +102,8 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            // Proceed to treat as a stopped recording.
+                            commonConfig.onMediaStopped(btnLabel);
                             break;
                         case 'NotFoundError':
                             Y.use('moodle-core-notification-alert', function() {
@@ -114,7 +113,8 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            // Proceed to treat as a stopped recording.
+                            commonConfig.onMediaStopped(btnLabel);
                             break;
                         case 'NotReadableError':
                             Y.use('moodle-core-notification-alert', function() {
@@ -124,7 +124,8 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            // Proceed to treat as a stopped recording.
+                            commonConfig.onMediaStopped(btnLabel);
                             break;
                         case 'OverConstrainedError':
                             Y.use('moodle-core-notification-alert', function() {
@@ -134,7 +135,8 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            // Proceed to treat as a stopped recording.
+                            commonConfig.onMediaStopped(btnLabel);
                             break;
                         case 'SecurityError':
                             Y.use('moodle-core-notification-alert', function() {
@@ -154,11 +156,12 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
+                            // Proceed to treat as a stopped recording.
+                            commonConfig.onMediaStopped(btnLabel);
+                            break;
+                        default:
+                            break;
                     }
-
-                    // Proceed to treat as a stopped recording.
-                    commonConfig.onMediaStopped(btnLabel);
                 }
             };
 
@@ -166,10 +169,10 @@ M.tinymce_recordrtc.view_init = function() {
             M.tinymce_recordrtc.capture_audio(commonConfig);
         } else { // If button is displaying "Stop Recording".
             // First of all clears the countdownTicker.
-            clearInterval(countdownTicker);
+            window.clearInterval(countdownTicker);
 
             // Disable "Record Again" button for 1s to allow background processing (closing streams).
-            setTimeout(function() {
+            window.setTimeout(function() {
                 startStopBtn.set('disabled', false);
             }, 1000);
 
@@ -218,8 +221,8 @@ M.tinymce_recordrtc.stop_recording_audio = function(stream) {
     });
 
     // Set source of audio player.
-    var blob = new Blob(chunks, {type: mediaRecorder.mimeType});
-    player.set('src', URL.createObjectURL(blob));
+    var blob = new window.Blob(chunks, {type: mediaRecorder.mimeType});
+    player.set('src', window.URL.createObjectURL(blob));
 
     // Show audio player with controls enabled, and unmute.
     player.set('muted', false);

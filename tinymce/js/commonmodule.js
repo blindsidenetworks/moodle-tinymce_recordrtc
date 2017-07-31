@@ -4,10 +4,10 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+// Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
 /** global: bowser */
-/** global: params */
 /** global: recordrtc */
 /** global: tinyMCEPopup */
 
@@ -19,7 +19,7 @@ M.tinymce_recordrtc = M.tinymce_recordrtc || {};
     var r = /([^&=]+)=?([^&]*)/g;
 
     var d = function(s) {
-        return decodeURIComponent(s.replace(/\+/g, ' '));
+        return window.decodeURIComponent(s.replace(/\+/g, ' '));
     };
 
     var search = window.location.search;
@@ -75,7 +75,7 @@ M.tinymce_recordrtc.check_browser = function() {
 
 // Capture webcam/microphone stream.
 M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
-    navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+    window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 };
 
 // Add chunks of audio/video to array when made available.
@@ -86,8 +86,8 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
     // Push recording slice to array.
     // If total size of recording so far exceeds max upload limit, stop recording.
     // An extra condition exists to avoid displaying alert twice.
-    if ((blobSize >= maxUploadSize) && (!localStorage.getItem('alerted'))) {
-        localStorage.setItem('alerted', 'true');
+    if ((blobSize >= maxUploadSize) && (!window.localStorage.getItem('alerted'))) {
+        window.localStorage.setItem('alerted', 'true');
 
         Y.use('node-event-simulate', function() {
             startStopBtn.simulate('click');
@@ -98,8 +98,8 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
                 message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')
             });
         });
-    } else if ((blobSize >= maxUploadSize) && (localStorage.getItem('alerted') === 'true')) {
-        localStorage.removeItem('alerted');
+    } else if ((blobSize >= maxUploadSize) && (window.localStorage.getItem('alerted') === 'true')) {
+        window.localStorage.removeItem('alerted');
     } else {
         chunks.push(event.data);
     }
@@ -112,40 +112,40 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     if (type === 'audio') {
         if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
             options = {
-                audioBitsPerSecond: params.audiobitrate,
+                audioBitsPerSecond: window.params.audiobitrate,
                 mimeType: 'audio/webm;codecs=opus'
             };
         } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
             options = {
-                audioBitsPerSecond: params.audiobitrate,
+                audioBitsPerSecond: window.params.audiobitrate,
                 mimeType: 'audio/ogg;codecs=opus'
             };
         }
     } else {
         if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
             options = {
-                audioBitsPerSecond: params.audiobitrate,
-                videoBitsPerSecond: params.videobitrate,
+                audioBitsPerSecond: window.params.audiobitrate,
+                videoBitsPerSecond: window.params.videobitrate,
                 mimeType: 'video/webm;codecs=vp9,opus'
             };
         } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
             options = {
-                audioBitsPerSecond: params.audiobitrate,
-                videoBitsPerSecond: params.videobitrate,
+                audioBitsPerSecond: window.params.audiobitrate,
+                videoBitsPerSecond: window.params.videobitrate,
                 mimeType: 'video/webm;codecs=h264,opus'
             };
         } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
             options = {
-                audioBitsPerSecond: params.audiobitrate,
-                videoBitsPerSecond: params.videobitrate,
+                audioBitsPerSecond: window.params.audiobitrate,
+                videoBitsPerSecond: window.params.videobitrate,
                 mimeType: 'video/webm;codecs=vp8,opus'
             };
         }
     }
 
     // If none of the options above are supported, fall back on browser defaults.
-    mediaRecorder = options ? new MediaRecorder(stream, options)
-                            : new MediaRecorder(stream);
+    mediaRecorder = options ? new window.MediaRecorder(stream, options)
+                            : new window.MediaRecorder(stream);
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
@@ -155,7 +155,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     player.set('muted', true);
 
     // Set recording timer to the time specified in the settings.
-    countdownSeconds = params.timelimit;
+    countdownSeconds = window.params.timelimit;
     countdownSeconds++;
     var timerText = M.util.get_string('stoprecording', 'tinymce_recordrtc');
     timerText += ' (<span id="minutes"></span>:<span id="seconds"></span>)';
@@ -169,7 +169,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
 
 // Upload recorded audio/video to server.
 M.tinymce_recordrtc.upload_to_server = function(type, callback) {
-    var xhr = new XMLHttpRequest();
+    var xhr = new window.XMLHttpRequest();
 
     // Get src media of audio/video tag.
     xhr.open('GET', player.get('src'), true);
@@ -189,9 +189,9 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
             }
 
             // Create FormData to send to PHP upload/save script.
-            var formData = new FormData();
+            var formData = new window.FormData();
             formData.append('contextid', recordrtc.contextid);
-            formData.append('sesskey', parent.M.cfg.sesskey);
+            formData.append('sesskey', M.cfg.sesskey);
             formData.append(type + '-filename', fileName);
             formData.append(type + '-blob', blob);
 
@@ -212,7 +212,7 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
 
 // Handle XHR sending/receiving/status.
 M.tinymce_recordrtc.make_xmlhttprequest = function(url, data, callback) {
-    var xhr = new XMLHttpRequest();
+    var xhr = new window.XMLHttpRequest();
 
     xhr.onreadystatechange = function() {
         if ((xhr.readyState === 4) && (xhr.status === 200)) { // When request is finished and successful.
