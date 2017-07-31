@@ -6,15 +6,14 @@
 
 // Scrutinizer CI directives.
 /** global: M */
-/** global: tinyMCEPopup */
 /** global: Y */
-/** global: bowser */
+/** global: tinyMCEPopup */
 /** global: recordrtc */
 /** global: alertWarning */
 /** global: alertDanger */
-/** global: countdownSeconds */
 /** global: blobSize */
 /** global: chunks */
+/** global: countdownSeconds */
 /** global: countdownTicker */
 /** global: maxUploadSize */
 /** global: mediaRecorder */
@@ -22,7 +21,6 @@
 /** global: playerDOM */
 /** global: recType */
 /** global: startStopBtn */
-/** global: tinyMCEPopup */
 /** global: uploadBtn */
 
 // This function is initialized from PHP.
