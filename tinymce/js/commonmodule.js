@@ -75,7 +75,7 @@ M.tinymce_recordrtc.check_browser = function() {
 
 // Capture webcam/microphone stream.
 M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
-    navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+    window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 };
 
 // Add chunks of audio/video to array when made available.
