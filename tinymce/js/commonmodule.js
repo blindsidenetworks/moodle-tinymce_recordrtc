@@ -4,6 +4,7 @@
 // @copyright  2016 to present, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+/** global: parent */
 /** global: M */
 /** global: tinyMCEPopup */
 /** global: bowser */

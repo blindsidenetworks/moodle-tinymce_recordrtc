@@ -151,6 +151,9 @@ M.tinymce_recordrtc.view_init = function() {
                                     message: M.util.get_string('gumtype', 'tinymce_recordrtc')
                                 });
                             });
+                            break;
+                        default:
+                            break;
 
                             btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc');
                     }
