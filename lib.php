@@ -18,7 +18,7 @@
  * TinyMCE RecordRTC library functions
  *
  * @package    tinymce_recordrtc
- * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
+ * @author     Jesus Federico (jesus [at] blindsidenetworks [dt] com)
  * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
