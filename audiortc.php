@@ -58,7 +58,6 @@ $baseversion = 2016120500;
 $oldermoodle = $currentversion <= $baseversion;
 $jsvars = array(
     'contextid' => $contextid,
-    'sesskey' => $CFG->sesskey,
     'maxfilesize' => $maxuploadsize,
     'oldermoodle' => $oldermoodle
 );

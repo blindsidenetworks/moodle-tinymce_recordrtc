@@ -190,7 +190,7 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
             // Create FormData to send to PHP upload/save script.
             var formData = new window.FormData();
             formData.append('contextid', recordrtc.contextid);
-            formData.append('sesskey', recordrtc.sesskey);
+            formData.append('sesskey', M.cfg.sesskey);
             formData.append(type + '-filename', fileName);
             formData.append(type + '-blob', blob);
 
