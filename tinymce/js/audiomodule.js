@@ -146,7 +146,7 @@ M.tinymce_recordrtc.view_init = function() {
                                 });
                             });
 
-                            cm.editorScope.closeDialogue(cm.editorScope);
+                            tinyMCEPopup.close();
                             break;
                         case 'TypeError':
                             Y.use('moodle-core-notification-alert', function() {
