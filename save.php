@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Functionality for saving recordings to the server.
  *
@@ -70,7 +69,7 @@ $fileinfo = array(
     'filepath' => '/',                  // Any path beginning and ending in "/".
     'filename' => $filename,            // Any filename.
     'author' => fullname($USER),
-    'licence' => $CFG->sitedefaultlicense
+    'license' => $CFG->sitedefaultlicense
 );
 $filesaved = $fs->create_file_from_pathname($fileinfo, $filetmp);
 

@@ -56,7 +56,9 @@ $component = array_shift($args);
 $filearea  = array_shift($args);
 $draftid   = (int)array_shift($args);
 
-if ($component !== 'tinymce_recordrtc' or $filearea !== 'annotation') {
+if ($component !== 'tinymce_recordrtc' or
+    $component !== 'atto_recordrtc' or
+    $filearea !== 'annotation') {
     send_file_not_found();
 }
 
@@ -68,7 +70,7 @@ if ($context->contextlevel != CONTEXT_USER) {
 $fs = get_file_storage();
 
 $relativepath = implode('/', $args);
-$fullpath = "/$context->id/tinymce_recordrtc/annotation/$draftid/$relativepath";
+$fullpath = "/$context->id/$component/$filearea/$draftid/$relativepath";
 
 if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->get_filename() == '.') {
     send_file_not_found();
