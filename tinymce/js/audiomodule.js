@@ -75,6 +75,10 @@ M.tinymce_recordrtc.view_init = function() {
                 // Revert button to "Record Again" when recording is stopped.
                 onMediaStopped: function(btnLabel) {
                     startStopBtn.set('textContent', btnLabel);
+                    startStopBtn.set('disabled', false);
+                    if (!recordrtc.oldermoodle) {
+                        startStopBtn.replaceClass('btn-danger', 'btn-outline-danger');
+                    }
                 },
 
                 // Handle recording errors.
