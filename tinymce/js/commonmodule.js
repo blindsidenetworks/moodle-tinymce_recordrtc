@@ -7,7 +7,6 @@
 // Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
-/** global: bowser */
 /** global: recordrtc */
 /** global: tinyMCEPopup */
 
@@ -66,9 +65,9 @@ M.tinymce_recordrtc.check_secure = function() {
 // - Chrome 49+;
 // - Opera 36+.
 M.tinymce_recordrtc.check_browser = function() {
-    if (!((bowser.firefox && bowser.version >= 29) ||
-          (bowser.chrome && bowser.version >= 49) ||
-          (bowser.opera && bowser.version >= 36))) {
+    if (!((window.bowser.firefox && window.bowser.version >= 29) ||
+          (window.bowser.chrome && window.bowser.version >= 49) ||
+          (window.bowser.opera && window.bowser.version >= 36))) {
         alertWarning.ancestor().ancestor().removeClass('hide');
     }
 };
@@ -110,31 +109,31 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     // The options for the recording codecs and bitrates.
     var options = null;
     if (type === 'audio') {
-        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        if (window.MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
             options = {
                 audioBitsPerSecond: window.params.audiobitrate,
                 mimeType: 'audio/webm;codecs=opus'
             };
-        } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+        } else if (window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
             options = {
                 audioBitsPerSecond: window.params.audiobitrate,
                 mimeType: 'audio/ogg;codecs=opus'
             };
         }
     } else {
-        if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
+        if (window.MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
             options = {
                 audioBitsPerSecond: window.params.audiobitrate,
                 videoBitsPerSecond: window.params.videobitrate,
                 mimeType: 'video/webm;codecs=vp9,opus'
             };
-        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
+        } else if (window.MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
             options = {
                 audioBitsPerSecond: window.params.audiobitrate,
                 videoBitsPerSecond: window.params.videobitrate,
                 mimeType: 'video/webm;codecs=h264,opus'
             };
-        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
+        } else if (window.MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
             options = {
                 audioBitsPerSecond: window.params.audiobitrate,
                 videoBitsPerSecond: window.params.videobitrate,
@@ -161,7 +160,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     timerText += ' (<span id="minutes"></span>:<span id="seconds"></span>)';
     startStopBtn.setHTML(timerText);
     M.tinymce_recordrtc.set_time();
-    countdownTicker = setInterval(M.tinymce_recordrtc.set_time, 1000);
+    countdownTicker = window.setInterval(M.tinymce_recordrtc.set_time, 1000);
 
     // Make button clickable again, to allow stopping recording.
     startStopBtn.set('disabled', false);
@@ -190,8 +189,8 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
 
             // Create FormData to send to PHP upload/save script.
             var formData = new window.FormData();
-            formData.append('contextid', recordrtc.contextid);
-            formData.append('sesskey', M.cfg.sesskey);
+            formData.append('contextid', window.params.contextid);
+            formData.append('sesskey', window.params.sesskey);
             formData.append(type + '-filename', fileName);
             formData.append(type + '-blob', blob);
 
@@ -256,7 +255,7 @@ M.tinymce_recordrtc.set_time = function() {
     countdownSeconds--;
 
     startStopBtn.one('span#seconds').set('textContent', M.tinymce_recordrtc.pad(countdownSeconds % 60));
-    startStopBtn.one('span#minutes').set('textContent', M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60, 10)));
+    startStopBtn.one('span#minutes').set('textContent', M.tinymce_recordrtc.pad(window.parseInt(countdownSeconds / 60, 10)));
 
     if (countdownSeconds === 0) {
         Y.use('node-event-simulate', function() {
