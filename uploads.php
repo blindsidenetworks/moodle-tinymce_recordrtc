@@ -56,7 +56,7 @@ $component = array_shift($args);
 $filearea  = array_shift($args);
 $draftid   = (int)array_shift($args);
 
-if ($component !== 'tinymce_recordrtc' or
+if ($component !== 'tinymce_recordrtc' and
     $component !== 'atto_recordrtc' or
     $filearea !== 'annotation') {
     send_file_not_found();
