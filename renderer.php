@@ -27,7 +27,11 @@ defined('MOODLE_INTERNAL') || die;
 
 /**
  * This class defines the custom renderer for this plugin.
+ *
+ * @copyright  2016 to present, Blindside Networks Inc.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 class tinymce_recordrtc_renderer extends plugin_renderer_base {
     /**
      * Renders the HTML for the plugin, for the alerts section.
