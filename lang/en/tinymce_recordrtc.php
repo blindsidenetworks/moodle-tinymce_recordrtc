@@ -40,6 +40,8 @@ $string['videobitrate_desc'] = 'Quality of video recording (larger number means 
 $string['timelimit'] = 'Time limit in seconds';
 $string['timelimit_desc'] = 'Maximum recording length allowed for the audio/video clips';
 
+$string['nowebrtc_title'] = 'WebRTC not supported';
+$string['nowebrtc'] = 'Your browser offers no support for WebRTC technologies yet, and cannot be used with this plugin. Please switch or upgrade your browser';
 $string['gumabort_title'] = 'Something happened';
 $string['gumabort'] = 'Something strange happened which prevented the webcam/microphone from being used';
 $string['gumnotallowed_title'] = 'Wrong permissions';

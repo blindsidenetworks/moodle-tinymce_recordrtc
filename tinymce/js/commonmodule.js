@@ -50,12 +50,35 @@ var recType = null;
 var startStopBtn = null;
 var uploadBtn = null;
 
+// Show alert and close plugin if browser does not support WebRTC at all.
+M.tinymce_recordrtc.check_has_gum = function() {
+    if (!(navigator.mediaDevices || navigator.mediaDevices.getUserMedia)) {
+        Y.use('moodle-core-notification-alert', function() {
+            new M.core.alert({
+                title: M.util.get_string('nowebrtc_title', 'tinymce_recordrtc'),
+                message: M.util.get_string('nowebrtc', 'tinymce_recordrtc')
+            });
+        });
+
+        tinyMCEPopup.close();
+    }
+};
+
 // Notify and redirect user if plugin is used from insecure location.
 M.tinymce_recordrtc.check_secure = function() {
     var isSecureOrigin = (window.location.protocol === 'https:') ||
                          (window.location.host.indexOf('localhost') !== -1);
 
-    if (!isSecureOrigin) {
+    if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
+        Y.use('moodle-core-notification-alert', function() {
+            new M.core.alert({
+                title: M.util.get_string('gumsecurity_title', 'tinymce_recordrtc'),
+                message: M.util.get_string('gumsecurity', 'tinymce_recordrtc')
+            });
+        });
+
+        tinyMCEPopup.close();
+    } else if (!isSecureOrigin) {
         alertDanger.ancestor().ancestor().removeClass('hide');
     }
 };

@@ -36,6 +36,8 @@ M.tinymce_recordrtc.view_init = function() {
     // Extract the numbers from the string, and convert to bytes.
     maxUploadSize = window.parseInt(recordrtc.maxfilesize.match(/\d+/)[0], 10) * Math.pow(1024, 2);
 
+    // Show alert and close plugin if WebRTC is not supported.
+    M.tinymce_recordrtc.check_has_gum();
     // Show alert and redirect user if connection is not secure.
     M.tinymce_recordrtc.check_secure();
     // Show alert if using non-ideal browser.
