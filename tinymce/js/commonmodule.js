@@ -52,7 +52,7 @@ var uploadBtn = null;
 
 // Show alert and close plugin if browser does not support WebRTC at all.
 M.tinymce_recordrtc.check_has_gum = function() {
-    if (!(navigator.mediaDevices || navigator.mediaDevices.getUserMedia)) {
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
         Y.use('moodle-core-notification-alert', function() {
             new M.core.alert({
                 title: M.util.get_string('nowebrtc_title', 'tinymce_recordrtc'),
