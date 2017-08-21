@@ -13,6 +13,7 @@
 /* eslint-disable camelcase */
 
 // Scrutinizer CI directives.
+/** global: M */
 /** global: tinyMCE */
 
 (function() {

@@ -11,6 +11,8 @@
 /* eslint-disable camelcase, no-alert */
 
 // Scrutinizer CI directives.
+/** global: navigator */
+/** global: parent */
 /** global: M */
 /** global: Y */
 /** global: recordrtc */
