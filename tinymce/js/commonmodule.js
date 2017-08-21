@@ -50,17 +50,28 @@ var recType = null;
 var startStopBtn = null;
 var uploadBtn = null;
 
+// A helper for making a Moodle alert appear.
+// Subject is the content of the alert (which error ther alert is for).
+// Possibility to add on-alert-close event.
+M.tinymce_recordrtc.show_alert = function(subject, onCloseEvent) {
+    Y.use('moodle-core-notification-alert', function() {
+        var dialogue = new M.core.alert({
+            title: M.util.get_string(subject + '_title', 'tinymce_recordrtc'),
+            message: M.util.get_string(subject, 'tinymce_recordrtc')
+        });
+
+        if (onCloseEvent) {
+            dialogue.after('complete', onCloseEvent);
+        }
+    });
+};
+
 // Show alert and close plugin if browser does not support WebRTC at all.
 M.tinymce_recordrtc.check_has_gum = function() {
     if (!(navigator.mediaDevices && window.MediaRecorder)) {
-        Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({
-                title: M.util.get_string('nowebrtc_title', 'tinymce_recordrtc'),
-                message: M.util.get_string('nowebrtc', 'tinymce_recordrtc')
-            });
+        M.tinymce_recordrtc.show_alert('nowebrtc', function() {
+            tinyMCEPopup.close();
         });
-
-        tinyMCEPopup.close();
     }
 };
 
@@ -70,14 +81,9 @@ M.tinymce_recordrtc.check_secure = function() {
                          (window.location.host.indexOf('localhost') !== -1);
 
     if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
-        Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({
-                title: M.util.get_string('gumsecurity_title', 'tinymce_recordrtc'),
-                message: M.util.get_string('gumsecurity', 'tinymce_recordrtc')
-            });
+        M.tinymce_recordrtc.show_alert('gumsecurity', function() {
+            tinyMCEPopup.close();
         });
-
-        tinyMCEPopup.close();
     } else if (!isSecureOrigin) {
         alertDanger.ancestor().ancestor().removeClass('hide');
     }
@@ -114,12 +120,7 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
         Y.use('node-event-simulate', function() {
             startStopBtn.simulate('click');
         });
-        Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({
-                title: M.util.get_string('nearingmaxsize_title', 'tinymce_recordrtc'),
-                message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')
-            });
-        });
+        M.tinymce_recordrtc.show_alert('nearingmaxsize');
     } else if ((blobSize >= maxUploadSize) && (window.localStorage.getItem('alerted') === 'true')) {
         window.localStorage.removeItem('alerted');
     } else {
