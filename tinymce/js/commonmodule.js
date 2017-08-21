@@ -126,6 +126,39 @@ M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallb
     window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 };
 
+// Select best options for the recording codec.
+M.tinymce_recordrtc.select_rec_options = function(recType) {
+    if (recType === 'audio') {
+        var types = [
+                'audio/webm;codecs=opus',
+                'audio/ogg;codecs=opus'
+            ],
+            options = {
+                audioBitsPerSecond: window.params.audiobitrate
+            };
+    } else {
+        var types = [
+                'video/webm;codecs=vp9,opus',
+                'video/webm;codecs=h264,opus',
+                'video/webm;codecs=vp8,opus'
+            ],
+            options = {
+                audioBitsPerSecond: window.params.audiobitrate,
+                videoBitsPerSecond: window.params.videobitrate
+            };
+    }
+
+    var compatTypes = types.filter(function(type) {
+        return window.MediaRecorder.isTypeSupported(type);
+    });
+
+    if (compatTypes !== []) {
+        options.mimeType = compatTypes[0];
+    }
+
+    return options;
+};
+
 // Add chunks of audio/video to array when made available.
 M.tinymce_recordrtc.handle_data_available = function(event) {
     // Size of all recorded data so far.
@@ -196,44 +229,8 @@ M.tinymce_recordrtc.handle_stop = function() {
 // Get everything set up to start recording.
 M.tinymce_recordrtc.start_recording = function(type, stream) {
     // The options for the recording codecs and bitrates.
-    var options = null;
-    if (type === 'audio') {
-        if (window.MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                mimeType: 'audio/webm;codecs=opus'
-            };
-        } else if (window.MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                mimeType: 'audio/ogg;codecs=opus'
-            };
-        }
-    } else {
-        if (window.MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate,
-                mimeType: 'video/webm;codecs=vp9,opus'
-            };
-        } else if (window.MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate,
-                mimeType: 'video/webm;codecs=h264,opus'
-            };
-        } else if (window.MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate,
-                mimeType: 'video/webm;codecs=vp8,opus'
-            };
-        }
-    }
-
-    // If none of the options above are supported, fall back on browser defaults.
-    mediaRecorder = options ? new window.MediaRecorder(stream, options)
-                            : new window.MediaRecorder(stream);
+    var options = M.tinymce_recordrtc.select_rec_options(type);
+    mediaRecorder = new window.MediaRecorder(stream, options);
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
