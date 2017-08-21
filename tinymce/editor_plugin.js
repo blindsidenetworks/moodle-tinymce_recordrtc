@@ -16,6 +16,38 @@
 /** global: M */
 /** global: tinyMCE */
 
+function addForceRepaint() {
+    ed.addCommand('mceForceRepaint', function() {
+        var root = ed.dom.getRoot(),
+            items = root.getElementsByTagName("img");
+        for (var i = 0; i < items.length; i++) {
+            var src = items[i].getAttribute('src').replace(/\?\d+$/, '');
+            items[i].setAttribute('src', src + '?' + (new Date().getTime()));
+        }
+        ed.execCommand('mceRepaint');
+        ed.focus();
+    });
+}
+
+function addMaximizeWindow(w) {
+    ed.addCommand('mceMaximizeWindow', function(w) {
+        // This function duplicates the TinyMCE windowManager code when 'maximize' button is pressed.
+        var vp = ed.dom.getViewPort(),
+            id = w.id;
+        // Reduce viewport size to avoid scrollbars.
+        vp.w -= 2;
+        vp.h -= 2;
+
+        w.oldPos = w.element.getXY();
+        w.oldSize = w.element.getSize();
+
+        w.element.moveTo(vp.x, vp.y);
+        w.element.resizeTo(vp.w, vp.h);
+        ed.dom.setStyles(id + '_ifr', {width: vp.w - w.deltaWidth, height: vp.h - w.deltaHeight});
+        ed.dom.addClass(id + '_wrapper', 'mceMaximized');
+    });
+}
+
 (function() {
     tinyMCE.PluginManager.requireLangPack('recordrtc');
 
@@ -29,33 +61,9 @@
          * @param {string} url Absolute URL to where the plugin is located.
          */
         init: function(ed, url) {
-            ed.addCommand('mceForceRepaint', function() {
-                var root = ed.dom.getRoot(),
-                    items = root.getElementsByTagName("img");
-                for (var i = 0; i < items.length; i++) {
-                    var src = items[i].getAttribute('src').replace(/\?\d+$/, '');
-                    items[i].setAttribute('src', src + '?' + (new Date().getTime()));
-                }
-                ed.execCommand('mceRepaint');
-                ed.focus();
-            });
-
-            ed.addCommand('mceMaximizeWindow', function(w) {
-                // This function duplicates the TinyMCE windowManager code when 'maximize' button is pressed.
-                var vp = ed.dom.getViewPort(),
-                    id = w.id;
-                // Reduce viewport size to avoid scrollbars.
-                vp.w -= 2;
-                vp.h -= 2;
-
-                w.oldPos = w.element.getXY();
-                w.oldSize = w.element.getSize();
-
-                w.element.moveTo(vp.x, vp.y);
-                w.element.resizeTo(vp.w, vp.h);
-                ed.dom.setStyles(id + '_ifr', {width: vp.w - w.deltaWidth, height: vp.h - w.deltaHeight});
-                ed.dom.addClass(id + '_wrapper', 'mceMaximized');
-            });
+            // Add commands to the editor.
+            addForceRepaint();
+            addMaximizeWindow(w);
 
             if (M.editor_tinymce.filepicker_options[ed.id] &&
                 M.editor_tinymce.filepicker_options[ed.id].hasOwnProperty('media')) {
@@ -152,6 +160,7 @@
                 });
             }
         },
+        
         createControl: function() {
             return null;
         },
