@@ -85,40 +85,7 @@ M.tinymce_recordrtc.view_init = function() {
 
                 // Handle recording errors.
                 onMediaCapturingFailed: function(error) {
-                    var btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc'),
-                        treatAsStopped = function() {
-                            commonConfig.onMediaStopped(btnLabel);
-                        };
-
-                    // Handle getUserMedia-thrown errors.
-                    // After alert, proceed to treat as stopped recording, or close dialogue.
-                    switch (error.name) {
-                        case 'AbortError':
-                            M.tinymce_recordrtc.show_alert('gumabort', treatAsStopped);
-                            break;
-                        case 'NotAllowedError':
-                            M.tinymce_recordrtc.show_alert('gumnotallowed', treatAsStopped);
-                            break;
-                        case 'NotFoundError':
-                            M.tinymce_recordrtc.show_alert('gumnotfound', treatAsStopped);
-                            break;
-                        case 'NotReadableError':
-                            M.tinymce_recordrtc.show_alert('gumnotreadable', treatAsStopped);
-                            break;
-                        case 'OverConstrainedError':
-                            M.tinymce_recordrtc.show_alert('gumoverconstrained', treatAsStopped);
-                            break;
-                        case 'SecurityError':
-                            M.tinymce_recordrtc.show_alert('gumsecurity', function() {
-                                tinyMCEPopup.close();
-                            });
-                            break;
-                        case 'TypeError':
-                            M.tinymce_recordrtc.show_alert('gumtype', treatAsStopped);
-                            break;
-                        default:
-                            break;
-                    }
+                    M.tinymce_recordrtc.handle_gum_errors(error, commonConfig);
                 }
             };
 

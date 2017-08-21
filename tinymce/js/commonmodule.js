@@ -66,6 +66,26 @@ M.tinymce_recordrtc.show_alert = function(subject, onCloseEvent) {
     });
 };
 
+// Handle getUserMedia errors.
+M.tinymce_recordrtc.handle_gum_errors = function(error, commonConfig) {
+    var btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc'),
+        treatAsStopped = function() {
+            commonConfig.onMediaStopped(btnLabel);
+        };
+
+    // Changes 'CertainError' -> 'gumcertain' to match language string names.
+    var stringName = 'gum' + error.name.replace('Error', '').toLowerCase();
+
+    // After alert, proceed to treat as stopped recording, or close dialogue.
+    if (stringName !== 'gumsecurity') {
+        M.tinymce_recordrtc.show_alert(stringName, treatAsStopped);
+    } else {
+        M.tinymce_recordrtc.show_alert(stringName, function() {
+            tinyMCEPopup.close();
+        });
+    }
+};
+
 // Show alert and close plugin if browser does not support WebRTC at all.
 M.tinymce_recordrtc.check_has_gum = function() {
     if (!(navigator.mediaDevices && window.MediaRecorder)) {
