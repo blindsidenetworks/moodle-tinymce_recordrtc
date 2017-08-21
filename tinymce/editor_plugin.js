@@ -73,7 +73,7 @@
                         baseWidth = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                         percentOfViewportWidth = vp.w * 0.75,
                         width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-                        height = 200 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+                        height = 340 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                         maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
                     if (maximizedmode) {
                         width = vp.w;
@@ -120,7 +120,7 @@
                         baseWidth = 720 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                         percentOfViewportWidth = vp.w * 0.75,
                         width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-                        height = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+                        height = 780 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
                         maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
                     if (maximizedmode) {
                         width = vp.w;

@@ -128,6 +128,8 @@ M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallb
 
 // Select best options for the recording codec.
 M.tinymce_recordrtc.select_rec_options = function(recType) {
+    var types, options;
+
     if (recType === 'audio') {
         var types = [
                 'audio/webm;codecs=opus',
