@@ -51,99 +51,102 @@
                 ed.dom.addClass(id + '_wrapper', 'mceMaximized');
             });
 
-            ed.addCommand('mceAudioRTC', function() {
-                var audiortc = ed.getParam('audiortc', {});
-                var viewparams = '';
-                for (var key in audiortc) {
-                    if (audiortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
-                        viewparams += '=' + window.encodeURIComponent(audiortc[key]);
+            if (M.editor_tinymce.filepicker_options[ed.id] &&
+                M.editor_tinymce.filepicker_options[ed.id].hasOwnProperty('media')) {
+                ed.addCommand('mceAudioRTC', function() {
+                    var audiortc = ed.getParam('audiortc', {});
+                    var viewparams = '';
+                    for (var key in audiortc) {
+                        if (audiortc.hasOwnProperty(key)) {
+                            viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
+                            viewparams += '=' + window.encodeURIComponent(audiortc[key]);
+                        }
                     }
-                }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php';
-                viewurl += (viewparams != '' ? '?' + viewparams : '');
-                var onClose = function() {
-                    ed.windowManager.onClose.remove(onClose);
-                    ed.execCommand('mceForceRepaint');
-                };
-                ed.windowManager.onClose.add(onClose);
-                var vp = ed.dom.getViewPort(),
-                    baseWidth = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
-                    percentOfViewportWidth = vp.w * 0.75,
-                    width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-                    height = 200 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
-                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
-                if (maximizedmode) {
-                    width = vp.w;
-                    height = vp.h;
-                }
-                var w = ed.windowManager.open({
-                    file: viewurl,
-                    width: width,
-                    height: height,
-                    inline: 1,
-                    popup_css: ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
-                }, {
-                    plugin_url: url // Plugin absolute URL.
-                });
-                if (maximizedmode) {
-                    ed.execCommand('mceMaximizeWindow', w);
-                }
-            });
-
-            // Register AudioRTC button.
-            ed.addButton('audiortc', {
-                title: 'recordrtc.audiortc',
-                cmd: 'mceAudioRTC',
-                image: url + '/img/audiortc.png'
-            });
-
-            ed.addCommand('mceVideoRTC', function() {
-                var videortc = ed.getParam('videortc', {});
-                var viewparams = '';
-                for (var key in videortc) {
-                    if (videortc.hasOwnProperty(key)) {
-                        viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
-                        viewparams += '=' + window.encodeURIComponent(videortc[key]);
+                    var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php';
+                    viewurl += (viewparams != '' ? '?' + viewparams : '');
+                    var onClose = function() {
+                        ed.windowManager.onClose.remove(onClose);
+                        ed.execCommand('mceForceRepaint');
+                    };
+                    ed.windowManager.onClose.add(onClose);
+                    var vp = ed.dom.getViewPort(),
+                        baseWidth = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+                        percentOfViewportWidth = vp.w * 0.75,
+                        width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
+                        height = 340 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+                        maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+                    if (maximizedmode) {
+                        width = vp.w;
+                        height = vp.h;
                     }
-                }
-                var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php';
-                viewurl += (viewparams != '' ? '?' + viewparams : '');
-                var onClose = function() {
-                    ed.windowManager.onClose.remove(onClose);
-                    ed.execCommand('mceForceRepaint');
-                };
-                ed.windowManager.onClose.add(onClose);
-                var vp = ed.dom.getViewPort(),
-                    baseWidth = 720 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
-                    percentOfViewportWidth = vp.w * 0.75,
-                    width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-                    height = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
-                    maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
-                if (maximizedmode) {
-                    width = vp.w;
-                    height = vp.h;
-                }
-                var w = ed.windowManager.open({
-                    file: viewurl,
-                    width: width,
-                    height: height,
-                    inline: 1,
-                    popup_css: ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
-                }, {
-                    plugin_url: url // Plugin absolute URL.
+                    var w = ed.windowManager.open({
+                        file: viewurl,
+                        width: width,
+                        height: height,
+                        inline: 1,
+                        popup_css: ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
+                    }, {
+                        plugin_url: url // Plugin absolute URL.
+                    });
+                    if (maximizedmode) {
+                        ed.execCommand('mceMaximizeWindow', w);
+                    }
                 });
-                if (maximizedmode) {
-                    ed.execCommand('mceMaximizeWindow', w);
-                }
-            });
 
-            // Register VideoRTC button.
-            ed.addButton('videortc', {
-                title: 'recordrtc.videortc',
-                cmd: 'mceVideoRTC',
-                image: url + '/img/videortc.png'
-            });
+                // Register AudioRTC button.
+                ed.addButton('audiortc', {
+                    title: 'recordrtc.audiortc',
+                    cmd: 'mceAudioRTC',
+                    image: url + '/img/audiortc.png'
+                });
+
+                ed.addCommand('mceVideoRTC', function() {
+                    var videortc = ed.getParam('videortc', {});
+                    var viewparams = '';
+                    for (var key in videortc) {
+                        if (videortc.hasOwnProperty(key)) {
+                            viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
+                            viewparams += '=' + window.encodeURIComponent(videortc[key]);
+                        }
+                    }
+                    var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php';
+                    viewurl += (viewparams != '' ? '?' + viewparams : '');
+                    var onClose = function() {
+                        ed.windowManager.onClose.remove(onClose);
+                        ed.execCommand('mceForceRepaint');
+                    };
+                    ed.windowManager.onClose.add(onClose);
+                    var vp = ed.dom.getViewPort(),
+                        baseWidth = 720 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+                        percentOfViewportWidth = vp.w * 0.75,
+                        width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
+                        height = 780 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+                        maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
+                    if (maximizedmode) {
+                        width = vp.w;
+                        height = vp.h;
+                    }
+                    var w = ed.windowManager.open({
+                        file: viewurl,
+                        width: width,
+                        height: height,
+                        inline: 1,
+                        popup_css: ed.getParam("moodle_plugin_base") + 'recordrtc/tinymce/css/popup.css'
+                    }, {
+                        plugin_url: url // Plugin absolute URL.
+                    });
+                    if (maximizedmode) {
+                        ed.execCommand('mceMaximizeWindow', w);
+                    }
+                });
+
+                // Register VideoRTC button.
+                ed.addButton('videortc', {
+                    title: 'recordrtc.videortc',
+                    cmd: 'mceVideoRTC',
+                    image: url + '/img/videortc.png'
+                });
+            }
         },
         createControl: function() {
             return null;

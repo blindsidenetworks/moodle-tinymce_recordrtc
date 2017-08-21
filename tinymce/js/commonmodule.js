@@ -7,7 +7,6 @@
 // Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
-/** global: bowser */
 /** global: recordrtc */
 /** global: tinyMCEPopup */
 
@@ -51,12 +50,61 @@ var recType = null;
 var startStopBtn = null;
 var uploadBtn = null;
 
+// A helper for making a Moodle alert appear.
+// Subject is the content of the alert (which error ther alert is for).
+// Possibility to add on-alert-close event.
+M.tinymce_recordrtc.show_alert = function(subject, onCloseEvent) {
+    Y.use('moodle-core-notification-alert', function() {
+        var dialogue = new M.core.alert({
+            title: M.util.get_string(subject + '_title', 'tinymce_recordrtc'),
+            message: M.util.get_string(subject, 'tinymce_recordrtc')
+        });
+
+        if (onCloseEvent) {
+            dialogue.after('complete', onCloseEvent);
+        }
+    });
+};
+
+// Handle getUserMedia errors.
+M.tinymce_recordrtc.handle_gum_errors = function(error, commonConfig) {
+    var btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc'),
+        treatAsStopped = function() {
+            commonConfig.onMediaStopped(btnLabel);
+        };
+
+    // Changes 'CertainError' -> 'gumcertain' to match language string names.
+    var stringName = 'gum' + error.name.replace('Error', '').toLowerCase();
+
+    // After alert, proceed to treat as stopped recording, or close dialogue.
+    if (stringName !== 'gumsecurity') {
+        M.tinymce_recordrtc.show_alert(stringName, treatAsStopped);
+    } else {
+        M.tinymce_recordrtc.show_alert(stringName, function() {
+            tinyMCEPopup.close();
+        });
+    }
+};
+
+// Show alert and close plugin if browser does not support WebRTC at all.
+M.tinymce_recordrtc.check_has_gum = function() {
+    if (!(navigator.mediaDevices && window.MediaRecorder)) {
+        M.tinymce_recordrtc.show_alert('nowebrtc', function() {
+            tinyMCEPopup.close();
+        });
+    }
+};
+
 // Notify and redirect user if plugin is used from insecure location.
 M.tinymce_recordrtc.check_secure = function() {
     var isSecureOrigin = (window.location.protocol === 'https:') ||
                          (window.location.host.indexOf('localhost') !== -1);
 
-    if (!isSecureOrigin) {
+    if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
+        M.tinymce_recordrtc.show_alert('gumsecurity', function() {
+            tinyMCEPopup.close();
+        });
+    } else if (!isSecureOrigin) {
         alertDanger.ancestor().ancestor().removeClass('hide');
     }
 };
@@ -66,9 +114,9 @@ M.tinymce_recordrtc.check_secure = function() {
 // - Chrome 49+;
 // - Opera 36+.
 M.tinymce_recordrtc.check_browser = function() {
-    if (!((bowser.firefox && bowser.version >= 29) ||
-          (bowser.chrome && bowser.version >= 49) ||
-          (bowser.opera && bowser.version >= 36))) {
+    if (!((window.bowser.firefox && window.bowser.version >= 29) ||
+          (window.bowser.chrome && window.bowser.version >= 49) ||
+          (window.bowser.opera && window.bowser.version >= 36))) {
         alertWarning.ancestor().ancestor().removeClass('hide');
     }
 };
@@ -76,6 +124,41 @@ M.tinymce_recordrtc.check_browser = function() {
 // Capture webcam/microphone stream.
 M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
     window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+};
+
+// Select best options for the recording codec.
+M.tinymce_recordrtc.select_rec_options = function(recType) {
+    var types, options;
+
+    if (recType === 'audio') {
+        types = [
+            'audio/webm;codecs=opus',
+            'audio/ogg;codecs=opus'
+        ];
+        options = {
+            audioBitsPerSecond: window.parseInt(window.params.audiobitrate)
+        };
+    } else {
+        types = [
+            'video/webm;codecs=vp9,opus',
+            'video/webm;codecs=h264,opus',
+            'video/webm;codecs=vp8,opus'
+        ];
+        options = {
+            audioBitsPerSecond: window.parseInt(window.params.audiobitrate),
+            videoBitsPerSecond: window.parseInt(window.params.videobitrate)
+        };
+    }
+
+    var compatTypes = types.filter(function(type) {
+        return window.MediaRecorder.isTypeSupported(type);
+    });
+
+    if (compatTypes !== []) {
+        options.mimeType = compatTypes[0];
+    }
+
+    return options;
 };
 
 // Add chunks of audio/video to array when made available.
@@ -92,12 +175,7 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
         Y.use('node-event-simulate', function() {
             startStopBtn.simulate('click');
         });
-        Y.use('moodle-core-notification-alert', function() {
-            new M.core.alert({
-                title: M.util.get_string('nearingmaxsize_title', 'tinymce_recordrtc'),
-                message: M.util.get_string('nearingmaxsize', 'tinymce_recordrtc')
-            });
-        });
+        M.tinymce_recordrtc.show_alert('nearingmaxsize');
     } else if ((blobSize >= maxUploadSize) && (window.localStorage.getItem('alerted') === 'true')) {
         window.localStorage.removeItem('alerted');
     } else {
@@ -105,50 +183,60 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
     }
 };
 
+M.tinymce_recordrtc.handle_stop = function() {
+    // Set source of audio player.
+    var blob = new window.Blob(chunks, {type: mediaRecorder.mimeType});
+    player.set('src', window.URL.createObjectURL(blob));
+
+    // Show audio player with controls enabled, and unmute.
+    player.set('muted', false);
+    player.set('controls', true);
+    player.ancestor().ancestor().removeClass('hide');
+
+    // Show upload button.
+    uploadBtn.ancestor().ancestor().removeClass('hide');
+    uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
+    uploadBtn.set('disabled', false);
+
+    // Handle when upload button is clicked.
+    uploadBtn.on('click', function() {
+        // Trigger error if no recording has been made.
+        if (!player.get('src') || chunks === []) {
+            M.tinymce_recordrtc.show_alert('norecordingfound');
+        } else {
+            uploadBtn.set('disabled', true);
+
+            // Upload recording to server.
+            M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
+                if (progress === 'ended') { // Insert annotation in text.
+                    uploadBtn.set('disabled', false);
+                    M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
+                } else if (progress === 'upload-failed') { // Show error message in upload button.
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
+                } else if (progress === 'upload-aborted') {
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                } else {
+                    uploadBtn.set('textContent', progress);
+                }
+            });
+        }
+    });
+};
+
 // Get everything set up to start recording.
 M.tinymce_recordrtc.start_recording = function(type, stream) {
     // The options for the recording codecs and bitrates.
-    var options = null;
-    if (type === 'audio') {
-        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                mimeType: 'audio/webm;codecs=opus'
-            };
-        } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                mimeType: 'audio/ogg;codecs=opus'
-            };
-        }
-    } else {
-        if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate,
-                mimeType: 'video/webm;codecs=vp9,opus'
-            };
-        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264,opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate,
-                mimeType: 'video/webm;codecs=h264,opus'
-            };
-        } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
-            options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate,
-                mimeType: 'video/webm;codecs=vp8,opus'
-            };
-        }
-    }
-
-    // If none of the options above are supported, fall back on browser defaults.
-    mediaRecorder = options ? new window.MediaRecorder(stream, options)
-                            : new window.MediaRecorder(stream);
+    var options = M.tinymce_recordrtc.select_rec_options(type);
+    mediaRecorder = new window.MediaRecorder(stream, options);
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
+    mediaRecorder.onstop = M.tinymce_recordrtc.handle_stop;
     mediaRecorder.start(1000); // Capture in 1s chunks. Must be set to work with Firefox.
 
     // Mute audio, distracting while recording.
@@ -161,7 +249,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     timerText += ' (<span id="minutes"></span>:<span id="seconds"></span>)';
     startStopBtn.setHTML(timerText);
     M.tinymce_recordrtc.set_time();
-    countdownTicker = setInterval(M.tinymce_recordrtc.set_time, 1000);
+    countdownTicker = window.setInterval(M.tinymce_recordrtc.set_time, 1000);
 
     // Make button clickable again, to allow stopping recording.
     startStopBtn.set('disabled', false);
@@ -188,18 +276,33 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
                 fileName += '-video.webm';
             }
 
-            // Create FormData to send to PHP upload/save script.
-            var formData = new window.FormData();
-            formData.append('contextid', recordrtc.contextid);
+            // Create FormData to send to PHP filepicker-upload script.
+            var formData = new window.FormData(),
+                editorId = tinyMCE.activeEditor.id,
+                filepickerOptions = parent.M.editor_tinymce.filepicker_options[editorId].link,
+                repositoryKeys = window.Object.keys(filepickerOptions.repositories);
+
+            formData.append('repo_upload_file', blob, fileName);
+            formData.append('itemid', filepickerOptions.itemid);
+
+            for (var i = 0; i < repositoryKeys.length; i++) {
+                if (filepickerOptions.repositories[repositoryKeys[i]].type === 'upload') {
+                    formData.append('repo_id', filepickerOptions.repositories[repositoryKeys[i]].id);
+                    break;
+                }
+            }
+
+            formData.append('env', filepickerOptions.env);
             formData.append('sesskey', M.cfg.sesskey);
-            formData.append(type + '-filename', fileName);
-            formData.append(type + '-blob', blob);
+            formData.append('client_id', filepickerOptions.client_id);
+            formData.append('savepath', '/');
+            formData.append('ctx_id', filepickerOptions.context.id);
 
             // Pass FormData to PHP script using XHR.
-            M.tinymce_recordrtc.make_xmlhttprequest('save.php', formData, function(progress, responseText) {
+            var uploadEndpoint = M.cfg.wwwroot + '/repository/repository_ajax.php?action=upload';
+            M.tinymce_recordrtc.make_xmlhttprequest(uploadEndpoint, formData, function(progress, responseText) {
                 if (progress === 'upload-ended') {
-                    var initialURL = location.href.replace(location.href.split('/').pop(), '') + 'uploads.php/';
-                    callback('ended', initialURL + responseText);
+                    callback('ended', window.JSON.parse(responseText).url);
                 } else {
                     callback(progress);
                 }
@@ -256,7 +359,7 @@ M.tinymce_recordrtc.set_time = function() {
     countdownSeconds--;
 
     startStopBtn.one('span#seconds').set('textContent', M.tinymce_recordrtc.pad(countdownSeconds % 60));
-    startStopBtn.one('span#minutes').set('textContent', M.tinymce_recordrtc.pad(parseInt(countdownSeconds / 60, 10)));
+    startStopBtn.one('span#minutes').set('textContent', M.tinymce_recordrtc.pad(window.parseInt(countdownSeconds / 60, 10)));
 
     if (countdownSeconds === 0) {
         Y.use('node-event-simulate', function() {
