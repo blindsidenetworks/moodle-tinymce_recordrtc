@@ -19,14 +19,15 @@
  *
  * @package    tinymce_recordrtc
  * @author     Jesus Federico (jesus [at] blindsidenetworks [dt] com)
+ * @author     Jacob Prud'homme (jacob [dt] prudhomme [at] blindsidenetworks [dt] com)
  * @copyright  2016 to present, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017070100;
+$plugin->version   = 2017070102;
 $plugin->requires  = 2015051100;
 $plugin->component = 'tinymce_recordrtc';
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.0-b2';
+$plugin->release = '1.0-b3';
