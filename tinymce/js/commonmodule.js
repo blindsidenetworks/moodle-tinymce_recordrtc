@@ -134,7 +134,7 @@ M.tinymce_recordrtc.select_rec_options = function(recType) {
                 'audio/ogg;codecs=opus'
             ],
             options = {
-                audioBitsPerSecond: window.params.audiobitrate
+                audioBitsPerSecond: window.parseInt(window.params.audiobitrate)
             };
     } else {
         var types = [
@@ -143,8 +143,8 @@ M.tinymce_recordrtc.select_rec_options = function(recType) {
                 'video/webm;codecs=vp8,opus'
             ],
             options = {
-                audioBitsPerSecond: window.params.audiobitrate,
-                videoBitsPerSecond: window.params.videobitrate
+                audioBitsPerSecond: window.parseInt(window.params.audiobitrate),
+                videoBitsPerSecond: window.parseInt(window.params.videobitrate)
             };
     }
 
