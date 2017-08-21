@@ -128,6 +128,51 @@ M.tinymce_recordrtc.handle_data_available = function(event) {
     }
 };
 
+M.tinymce_recordrtc.handle_stop = function() {
+    // Set source of audio player.
+    var blob = new window.Blob(chunks, {type: mediaRecorder.mimeType});
+    player.set('src', window.URL.createObjectURL(blob));
+
+    // Show audio player with controls enabled, and unmute.
+    player.set('muted', false);
+    player.set('controls', true);
+    player.ancestor().ancestor().removeClass('hide');
+
+    // Show upload button.
+    uploadBtn.ancestor().ancestor().removeClass('hide');
+    uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
+    uploadBtn.set('disabled', false);
+
+    // Handle when upload button is clicked.
+    uploadBtn.on('click', function() {
+        // Trigger error if no recording has been made.
+        if (!player.get('src') || chunks === []) {
+            M.tinymce_recordrtc.show_alert('norecordingfound');
+        } else {
+            uploadBtn.set('disabled', true);
+
+            // Upload recording to server.
+            M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
+                if (progress === 'ended') { // Insert annotation in text.
+                    uploadBtn.set('disabled', false);
+                    M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
+                } else if (progress === 'upload-failed') { // Show error message in upload button.
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
+                } else if (progress === 'upload-aborted') {
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                } else {
+                    uploadBtn.set('textContent', progress);
+                }
+            });
+        }
+    });
+};
+
 // Get everything set up to start recording.
 M.tinymce_recordrtc.start_recording = function(type, stream) {
     // The options for the recording codecs and bitrates.
@@ -172,6 +217,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
 
     // Initialize MediaRecorder events and start recording.
     mediaRecorder.ondataavailable = M.tinymce_recordrtc.handle_data_available;
+    mediaRecorder.onstop = M.tinymce_recordrtc.handle_stop;
     mediaRecorder.start(1000); // Capture in 1s chunks. Must be set to work with Firefox.
 
     // Mute audio, distracting while recording.

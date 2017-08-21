@@ -184,46 +184,4 @@ M.tinymce_recordrtc.stop_recording_video = function(stream) {
     stream.getTracks().forEach(function(track) {
         track.stop();
     });
-
-    // Set source of video player.
-    var blob = new window.Blob(chunks, {type: mediaRecorder.mimeType});
-    player.set('src', window.URL.createObjectURL(blob));
-
-    // Enable controls for video player, and unmute.
-    player.set('muted', false);
-    player.set('controls', true);
-
-    // Show upload button.
-    uploadBtn.ancestor().ancestor().removeClass('hide');
-    uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
-    uploadBtn.set('disabled', false);
-
-    // Handle when upload button is clicked.
-    uploadBtn.on('click', function() {
-        // Trigger error if no recording has been made.
-        if (!player.get('src') || chunks === []) {
-            M.tinymce_recordrtc.show_alert('norecordingfound');
-        } else {
-            uploadBtn.set('disabled', true);
-
-            // Upload recording to server.
-            M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
-                if (progress === 'ended') { // Insert annotation in text.
-                    uploadBtn.set('disabled', false);
-                    M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
-                } else if (progress === 'upload-failed') { // Show error message in upload button.
-                    uploadBtn.set('disabled', false);
-                    uploadBtn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
-                } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
-                    uploadBtn.set('disabled', false);
-                    uploadBtn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
-                } else if (progress === 'upload-aborted') {
-                    uploadBtn.set('disabled', false);
-                    uploadBtn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
-                } else {
-                    uploadBtn.set('textContent', progress);
-                }
-            });
-        }
-    });
 };
