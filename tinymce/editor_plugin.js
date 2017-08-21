@@ -62,14 +62,13 @@
                 ed.addCommand('mceAudioRTC', function() {
                     var audiortc = ed.getParam('audiortc', {});
                     var viewparams = '';
-                    for (var key in audiortc) {
-                        if (audiortc.hasOwnProperty(key)) {
-                            viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
-                            viewparams += '=' + window.encodeURIComponent(audiortc[key]);
-                        }
-                    }
+                    window.Object.keys(audiortc).forEach(function(key) {
+                        viewparams += (viewparams !== '' ? '&' : '') + window.encodeURIComponent(key);
+                        viewparams += '=' + window.encodeURIComponent(audiortc[key]);
+                    });
                     var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/audiortc.php';
                     viewurl += (viewparams != '' ? '?' + viewparams : '');
+
                     var onClose = function() {
                         ed.windowManager.onClose.remove(onClose);
                         ed.execCommand('mceForceRepaint');
@@ -109,14 +108,13 @@
                 ed.addCommand('mceVideoRTC', function() {
                     var videortc = ed.getParam('videortc', {});
                     var viewparams = '';
-                    for (var key in videortc) {
-                        if (videortc.hasOwnProperty(key)) {
-                            viewparams += (viewparams != '' ? '&' : '') + window.encodeURIComponent(key);
-                            viewparams += '=' + window.encodeURIComponent(videortc[key]);
-                        }
-                    }
+                    window.Object.keys(videortc).forEach(function(key) {
+                        viewparams += (viewparams !== '' ? '&' : '') + window.encodeURIComponent(key);
+                        viewparams += '=' + window.encodeURIComponent(videortc[key]);
+                    });
                     var viewurl = ed.getParam("moodle_plugin_base") + 'recordrtc/videortc.php';
                     viewurl += (viewparams != '' ? '?' + viewparams : '');
+
                     var onClose = function() {
                         ed.windowManager.onClose.remove(onClose);
                         ed.execCommand('mceForceRepaint');
