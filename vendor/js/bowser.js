@@ -1,5 +1,8 @@
-/* eslint-env es6 */
+// ESLint directives.
 /* eslint-disable */
+
+// JSHint directives.
+/* jshint ignore:start */
 
 /*!
  * Bowser - a browser detector

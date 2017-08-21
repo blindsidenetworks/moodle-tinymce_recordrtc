@@ -11,6 +11,10 @@
 /* exported alertWarning, alertDanger, maxUploadSize, chunks, blobSize */
 /* eslint-disable camelcase, no-global-assign */
 
+// JSHint directives.
+/* global alertWarning: true, alertDanger: true, player: true, playerDOM: true, startStopBtn: true */
+/* global uploadBtn: true, recType: true, maxUploadSize: true, chunks: true, blobSize: true */
+
 // Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
