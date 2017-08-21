@@ -131,23 +131,23 @@ M.tinymce_recordrtc.select_rec_options = function(recType) {
     var types, options;
 
     if (recType === 'audio') {
-        var types = [
-                'audio/webm;codecs=opus',
-                'audio/ogg;codecs=opus'
-            ],
-            options = {
-                audioBitsPerSecond: window.parseInt(window.params.audiobitrate)
-            };
+        types = [
+            'audio/webm;codecs=opus',
+            'audio/ogg;codecs=opus'
+        ];
+        options = {
+            audioBitsPerSecond: window.parseInt(window.params.audiobitrate)
+        };
     } else {
-        var types = [
-                'video/webm;codecs=vp9,opus',
-                'video/webm;codecs=h264,opus',
-                'video/webm;codecs=vp8,opus'
-            ],
-            options = {
-                audioBitsPerSecond: window.parseInt(window.params.audiobitrate),
-                videoBitsPerSecond: window.parseInt(window.params.videobitrate)
-            };
+        types = [
+            'video/webm;codecs=vp9,opus',
+            'video/webm;codecs=h264,opus',
+            'video/webm;codecs=vp8,opus'
+        ];
+        options = {
+            audioBitsPerSecond: window.parseInt(window.params.audiobitrate),
+            videoBitsPerSecond: window.parseInt(window.params.videobitrate)
+        };
     }
 
     var compatTypes = types.filter(function(type) {
