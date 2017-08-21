@@ -8,19 +8,23 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// ESLint directives.
+/* global tinyMCE */
+/* eslint-disable camelcase */
+
 // Scrutinizer CI directives.
-/** global: tinymce */
+/** global: tinyMCE */
 
 (function() {
-    tinymce.PluginManager.requireLangPack('recordrtc');
+    tinyMCE.PluginManager.requireLangPack('recordrtc');
 
-    tinymce.create('tinymce.plugins.RecordRTC', {
+    tinyMCE.create('tinymce.plugins.RecordRTC', {
         /**
          * Initializes the plugin, this will be executed after the plugin has been created.
          * This call is done before the editor instance has finished it's initialization so use the onInit event
          * of the editor instance to intercept that event.
          *
-         * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
+         * @param {tinyMCE.Editor} ed Editor instance that the plugin is initialized in.
          * @param {string} url Absolute URL to where the plugin is located.
          */
         init: function(ed, url) {
@@ -170,5 +174,5 @@
     });
 
     // Register plugin.
-    tinymce.PluginManager.add('recordrtc', tinymce.plugins.RecordRTC);
+    tinyMCE.PluginManager.add('recordrtc', tinyMCE.plugins.RecordRTC);
 })();

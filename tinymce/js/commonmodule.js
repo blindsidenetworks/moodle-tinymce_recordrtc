@@ -5,6 +5,11 @@
 // @copyright  2016 onwards, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+// ESLint directives.
+/* global tinyMCE, tinyMCEPopup */
+/* exported countdownTicker, playerDOM */
+/* eslint-disable camelcase, no-alert */
+
 // Scrutinizer CI directives.
 /** global: M */
 /** global: Y */

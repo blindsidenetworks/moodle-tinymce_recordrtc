@@ -5,10 +5,15 @@
 // @copyright  2016 onwards, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+// ESLint directives.
+/* global recordrtc, alertWarning, alertDanger, player, playerDOM, startStopBtn, uploadBtn */
+/* global recType, maxUploadSize, chunks, blobSize, countdownTicker, mediaRecorder */
+/* exported alertWarning, alertDanger, maxUploadSize, chunks, blobSize */
+/* eslint-disable camelcase, no-global-assign */
+
 // Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
-/** global: tinyMCEPopup */
 /** global: recordrtc */
 /** global: alertWarning */
 /** global: alertDanger */
