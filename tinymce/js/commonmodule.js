@@ -94,41 +94,6 @@ M.tinymce_recordrtc.handle_gum_errors = function(error, commonConfig) {
     }
 };
 
-// Show alert and close plugin if browser does not support WebRTC at all.
-M.tinymce_recordrtc.check_has_gum = function() {
-    if (!(navigator.mediaDevices && window.MediaRecorder)) {
-        M.tinymce_recordrtc.show_alert('nowebrtc', function() {
-            tinyMCEPopup.close();
-        });
-    }
-};
-
-// Notify and redirect user if plugin is used from insecure location.
-M.tinymce_recordrtc.check_secure = function() {
-    var isSecureOrigin = (window.location.protocol === 'https:') ||
-                         (window.location.host.indexOf('localhost') !== -1);
-
-    if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
-        M.tinymce_recordrtc.show_alert('gumsecurity', function() {
-            tinyMCEPopup.close();
-        });
-    } else if (!isSecureOrigin) {
-        alertDanger.ancestor().ancestor().removeClass('hide');
-    }
-};
-
-// Display "consider switching browsers" message if not using:
-// - Firefox 29+;
-// - Chrome 49+;
-// - Opera 36+.
-M.tinymce_recordrtc.check_browser = function() {
-    if (!((window.bowser.firefox && window.bowser.version >= 29) ||
-          (window.bowser.chrome && window.bowser.version >= 49) ||
-          (window.bowser.opera && window.bowser.version >= 36))) {
-        alertWarning.ancestor().ancestor().removeClass('hide');
-    }
-};
-
 // Capture webcam/microphone stream.
 M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
     window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
