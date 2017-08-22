@@ -64,23 +64,26 @@ M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallb
 
 // Add chunks of audio/video to array when made available.
 M.tinymce_recordrtc.handle_data_available = function(event) {
+    // Push recording slice to array.
+    chunks.push(event.data);
     // Size of all recorded data so far.
     blobSize += event.data.size;
 
-    // Push recording slice to array.
     // If total size of recording so far exceeds max upload limit, stop recording.
     // An extra condition exists to avoid displaying alert twice.
-    if ((blobSize >= maxUploadSize) && (!window.localStorage.getItem('alerted'))) {
-        window.localStorage.setItem('alerted', 'true');
+    if (blobSize >= maxUploadSize) {
+        if (!window.localStorage.getItem('alerted')) {
+            window.localStorage.setItem('alerted', 'true');
 
-        Y.use('node-event-simulate', function() {
-            startStopBtn.simulate('click');
-        });
-        M.tinymce_recordrtc.show_alert('nearingmaxsize');
-    } else if ((blobSize >= maxUploadSize) && (window.localStorage.getItem('alerted') === 'true')) {
-        window.localStorage.removeItem('alerted');
-    } else {
-        chunks.push(event.data);
+            Y.use('node-event-simulate', function() {
+                startStopBtn.simulate('click');
+            });
+            M.tinymce_recordrtc.show_alert('nearingmaxsize');
+        } else {
+            window.localStorage.removeItem('alerted');
+        }
+
+        chunks.pop();
     }
 };
 
@@ -102,7 +105,7 @@ M.tinymce_recordrtc.handle_stop = function() {
     // Handle when upload button is clicked.
     uploadBtn.on('click', function() {
         // Trigger error if no recording has been made.
-        if (!player.get('src') || chunks === []) {
+        if (chunks.length === 0) {
             M.tinymce_recordrtc.show_alert('norecordingfound');
         } else {
             uploadBtn.set('disabled', true);
@@ -171,11 +174,8 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
 
             // Generate filename with random ID and file extension.
             var fileName = (Math.random() * 1000).toString().replace('.', '');
-            if (type === 'audio') {
-                fileName += '-audio.ogg';
-            } else {
-                fileName += '-video.webm';
-            }
+            fileName += (type === 'audio') ? '-audio.ogg'
+                                           : '-video.webm';
 
             // Create FormData to send to PHP filepicker-upload script.
             var formData = new window.FormData(),

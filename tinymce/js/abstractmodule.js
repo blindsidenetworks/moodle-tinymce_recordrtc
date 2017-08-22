@@ -81,7 +81,7 @@ M.tinymce_recordrtc.select_rec_options = function(recType) {
         return window.MediaRecorder.isTypeSupported(type);
     });
 
-    if (compatTypes !== []) {
+    if (compatTypes.length !== 0) {
         options.mimeType = compatTypes[0];
     }
 
