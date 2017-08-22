@@ -7,7 +7,7 @@
 
 // ESLint directives.
 /* global tinyMCE, tinyMCEPopup */
-/* exported countdownTicker, playerDOM */
+/* exported alertWarning, alertDanger, countdownTicker, playerDOM */
 /* eslint-disable camelcase, no-alert */
 
 // Scrutinizer CI directives.
@@ -15,7 +15,6 @@
 /** global: parent */
 /** global: M */
 /** global: Y */
-/** global: recordrtc */
 /** global: tinyMCEPopup */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
@@ -58,80 +57,9 @@ var recType = null;
 var startStopBtn = null;
 var uploadBtn = null;
 
-// A helper for making a Moodle alert appear.
-// Subject is the content of the alert (which error ther alert is for).
-// Possibility to add on-alert-close event.
-M.tinymce_recordrtc.show_alert = function(subject, onCloseEvent) {
-    Y.use('moodle-core-notification-alert', function() {
-        var dialogue = new M.core.alert({
-            title: M.util.get_string(subject + '_title', 'tinymce_recordrtc'),
-            message: M.util.get_string(subject, 'tinymce_recordrtc')
-        });
-
-        if (onCloseEvent) {
-            dialogue.after('complete', onCloseEvent);
-        }
-    });
-};
-
-// Handle getUserMedia errors.
-M.tinymce_recordrtc.handle_gum_errors = function(error, commonConfig) {
-    var btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc'),
-        treatAsStopped = function() {
-            commonConfig.onMediaStopped(btnLabel);
-        };
-
-    // Changes 'CertainError' -> 'gumcertain' to match language string names.
-    var stringName = 'gum' + error.name.replace('Error', '').toLowerCase();
-
-    // After alert, proceed to treat as stopped recording, or close dialogue.
-    if (stringName !== 'gumsecurity') {
-        M.tinymce_recordrtc.show_alert(stringName, treatAsStopped);
-    } else {
-        M.tinymce_recordrtc.show_alert(stringName, function() {
-            tinyMCEPopup.close();
-        });
-    }
-};
-
 // Capture webcam/microphone stream.
 M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
     window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
-};
-
-// Select best options for the recording codec.
-M.tinymce_recordrtc.select_rec_options = function(recType) {
-    var types, options;
-
-    if (recType === 'audio') {
-        types = [
-            'audio/webm;codecs=opus',
-            'audio/ogg;codecs=opus'
-        ];
-        options = {
-            audioBitsPerSecond: window.parseInt(window.params.audiobitrate)
-        };
-    } else {
-        types = [
-            'video/webm;codecs=vp9,opus',
-            'video/webm;codecs=h264,opus',
-            'video/webm;codecs=vp8,opus'
-        ];
-        options = {
-            audioBitsPerSecond: window.parseInt(window.params.audiobitrate),
-            videoBitsPerSecond: window.parseInt(window.params.videobitrate)
-        };
-    }
-
-    var compatTypes = types.filter(function(type) {
-        return window.MediaRecorder.isTypeSupported(type);
-    });
-
-    if (compatTypes !== []) {
-        options.mimeType = compatTypes[0];
-    }
-
-    return options;
 };
 
 // Add chunks of audio/video to array when made available.

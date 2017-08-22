@@ -10,7 +10,7 @@
 
 // ESLint directives.
 /* global tinyMCE */
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, require-jsdoc */
 
 // Scrutinizer CI directives.
 /** global: M */

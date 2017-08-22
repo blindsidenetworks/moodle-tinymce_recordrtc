@@ -6,17 +6,16 @@
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
 // ESLint directives.
-/* global tinyMCE, tinyMCEPopup */
+/* global tinyMCEPopup, alertWarning, alertDanger */
 /* exported countdownTicker, playerDOM */
 /* eslint-disable camelcase, no-alert */
 
 // Scrutinizer CI directives.
 /** global: navigator */
-/** global: parent */
 /** global: M */
-/** global: Y */
-/** global: recordrtc */
 /** global: tinyMCEPopup */
+/** global: alertDanger */
+/** global: alertWarning */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
