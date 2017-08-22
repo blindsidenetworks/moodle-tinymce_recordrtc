@@ -21,10 +21,10 @@ function addForceRepaint(ed) {
         var root = ed.dom.getRoot(),
             items = root.getElementsByTagName("img");
 
-        items.forEach(function(item) {
-            var src = item.getAttribute('src').replace(/\?\d+$/, '');
-            item.setAttribute('src', src + '?' + (new Date().getTime()));
-        });
+        for (var i = 0; i < items.length; i++) {
+            var src = items[i].getAttribute('src').replace(/\?\d+$/, '');
+            items[i].setAttribute('src', src + '?' + (new Date().getTime()));
+        }
 
         ed.execCommand('mceRepaint');
         ed.focus();
