@@ -52,7 +52,6 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
      * @param array $options Options for this editor
      */
     protected function update_init_params(array &$params, context $context, array $options = null) {
-
         if (!isloggedin() or isguestuser()) {
             // Must be a real user to manage any files.
             return;
