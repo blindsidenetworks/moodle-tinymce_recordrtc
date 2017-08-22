@@ -107,33 +107,28 @@ M.tinymce_recordrtc.handle_stop = function() {
         // Trigger error if no recording has been made.
         if (chunks.length === 0) {
             M.tinymce_recordrtc.show_alert('norecordingfound');
-            return undefined;
+        } else {
+            uploadBtn.set('disabled', true);
+
+            // Upload recording to server.
+            M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
+                if (progress === 'ended') { // Insert annotation in text.
+                    uploadBtn.set('disabled', false);
+                    M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
+                } else if (progress === 'upload-failed') { // Show error message in upload button.
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
+                } else if (progress === 'upload-aborted') {
+                    uploadBtn.set('disabled', false);
+                    uploadBtn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
+                } else {
+                    uploadBtn.set('textContent', progress);
+                }
+            });
         }
-
-        uploadBtn.set('disabled', true);
-
-        // Upload recording to server.
-        M.tinymce_recordrtc.upload_to_server(recType, function(progress, fileURLOrError) {
-            if (progress === 'ended') { // Insert annotation in text.
-                uploadBtn.set('disabled', false);
-                M.tinymce_recordrtc.insert_annotation(recType, fileURLOrError);
-                return undefined;
-            } else if (progress === 'upload-failed') { // Show error message in upload button.
-                uploadBtn.set('disabled', false);
-                uploadBtn.set('textContent', M.util.get_string('uploadfailed', 'tinymce_recordrtc') + ' ' + fileURLOrError);
-                return undefined;
-            } else if (progress === 'upload-failed-404') { // 404 error = File too large in Moodle.
-                uploadBtn.set('disabled', false);
-                uploadBtn.set('textContent', M.util.get_string('uploadfailed404', 'tinymce_recordrtc'));
-                return undefined;
-            } else if (progress === 'upload-aborted') {
-                uploadBtn.set('disabled', false);
-                uploadBtn.set('textContent', M.util.get_string('uploadaborted', 'tinymce_recordrtc') + ' ' + fileURLOrError);
-                return undefined;
-            }
-
-            uploadBtn.set('textContent', progress);
-        });
     });
 };
 
@@ -209,10 +204,9 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
             M.tinymce_recordrtc.make_xmlhttprequest(uploadEndpoint, formData, function(progress, responseText) {
                 if (progress === 'upload-ended') {
                     callback('ended', window.JSON.parse(responseText).url);
-                    return undefined;
+                } else {
+                    callback(progress);
                 }
-
-                callback(progress);
             });
         }
     };
@@ -255,9 +249,9 @@ M.tinymce_recordrtc.pad = function(val) {
 
     if (valString.length < 2) {
         return "0" + valString;
+    } else {
+        return valString;
     }
-
-    return valString;
 };
 
 // Functionality to make recording timer count down.
@@ -283,10 +277,10 @@ M.tinymce_recordrtc.create_annotation = function(type, recording_url) {
     // Return HTML for annotation link, if user did not press "Cancel".
     if (!linkText) {
         return undefined;
+    } else {
+        var annotation = '<div><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
+        return annotation;
     }
-
-    var annotation = '<div><a target="_blank" href="' + recording_url + '">' + linkText + '</a></div>';
-    return annotation;
 };
 
 // Inserts link to annotation in editor text area.
@@ -297,9 +291,8 @@ M.tinymce_recordrtc.insert_annotation = function(type, recording_url) {
     // If user pressed "Cancel", just go back to main recording screen.
     if (!annotation) {
         uploadBtn.set('textContent', M.util.get_string('attachrecording', 'tinymce_recordrtc'));
-        return undefined;
+    } else {
+        tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
+        tinyMCEPopup.close();
     }
-
-    tinyMCEPopup.editor.execCommand('mceInsertContent', false, annotation);
-    tinyMCEPopup.close();
 };
