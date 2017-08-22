@@ -1,3 +1,9 @@
+// ESLint directives.
+/* eslint-disable */
+
+// JSHint directives.
+/* jshint ignore:start */
+
 /*!
  * Bowser - a browser detector
  * https://github.com/ded/bowser

@@ -35,6 +35,8 @@ const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
 
 /**
  * This class defines functions for the plugin.
+ * @copyright  2017 Blindside Networks Inc.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tinymce_recordrtc extends editor_tinymce_plugin {
     /** @var array list of buttons defined by this plugin */
@@ -50,7 +52,6 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
      * @param array $options Options for this editor
      */
     protected function update_init_params(array &$params, context $context, array $options = null) {
-
         if (!isloggedin() or isguestuser()) {
             // Must be a real user to manage any files.
             return;
@@ -59,30 +60,22 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
         // Add JS file, which uses default name.
         $this->add_js_plugin($params);
 
-        // Add audio button at the end of the first row.
+        // Add audio/video buttons at the end of the first row.
         $allowedtypes = $this->get_config('allowedtypes', 'both');
-        if ($allowedtypes == 'both' || $allowedtypes == 'audio') {
-            // Add parameters for audiortc.
-            $params['audiortc'] = array(
-                'contextid' => $options['context']->id,
-                'sesskey' => sesskey(),
-                'timelimit' => $this->get_config('timelimit'),
-                'audiobitrate' => $this->get_config('audiobitrate')
-            );
-            $this->add_button_after($params, 0, 'audiortc');
-        }
+        $allowedtypes = str_replace('both', 'audio,video', $allowedtypes);
+        $allowedtypes = explode(',', $allowedtypes);
 
-        // Add video button at the end of the first row.
-        if ($allowedtypes == 'both' || $allowedtypes == 'video') {
-            // Add parameters for audiortc.
-            $params['videortc'] = array(
+        foreach ($allowedtypes as &$type) {
+            $params[$type.'rtc'] = array(
                 'contextid' => $options['context']->id,
                 'sesskey' => sesskey(),
                 'timelimit' => $this->get_config('timelimit'),
                 'audiobitrate' => $this->get_config('audiobitrate'),
                 'videobitrate' => $this->get_config('videobitrate')
             );
-            $this->add_button_after($params, 0, 'videortc');
+            $this->add_button_after($params, 0, $type.'rtc');
+
+            unset($type);
         }
     }
 
