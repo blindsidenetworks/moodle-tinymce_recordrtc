@@ -58,7 +58,7 @@ $maxuploadsize = ini_get('upload_max_filesize');
 // Determine if the current version of Moodle is 3.2+.
 $moodleversion = intval($CFG->version, 10);
 $moodle32 = 2016120500;
-$oldermoodle = $moodleversion <= $moodle32;
+$oldermoodle = $moodleversion < $moodle32;
 $jsvars = array(
     'maxfilesize' => $maxuploadsize,
     'oldermoodle' => $oldermoodle
