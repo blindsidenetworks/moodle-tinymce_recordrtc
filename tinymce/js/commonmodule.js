@@ -159,6 +159,17 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     startStopBtn.set('disabled', false);
 };
 
+M.tinymce_recordrtc.stop_recording = function(stream) {
+    // Stop recording microphone stream.
+    mediaRecorder.stop();
+
+    // Stop each individual MediaTrack.
+    var tracks = stream.getTracks();
+    for (var i = 0; i < tracks.length; i++) {
+        tracks[i].stop();
+    }
+};
+
 // Upload recorded audio/video to server.
 M.tinymce_recordrtc.upload_to_server = function(type, callback) {
     var xhr = new window.XMLHttpRequest();
