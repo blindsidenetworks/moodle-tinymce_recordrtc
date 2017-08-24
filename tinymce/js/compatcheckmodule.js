@@ -33,12 +33,14 @@ M.tinymce_recordrtc.check_secure = function() {
     var isSecureOrigin = (window.location.protocol === 'https:') ||
                          (window.location.host.indexOf('localhost') !== -1);
 
-    if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
-        M.tinymce_recordrtc.show_alert('gumsecurity', function() {
-            tinyMCEPopup.close();
-        });
-    } else if (!isSecureOrigin) {
+    if (!isSecureOrigin) {
         alertDanger.ancestor().ancestor().removeClass('hide');
+
+        if (window.bowser.chrome || window.bowser.opera) {
+            M.tinymce_recordrtc.show_alert('gumsecurity', function() {
+                tinyMCEPopup.close();
+            });
+        }
     }
 };
 
