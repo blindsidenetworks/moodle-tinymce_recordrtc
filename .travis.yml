@@ -82,7 +82,6 @@ install:
 
 script:
   - moodle-plugin-ci phplint
-  - moodle-plugin-ci phpcpd
   - moodle-plugin-ci phpmd
   #- moodle-plugin-ci codechecker ## Failing due BIGBLUEBUTTONBN_CFG
   - moodle-plugin-ci validate
