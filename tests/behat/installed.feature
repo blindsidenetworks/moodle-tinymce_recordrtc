@@ -1,4 +1,4 @@
-@editor @editor_tinymce @recordrtc @tinymce_recordrtc @tinymce_recordrtc_installed
+@editor @tinymce @editor_tinymce @recordrtc @tinymce_recordrtc @tinymce_recordrtc_installed
 Feature: Installation succeeds
   In order to use this plugin
   As a user
