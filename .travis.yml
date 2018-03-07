@@ -2,16 +2,14 @@ language: php
 
 # Workaround for fixing that Selenium server is not running and therefore Behat tests not working
 sudo: required
-# ORIGINAL:
-# sudo: false
 
 addons:
   firefox: "47.0.1"
   postgresql: "9.3"
   apt:
     packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
+      - oracle-java9-installer
+      - oracle-java9-set-default
 
 cache:
   directories:
@@ -72,15 +70,7 @@ matrix:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  #- nvm install node 8.9.0
-  ## Install node manually as is broken since Nov 1, 2017
-  - sudo apt-get install -y build-essential libssl-dev curl
-  - curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh -o install_nvm.sh
-  - bash install_nvm.sh
-  - source ~/.profile
   - nvm install 8.9.0
-  - nvm alias default 8.9.0
-  - nvm use default
   - cd ../..
   - composer create-project -n --no-dev --prefer-dist moodlerooms/moodle-plugin-ci ci ^${MOODLE_PLUGIN_CI}
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
@@ -92,19 +82,15 @@ script:
   - moodle-plugin-ci phplint
   - moodle-plugin-ci phpcpd
   - moodle-plugin-ci phpmd
-  #- moodle-plugin-ci codechecker ## Failing due BIGBLUEBUTTONBN_CFG
+  - moodle-plugin-ci codechecker
   - moodle-plugin-ci validate
   - moodle-plugin-ci phpunit
   # Specific for version 1
-  - 'if [ ${MOODLE_PLUGIN_CI} = "1" ]; then
-        moodle-plugin-ci csslint;
-        moodle-plugin-ci shifter;
-        moodle-plugin-ci jshint;
-     fi'
+  - if [ ${MOODLE_PLUGIN_CI} = "1" ]; then moodle-plugin-ci csslint; fi
+  - if [ ${MOODLE_PLUGIN_CI} = "1" ]; then moodle-plugin-ci shifter; fi
+  - if [ ${MOODLE_PLUGIN_CI} = "1" ]; then moodle-plugin-ci jshint; fi
   # Specific for version 2
-  - 'if [ ${MOODLE_PLUGIN_CI} = "2" ]; then
-        moodle-plugin-ci savepoints;
-        moodle-plugin-ci mustache;
-        moodle-plugin-ci grunt;
-        moodle-plugin-ci behat --dump;
-     fi'
+  - if [ ${MOODLE_PLUGIN_CI} = "2" ]; then moodle-plugin-ci savepoints; fi
+  - if [ ${MOODLE_PLUGIN_CI} = "2" ]; then moodle-plugin-ci mustache; fi
+  - if [ ${MOODLE_PLUGIN_CI} = "2" ]; then moodle-plugin-ci grunt; fi
+  - if [ ${MOODLE_PLUGIN_CI} = "2" ]; then moodle-plugin-ci behat --dump; fi
