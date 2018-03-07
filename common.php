@@ -20,7 +20,6 @@
  * Created by PhpStorm.
  * User: riadvice
  * Date: 02/03/18
- * Time: 02:47 م
  */
 
 defined('MOODLE_INTERNAL') || die();
