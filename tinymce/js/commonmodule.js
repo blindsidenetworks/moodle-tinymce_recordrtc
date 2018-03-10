@@ -7,7 +7,7 @@
 
 // ESLint directives.
 /* global tinyMCE, tinyMCEPopup */
-/* exported alertWarning, alertDanger, countdownTicker, playerDOM */
+/* exported alertWarning, alertDanger, countdownTicker, playerDOM, mediaRecorder */
 /* eslint-disable camelcase, no-alert */
 
 // Scrutinizer CI directives.
@@ -16,6 +16,7 @@
 /** global: M */
 /** global: Y */
 /** global: tinyMCEPopup */
+/** global: mediaRecorder */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 

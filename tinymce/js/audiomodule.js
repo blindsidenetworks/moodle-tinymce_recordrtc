@@ -7,7 +7,7 @@
 
 // ESLint directives.
 /* global recordrtc, alertWarning, alertDanger, player, playerDOM, startStopBtn, uploadBtn */
-/* global recType, maxUploadSize, chunks, blobSize, countdownTicker, mediaRecorder */
+/* global recType, maxUploadSize, chunks, blobSize, countdownTicker */
 /* exported alertWarning, alertDanger, maxUploadSize, chunks, blobSize */
 /* eslint-disable camelcase, no-global-assign */
 
@@ -26,7 +26,6 @@
 /** global: countdownSeconds */
 /** global: countdownTicker */
 /** global: maxUploadSize */
-/** global: mediaRecorder */
 /** global: player */
 /** global: playerDOM */
 /** global: recType */
