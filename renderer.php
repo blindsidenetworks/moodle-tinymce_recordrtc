@@ -34,11 +34,11 @@ defined('MOODLE_INTERNAL') || die;
 class tinymce_recordrtc_renderer extends plugin_renderer_base {
     /**
      * Renders the HTML for the plugin, for the alerts section.
-     * @param boolean $oldermoodle True if Moodle >= 3.2, else False.
+     * @param string $themename.
      * @return string
      */
-    public function render_alerts($oldermoodle) {
-        if ($oldermoodle) {
+    public function render_alerts($themename) {
+        if ($themename != 'boost') {
             $output = html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span12'));
             $output .= html_writer::start_tag('div', array('id' => 'alert-warning', 'class' => 'alert'));
@@ -55,7 +55,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
-        if ($oldermoodle) {
+        if ($themename != 'boost') {
             $output .= html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span12'));
             $output .= html_writer::start_tag('div', array('id' => 'alert-danger', 'class' => 'alert alert-error'));
@@ -78,12 +78,12 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for the audio/video player section.
-     * @param boolean $oldermoodle True if Moodle >= 3.2, else False.
+     * @param string $themename.
      * @param string $type Either 'audio' or 'video', depending on where it's being rendered.
      * @return string
      */
-    public function render_player($oldermoodle, $type) {
-        if ($oldermoodle && $type === 'audio') {
+    public function render_player($themename, $type) {
+        if ($themename != 'boost' && $type === 'audio') {
             $output = html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span1')).html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'span10'));
@@ -91,7 +91,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
             $output .= html_writer::end_tag('audio');
             $output .= html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'span1')).html_writer::end_tag('div');
-        } else if ($oldermoodle && $type === 'video') {
+        } else if ($themename != 'boost' && $type === 'video') {
             $output = html_writer::start_tag('div', array('class' => 'row-fluid hide'));
             $output .= html_writer::start_tag('div', array('class' => 'span12'));
             $output .= html_writer::start_tag('video', array('id' => 'player'));
@@ -119,11 +119,11 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for the start/stop and upload buttons section.
-     * @param boolean $oldermoodle True if Moodle >= 3.2, else False.
+     * @param string $themename.
      * @return string
      */
-    public function render_buttons($oldermoodle) {
-        if ($oldermoodle) {
+    public function render_buttons($themename) {
+        if ($themename != 'boost') {
             $output = html_writer::start_tag('div', array('class' => 'row-fluid'));
             $output .= html_writer::start_tag('div', array('class' => 'span1')).html_writer::end_tag('div');
             $output .= html_writer::start_tag('div', array('class' => 'span10'));
@@ -174,14 +174,14 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for audio recording.
-     * @param boolean $oldermoodle True if Moodle >= 3.2, else False.
+     * @param string $themename.
      * @return string
      */
-    public function render_audiortc_index($oldermoodle) {
+    public function render_audiortc_index($themename) {
         $output = html_writer::start_tag('div', array('class' => 'container-fluid'));
-        $output .= self::render_alerts($oldermoodle);
-        $output .= self::render_player($oldermoodle, 'audio');
-        $output .= self::render_buttons($oldermoodle);
+        $output .= self::render_alerts($themename);
+        $output .= self::render_player($themename, 'audio');
+        $output .= self::render_buttons($themename);
         $output .= html_writer::end_tag('div');
 
         return $output;
@@ -189,14 +189,14 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for video recording.
-     * @param boolean $oldermoodle True if Moodle >= 3.2, else False.
+     * @param string $themename.
      * @return string
      */
-    public function render_videortc_index($oldermoodle) {
+    public function render_videortc_index($themename) {
         $output = html_writer::start_tag('div', array('class' => 'container-fluid'));
-        $output .= self::render_alerts($oldermoodle);
-        $output .= self::render_player($oldermoodle, 'video');
-        $output .= self::render_buttons($oldermoodle);
+        $output .= self::render_alerts($themename);
+        $output .= self::render_player($themename, 'video');
+        $output .= self::render_buttons($themename);
         $output .= html_writer::end_tag('div');
 
         return $output;

@@ -53,7 +53,7 @@ $output = $PAGE->get_renderer('tinymce_recordrtc');
 
 echo $output->header();
 
-echo $output->render_videortc_index($oldermoodle);
+echo $output->render_videortc_index($themename);
 
 // Because there is no relative path to TinyMCE, we have to use JavaScript
 // to work out correct path from the .js files from TinyMCE. Only files

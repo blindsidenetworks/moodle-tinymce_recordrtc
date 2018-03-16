@@ -35,3 +35,6 @@ $jsvars = array(
     'oldermoodle' => $oldermoodle
 );
 $PAGE->requires->data_for_js('recordrtc', $jsvars);
+
+// Get current theme name
+$themename = $PAGE->theme->name;
