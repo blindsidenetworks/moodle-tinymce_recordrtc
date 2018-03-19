@@ -49,6 +49,9 @@ $stringmanager = get_string_manager();
 $strings = $stringmanager->load_component_strings('tinymce_recordrtc', $USER->lang);
 $PAGE->requires->strings_for_js(array_keys($strings), 'tinymce_recordrtc');
 
+// Get current theme name.
+$themename = $PAGE->theme->name;
+
 $output = $PAGE->get_renderer('tinymce_recordrtc');
 
 echo $output->header();

@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die;
 class tinymce_recordrtc_renderer extends plugin_renderer_base {
     /**
      * Renders the HTML for the plugin, for the alerts section.
-     * @param string $themename.
+     * @param string $themename contains the name of the current theme.
      * @return string
      */
     public function render_alerts($themename) {
@@ -78,7 +78,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for the audio/video player section.
-     * @param string $themename.
+     * @param string $themename contains the name of the current theme.
      * @param string $type Either 'audio' or 'video', depending on where it's being rendered.
      * @return string
      */
@@ -119,7 +119,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for the start/stop and upload buttons section.
-     * @param string $themename.
+     * @param string $themename contains the name of the current theme.
      * @return string
      */
     public function render_buttons($themename) {
@@ -174,7 +174,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for audio recording.
-     * @param string $themename.
+     * @param string $themename contains the name of the current theme.
      * @return string
      */
     public function render_audiortc_index($themename) {
@@ -189,7 +189,7 @@ class tinymce_recordrtc_renderer extends plugin_renderer_base {
 
     /**
      * Renders the HTML for the plugin, for video recording.
-     * @param string $themename.
+     * @param string $themename contains the name of the current theme.
      * @return string
      */
     public function render_videortc_index($themename) {
