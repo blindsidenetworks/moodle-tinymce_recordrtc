@@ -13,11 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Created by PhpStorm.
- * User: riadvice
- * Date: 02/03/18
+ * The audio recording module for RecordRTC.
+ *
+ * @package    tinymce_recordrtc
+ * @author     Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
+ * @author     Jacob Prud'homme (jacob [dt] prudhomme [at] blindsidenetworks [dt] com)
+ * @author     Marouene Agrebi (marouene [dt] agrebi [at] riadvice [dt] tn)
+ * @copyright  2016 onwards, Blindside Networks Inc.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
