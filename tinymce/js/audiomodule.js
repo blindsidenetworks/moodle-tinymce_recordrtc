@@ -7,7 +7,7 @@
 
 // ESLint directives.
 /* global recordrtc, alertWarning, alertDanger, player, playerDOM, startStopBtn, uploadBtn */
-/* global recType, maxUploadSize, chunks, blobSize, countdownTicker, mediaRecorder */
+/* global recType, maxUploadSize, chunks, blobSize, countdownTicker */
 /* exported alertWarning, alertDanger, maxUploadSize, chunks, blobSize */
 /* eslint-disable camelcase, no-global-assign */
 
@@ -26,7 +26,6 @@
 /** global: countdownSeconds */
 /** global: countdownTicker */
 /** global: maxUploadSize */
-/** global: mediaRecorder */
 /** global: player */
 /** global: playerDOM */
 /** global: recType */
@@ -111,7 +110,7 @@ M.tinymce_recordrtc.view_init = function() {
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stop_recording_audio(startStopBtn.stream);
+            M.tinymce_recordrtc.stop_recording(startStopBtn.stream);
 
             // Change button to offer to record again.
             startStopBtn.set('textContent', M.util.get_string('recordagain', 'tinymce_recordrtc'));
@@ -143,15 +142,4 @@ M.tinymce_recordrtc.capture_audio = function(config) {
             config.onMediaCapturingFailed(error);
         }
     );
-};
-
-M.tinymce_recordrtc.stop_recording_audio = function(stream) {
-    // Stop recording microphone stream.
-    mediaRecorder.stop();
-
-    // Stop each individual MediaTrack.
-    var tracks = stream.getTracks();
-    for (var i = 0; i < tracks.length; i++) {
-        tracks[i].stop();
-    }
 };
