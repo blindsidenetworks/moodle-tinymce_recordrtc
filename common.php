@@ -24,7 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
 $PAGE->set_cacheable(false);
 $title = '';
@@ -47,9 +47,9 @@ $PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'
 // Get max file upload size.
 $maxuploadsize = ini_get('upload_max_filesize');
 // Determine if the current version of Moodle is 3.2+.
-$currentversion = intval($CFG->version);
-$baseversion = 2016120500;
-$oldermoodle = $currentversion <= $baseversion;
+$moodleversion = intval($CFG->version, 10);
+$moodle32 = 2016120500;
+$oldermoodle = $moodleversion < $moodle32;
 $jsvars = array(
     'maxfilesize' => $maxuploadsize,
     'oldermoodle' => $oldermoodle

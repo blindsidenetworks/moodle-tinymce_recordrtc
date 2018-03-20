@@ -7,7 +7,7 @@
 
 // ESLint directives.
 /* global tinyMCE, tinyMCEPopup */
-/* exported alertWarning, alertDanger, countdownTicker, playerDOM */
+/* exported alertWarning, alertDanger, countdownTicker, playerDOM, mediaRecorder */
 /* eslint-disable camelcase, no-alert */
 
 // Scrutinizer CI directives.
@@ -16,6 +16,7 @@
 /** global: M */
 /** global: Y */
 /** global: tinyMCEPopup */
+/** global: mediaRecorder */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
@@ -157,6 +158,18 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
 
     // Make button clickable again, to allow stopping recording.
     startStopBtn.set('disabled', false);
+};
+
+// Stop recording audio/video.
+M.tinymce_recordrtc.stop_recording = function (stream) {
+    // Stop recording microphone stream.
+    mediaRecorder.stop();
+
+    // Stop each individual MediaTrack.
+    var tracks = stream.getTracks();
+    for (var i = 0; i < tracks.length; i++) {
+        tracks[i].stop();
+    }
 };
 
 // Upload recorded audio/video to server.
