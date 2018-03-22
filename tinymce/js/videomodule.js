@@ -5,10 +5,19 @@
 // @copyright  2016 onwards, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+// ESLint directives.
+/* global recordrtc, alertWarning, alertDanger, player, playerDOM, startStopBtn, uploadBtn */
+/* global recType, maxUploadSize, chunks, blobSize, countdownTicker */
+/* exported alertWarning, alertDanger, maxUploadSize, chunks, blobSize */
+/* eslint-disable camelcase, no-global-assign */
+
+// JSHint directives.
+/* global alertWarning: true, alertDanger: true, player: true, playerDOM: true, startStopBtn: true */
+/* global uploadBtn: true, recType: true, maxUploadSize: true, chunks: true, blobSize: true */
+
 // Scrutinizer CI directives.
 /** global: M */
 /** global: Y */
-/** global: tinyMCEPopup */
 /** global: recordrtc */
 /** global: alertWarning */
 /** global: alertDanger */
@@ -17,7 +26,6 @@
 /** global: countdownSeconds */
 /** global: countdownTicker */
 /** global: maxUploadSize */
-/** global: mediaRecorder */
 /** global: player */
 /** global: playerDOM */
 /** global: recType */
@@ -105,7 +113,7 @@ M.tinymce_recordrtc.view_init = function() {
             }, 1000);
 
             // Stop recording.
-            M.tinymce_recordrtc.stop_recording_video(startStopBtn.stream);
+            M.tinymce_recordrtc.stop_recording(startStopBtn.stream);
 
             // Change button to offer to record again.
             startStopBtn.set('textContent', M.util.get_string('recordagain', 'tinymce_recordrtc'));
@@ -142,14 +150,4 @@ M.tinymce_recordrtc.capture_audio_video = function(config) {
             config.onMediaCapturingFailed(error);
         }
     );
-};
-
-M.tinymce_recordrtc.stop_recording_video = function(stream) {
-    // Stop recording microphone stream.
-    mediaRecorder.stop();
-
-    // Stop each individual MediaTrack.
-    stream.getTracks().forEach(function(track) {
-        track.stop();
-    });
 };

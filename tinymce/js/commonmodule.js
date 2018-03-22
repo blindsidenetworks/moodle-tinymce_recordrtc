@@ -5,11 +5,18 @@
 // @copyright  2016 onwards, Blindside Networks Inc.
 // @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
 
+// ESLint directives.
+/* global tinyMCE, tinyMCEPopup */
+/* exported alertWarning, alertDanger, countdownTicker, playerDOM, mediaRecorder */
+/* eslint-disable camelcase, no-alert */
+
 // Scrutinizer CI directives.
+/** global: navigator */
+/** global: parent */
 /** global: M */
 /** global: Y */
-/** global: recordrtc */
 /** global: tinyMCEPopup */
+/** global: mediaRecorder */
 
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
@@ -51,136 +58,33 @@ var recType = null;
 var startStopBtn = null;
 var uploadBtn = null;
 
-// A helper for making a Moodle alert appear.
-// Subject is the content of the alert (which error ther alert is for).
-// Possibility to add on-alert-close event.
-M.tinymce_recordrtc.show_alert = function(subject, onCloseEvent) {
-    Y.use('moodle-core-notification-alert', function() {
-        var dialogue = new M.core.alert({
-            title: M.util.get_string(subject + '_title', 'tinymce_recordrtc'),
-            message: M.util.get_string(subject, 'tinymce_recordrtc')
-        });
-
-        if (onCloseEvent) {
-            dialogue.after('complete', onCloseEvent);
-        }
-    });
-};
-
-// Handle getUserMedia errors.
-M.tinymce_recordrtc.handle_gum_errors = function(error, commonConfig) {
-    var btnLabel = M.util.get_string('recordingfailed', 'tinymce_recordrtc'),
-        treatAsStopped = function() {
-            commonConfig.onMediaStopped(btnLabel);
-        };
-
-    // Changes 'CertainError' -> 'gumcertain' to match language string names.
-    var stringName = 'gum' + error.name.replace('Error', '').toLowerCase();
-
-    // After alert, proceed to treat as stopped recording, or close dialogue.
-    if (stringName !== 'gumsecurity') {
-        M.tinymce_recordrtc.show_alert(stringName, treatAsStopped);
-    } else {
-        M.tinymce_recordrtc.show_alert(stringName, function() {
-            tinyMCEPopup.close();
-        });
-    }
-};
-
-// Show alert and close plugin if browser does not support WebRTC at all.
-M.tinymce_recordrtc.check_has_gum = function() {
-    if (!(navigator.mediaDevices && window.MediaRecorder)) {
-        M.tinymce_recordrtc.show_alert('nowebrtc', function() {
-            tinyMCEPopup.close();
-        });
-    }
-};
-
-// Notify and redirect user if plugin is used from insecure location.
-M.tinymce_recordrtc.check_secure = function() {
-    var isSecureOrigin = (window.location.protocol === 'https:') ||
-                         (window.location.host.indexOf('localhost') !== -1);
-
-    if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
-        M.tinymce_recordrtc.show_alert('gumsecurity', function() {
-            tinyMCEPopup.close();
-        });
-    } else if (!isSecureOrigin) {
-        alertDanger.ancestor().ancestor().removeClass('hide');
-    }
-};
-
-// Display "consider switching browsers" message if not using:
-// - Firefox 29+;
-// - Chrome 49+;
-// - Opera 36+.
-M.tinymce_recordrtc.check_browser = function() {
-    if (!((window.bowser.firefox && window.bowser.version >= 29) ||
-          (window.bowser.chrome && window.bowser.version >= 49) ||
-          (window.bowser.opera && window.bowser.version >= 36))) {
-        alertWarning.ancestor().ancestor().removeClass('hide');
-    }
-};
-
 // Capture webcam/microphone stream.
 M.tinymce_recordrtc.capture_user_media = function(mediaConstraints, successCallback, errorCallback) {
     window.navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
 };
 
-// Select best options for the recording codec.
-M.tinymce_recordrtc.select_rec_options = function(recType) {
-    var types, options;
-
-    if (recType === 'audio') {
-        types = [
-            'audio/webm;codecs=opus',
-            'audio/ogg;codecs=opus'
-        ];
-        options = {
-            audioBitsPerSecond: window.parseInt(window.params.audiobitrate)
-        };
-    } else {
-        types = [
-            'video/webm;codecs=vp9,opus',
-            'video/webm;codecs=h264,opus',
-            'video/webm;codecs=vp8,opus'
-        ];
-        options = {
-            audioBitsPerSecond: window.parseInt(window.params.audiobitrate),
-            videoBitsPerSecond: window.parseInt(window.params.videobitrate)
-        };
-    }
-
-    var compatTypes = types.filter(function(type) {
-        return window.MediaRecorder.isTypeSupported(type);
-    });
-
-    if (compatTypes !== []) {
-        options.mimeType = compatTypes[0];
-    }
-
-    return options;
-};
-
 // Add chunks of audio/video to array when made available.
 M.tinymce_recordrtc.handle_data_available = function(event) {
+    // Push recording slice to array.
+    chunks.push(event.data);
     // Size of all recorded data so far.
     blobSize += event.data.size;
 
-    // Push recording slice to array.
     // If total size of recording so far exceeds max upload limit, stop recording.
     // An extra condition exists to avoid displaying alert twice.
-    if ((blobSize >= maxUploadSize) && (!window.localStorage.getItem('alerted'))) {
-        window.localStorage.setItem('alerted', 'true');
+    if (blobSize >= maxUploadSize) {
+        if (!window.localStorage.getItem('alerted')) {
+            window.localStorage.setItem('alerted', 'true');
 
-        Y.use('node-event-simulate', function() {
-            startStopBtn.simulate('click');
-        });
-        M.tinymce_recordrtc.show_alert('nearingmaxsize');
-    } else if ((blobSize >= maxUploadSize) && (window.localStorage.getItem('alerted') === 'true')) {
-        window.localStorage.removeItem('alerted');
-    } else {
-        chunks.push(event.data);
+            Y.use('node-event-simulate', function() {
+                startStopBtn.simulate('click');
+            });
+            M.tinymce_recordrtc.show_alert('nearingmaxsize');
+        } else {
+            window.localStorage.removeItem('alerted');
+        }
+
+        chunks.pop();
     }
 };
 
@@ -202,7 +106,7 @@ M.tinymce_recordrtc.handle_stop = function() {
     // Handle when upload button is clicked.
     uploadBtn.on('click', function() {
         // Trigger error if no recording has been made.
-        if (!player.get('src') || chunks === []) {
+        if (chunks.length === 0) {
             M.tinymce_recordrtc.show_alert('norecordingfound');
         } else {
             uploadBtn.set('disabled', true);
@@ -256,6 +160,18 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
     startStopBtn.set('disabled', false);
 };
 
+// Stop recording audio/video.
+M.tinymce_recordrtc.stop_recording = function (stream) {
+    // Stop recording microphone stream.
+    mediaRecorder.stop();
+
+    // Stop each individual MediaTrack.
+    var tracks = stream.getTracks();
+    for (var i = 0; i < tracks.length; i++) {
+        tracks[i].stop();
+    }
+};
+
 // Upload recorded audio/video to server.
 M.tinymce_recordrtc.upload_to_server = function(type, callback) {
     var xhr = new window.XMLHttpRequest();
@@ -271,11 +187,8 @@ M.tinymce_recordrtc.upload_to_server = function(type, callback) {
 
             // Generate filename with random ID and file extension.
             var fileName = (Math.random() * 1000).toString().replace('.', '');
-            if (type === 'audio') {
-                fileName += '-audio.ogg';
-            } else {
-                fileName += '-video.webm';
-            }
+            fileName += (type === 'audio') ? '-audio.ogg'
+                                           : '-video.webm';
 
             // Create FormData to send to PHP filepicker-upload script.
             var formData = new window.FormData(),

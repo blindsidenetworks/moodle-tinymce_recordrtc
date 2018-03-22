@@ -14,9 +14,26 @@ audio {
     width: 100%;
 }
 
-video {
-    display: block;
-    width: 640px;
-    height: 480px;
-    margin: 0 auto;
+@media screen and (max-width: 680px) {
+    video {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+        padding-right: 10px;
+    }
+}
+
+@media screen and (min-width: 681px) {
+    video {
+        display: block;
+        width: 640px;
+        height: 480px;
+        margin: 0 auto;
+    }
+}
+
+#start-stop,
+#upload {
+    white-space: normal;
 }

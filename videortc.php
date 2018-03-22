@@ -35,33 +35,8 @@ require_sesskey();
 
 $PAGE->set_context($context);
 $PAGE->set_url(MOODLE_TINYMCE_RECORDRTC_ROOT.'videortc.php');
-$PAGE->set_cacheable(false);
-$title = '';
-if (isset($cm->name)) {
-    $title = $cm->name;
-}
-$PAGE->set_title($title);
-$PAGE->set_heading($title);
 
-// Reset page layout for inside editor.
-$PAGE->set_pagelayout('embedded');
-
-$PAGE->requires->css(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css'));
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/bowser.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/adapter.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/commonmodule.js'), true);
-
-// Get max file upload size.
-$maxuploadsize = ini_get('upload_max_filesize');
-// Determine if the current version of Moodle is 3.2+.
-$currentversion = intval($CFG->version);
-$baseversion = 2016120500;
-$oldermoodle = $currentversion <= $baseversion;
-$jsvars = array(
-    'maxfilesize' => $maxuploadsize,
-    'oldermoodle' => $oldermoodle
-);
-$PAGE->requires->data_for_js('recordrtc', $jsvars);
+require_once('common.php');
 
 $jsmodule = array(
     'name'     => 'tinymce_recordrtc',
@@ -74,11 +49,14 @@ $stringmanager = get_string_manager();
 $strings = $stringmanager->load_component_strings('tinymce_recordrtc', $USER->lang);
 $PAGE->requires->strings_for_js(array_keys($strings), 'tinymce_recordrtc');
 
+// Get current theme name.
+$themename = $PAGE->theme->name;
+
 $output = $PAGE->get_renderer('tinymce_recordrtc');
 
 echo $output->header();
 
-echo $output->render_videortc_index($oldermoodle);
+echo $output->render_videortc_index($themename);
 
 // Because there is no relative path to TinyMCE, we have to use JavaScript
 // to work out correct path from the .js files from TinyMCE. Only files
