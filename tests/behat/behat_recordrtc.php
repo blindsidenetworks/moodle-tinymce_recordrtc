@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Behat recordrtc-related steps definitions.
+ * Behat recordrtc-related steps definitions for tinymce editor.
  *
- * @package    recordrtc
+ * @package    tinymce_recordrtc
  * @category   test
  * @copyright  2018 Marouene Agrebi <marouene.agrebi@riadvice.tn>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,27 +29,26 @@ require_once(__DIR__ . '/../../../../../../behat/behat_base.php');
 
 
 /**
- * Behat recordrtc-related steps definitions.
+ * Behat recordrtc-related steps definitions for tinymce editor.
  *
- * @package    recordrtc
+ * @package    tinymce_recordrtc
  * @category   test
  * @copyright  2018 Marouene Agrebi <marouene.agrebi@riadvice.tn>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_recordrtc extends behat_base
-{
+class behat_recordrtc extends behat_base {
+
     /**
      * Switch to iframe inside the popup window.
      *
      * @When /^I switch to popup iframe$/
      */
+    public function i_switch_to_popup_iframe() {
 
-    public function i_switch_to_popup_iframe()
-    {
         // We spin to give time to the iframe to be loaded.
         $this->spin(
             function () {
-                $this->switchToIFrame();
+                $this->switch_to_first_iframe();
                 // If no exception we are done.
                 return true;
             },
@@ -62,15 +61,13 @@ class behat_recordrtc extends behat_base
      *
      * @throws Exception When no iFrame is found.
      */
+    public function switch_to_first_iframe() {
 
-    public function switchToIFrame()
-    {
         // Find the only iFrame in the document by tag name.
         // The reason: this iFrame has only one selector: id, that can not be used to find it
         // because it is generated automatically.
         $function = <<<JS
             (function(){
-                
                  var iframe = document.getElementsByTagName('iframe');
                  iframe[1].name = "iframeTinymce";
             })()
@@ -78,7 +75,6 @@ JS;
         try {
             $this->getSession()->executeScript($function);
         } catch (Exception $e) {
-            print_r($e->getMessage());
             throw new \Exception("iFrame was NOT found." . PHP_EOL . $e->getMessage());
         }
 
