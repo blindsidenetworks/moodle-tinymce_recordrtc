@@ -85,42 +85,11 @@ JS;
     }
 
     /**
-     * Switch to iframe inside the editor textarea.
-     *
-     * @When /^I switch to editor iframe$/
-     *
-     * @throws Exception When no iFrame is found.
-     */
-    public function i_switch_to_editor_iframe()  {
-
-        // Find the only iFrame in the document by tag name.
-        // The reason: this iFrame has only one selector: id, that can not be used to find it
-        // because it is generated automatically.
-        $function = <<<JS
-            (function(){
-                 var iframe = document.getElementById('id_summary_editor_ifr');
-                 iframe.name = "iframeTinymceEditor";
-            })()
-JS;
-        try {
-            $this->getSession()->executeScript($function);
-        } catch (Exception $e) {
-            throw new \Exception("iFrame was NOT found." . PHP_EOL . $e->getMessage());
-        }
-
-        // After injecting the name attribute to the iFrame
-        // we can now use the original switchToIFrame function which needs
-        // the name attribute as an argument.
-        $this->getSession()->getDriver()->switchToIFrame("iframeTinymceEditor");
-    }
-
-    /**
      * Confirm browser alert popup.
      *
      * @When /^I confirm the popup$/
      */
-    public function iConfirmThePopup()
-    {
+    public function i_confirm_the_popup() {
         sleep(1);
         $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
