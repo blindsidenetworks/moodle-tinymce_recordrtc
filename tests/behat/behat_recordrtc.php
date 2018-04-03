@@ -48,7 +48,7 @@ class behat_recordrtc extends behat_base {
         // We spin to give time to the iframe to be loaded.
         $this->spin(
             function () {
-                $this->switch_to_first_iframe();
+                $this->switch_to_popup_iframe();
                 // If no exception we are done.
                 return true;
             },
@@ -61,7 +61,7 @@ class behat_recordrtc extends behat_base {
      *
      * @throws Exception When no iFrame is found.
      */
-    public function switch_to_first_iframe() {
+    public function switch_to_popup_iframe() {
 
         // Find the only iFrame in the document by tag name.
         // The reason: this iFrame has only one selector: id, that can not be used to find it
@@ -82,5 +82,46 @@ JS;
         // we can now use the original switchToIFrame function which needs
         // the name attribute as an argument.
         $this->getSession()->getDriver()->switchToIFrame("iframeTinymce");
+    }
+
+    /**
+     * Switch to iframe inside the editor textarea.
+     *
+     * @When /^I switch to editor iframe$/
+     *
+     * @throws Exception When no iFrame is found.
+     */
+    public function i_switch_to_editor_iframe()  {
+
+        // Find the only iFrame in the document by tag name.
+        // The reason: this iFrame has only one selector: id, that can not be used to find it
+        // because it is generated automatically.
+        $function = <<<JS
+            (function(){
+                 var iframe = document.getElementById('id_summary_editor_ifr');
+                 iframe.name = "iframeTinymceEditor";
+            })()
+JS;
+        try {
+            $this->getSession()->executeScript($function);
+        } catch (Exception $e) {
+            throw new \Exception("iFrame was NOT found." . PHP_EOL . $e->getMessage());
+        }
+
+        // After injecting the name attribute to the iFrame
+        // we can now use the original switchToIFrame function which needs
+        // the name attribute as an argument.
+        $this->getSession()->getDriver()->switchToIFrame("iframeTinymceEditor");
+    }
+
+    /**
+     * Confirm browser alert popup.
+     *
+     * @When /^I confirm the popup$/
+     */
+    public function iConfirmThePopup()
+    {
+        sleep(1);
+        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
 }

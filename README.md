@@ -58,3 +58,28 @@ The plugin can be configured during the initial install, and later by navigating
 * If nothing is displayed in the popup after clicking one of the buttons in the TinyMCE toolbar, it is likely an issue with the `X-Frame-Options` header. To fix this, change the server configuration to set the header to `SAMEORIGIN`. Also, make sure that the header is not set twice as the browser will default the value to `DENY` (sometimes individual web apps also set the header, or there is some conflicting server configuration)
 * The default maximum size of uploads in PHP is very small, it is recommended to set the `upload_max_filesize` setting to `40M` and the `post_max_size` setting to `50M` for a time limit of 2:00 to avoid getting an alert while recording
 * The filesize of recorded video for Firefox will likely be twice that of other browsers, even with the same settings; this is expected as it uses a different writing library for recording video. The audio filesize should be similar across all browsers
+
+### Behat tests
+
+To ensure behat tests work correctly, you should add this chrome switches to $CFG->behat_profiles like this:
+
+$CFG->behat_profiles = [
+    'default' => [
+        'browser' => 'chrome',
+        'capabilities' => [
+            'chrome' => [
+                'switches' => [
+                    '--use-fake-device-for-media-stream',
+                    '--use-fake-ui-for-media-stream'
+                ]
+            ]
+        ],
+        'extensions' => [
+            'Behat\MinkExtension' => [
+                'selenium2' => [
+                    'browser' => 'chrome'
+                ]
+            ]
+        ]
+    ]
+];
