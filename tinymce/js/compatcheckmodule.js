@@ -20,25 +20,28 @@
 M.tinymce_recordrtc = M.tinymce_recordrtc || {};
 
 // Show alert and close plugin if browser does not support WebRTC at all.
-M.tinymce_recordrtc.check_has_gum = function() {
+M.tinymce_recordrtc.check_has_gum = function () {
     if (!(navigator.mediaDevices && window.MediaRecorder)) {
-        M.tinymce_recordrtc.show_alert('nowebrtc', function() {
+        M.tinymce_recordrtc.show_alert('nowebrtc', function () {
             tinyMCEPopup.close();
         });
     }
 };
 
 // Notify and redirect user if plugin is used from insecure location.
-M.tinymce_recordrtc.check_secure = function() {
+M.tinymce_recordrtc.check_secure = function () {
     var isSecureOrigin = (window.location.protocol === 'https:') ||
-                         (window.location.host.indexOf('localhost') !== -1);
+        (window.location.host.indexOf('localhost') !== -1) ||
+        (window.location.host.indexOf('127.0.0.1') !== -1);
 
-    if (!isSecureOrigin && (window.bowser.chrome || window.bowser.opera)) {
-        M.tinymce_recordrtc.show_alert('gumsecurity', function() {
-            tinyMCEPopup.close();
-        });
-    } else if (!isSecureOrigin) {
+    if (!isSecureOrigin) {
         alertDanger.ancestor().ancestor().removeClass('hide');
+
+        if (window.bowser.chrome || window.bowser.opera) {
+            M.tinymce_recordrtc.show_alert('gumsecurity', function () {
+                tinyMCEPopup.close();
+            });
+        }
     }
 };
 
@@ -46,10 +49,10 @@ M.tinymce_recordrtc.check_secure = function() {
 // - Firefox 29+;
 // - Chrome 49+;
 // - Opera 36+.
-M.tinymce_recordrtc.check_browser = function() {
+M.tinymce_recordrtc.check_browser = function () {
     if (!((window.bowser.firefox && window.bowser.version >= 29) ||
-          (window.bowser.chrome && window.bowser.version >= 49) ||
-          (window.bowser.opera && window.bowser.version >= 36))) {
+        (window.bowser.chrome && window.bowser.version >= 49) ||
+        (window.bowser.opera && window.bowser.version >= 36))) {
         alertWarning.ancestor().ancestor().removeClass('hide');
     }
 };

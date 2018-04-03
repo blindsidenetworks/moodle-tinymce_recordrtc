@@ -73,7 +73,7 @@ function addAudio(ed, url) {
             baseWidth = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
             percentOfViewportWidth = vp.w * 0.75,
             width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-            height = 340 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+            height = 220 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
             maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
         if (maximizedmode) {
             width = vp.w;
@@ -119,10 +119,10 @@ function addVideo(ed, url) {
         ed.windowManager.onClose.add(onClose);
 
         var vp = ed.dom.getViewPort(),
-            baseWidth = 720 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+            baseWidth = 640 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
             percentOfViewportWidth = vp.w * 0.75,
             width = percentOfViewportWidth > baseWidth ? percentOfViewportWidth : baseWidth,
-            height = 780 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
+            height = 600 + window.parseInt(ed.getLang('advimage.delta_width', 0)),
             maximizedmode = (width >= vp.w - 2 || height >= vp.h - 2);
         if (maximizedmode) {
             width = vp.w;
