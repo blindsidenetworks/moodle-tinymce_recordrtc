@@ -2,6 +2,7 @@ language: php
 
 # Workaround for fixing that Selenium server is not running and therefore Behat tests not working
 sudo: required
+dist: trusty
 
 addons:
   firefox: "47.0.1"
@@ -61,9 +62,6 @@ before_install:
   - composer selfupdate
   - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
-
-  # Stop services that would claim ports we may need
-  - sudo service mysql stop
 
 install:
   - moodle-plugin-ci install
