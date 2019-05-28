@@ -29,6 +29,8 @@ env:
     - MOODLE_BRANCH=MOODLE_34_STABLE DB=pgsql
     - MOODLE_BRANCH=MOODLE_35_STABLE DB=mysqli
     - MOODLE_BRANCH=MOODLE_35_STABLE DB=pgsql
+    - MOODLE_BRANCH=MOODLE_36_STABLE DB=mysqli
+    - MOODLE_BRANCH=MOODLE_36_STABLE DB=pgsql
     - MOODLE_BRANCH=MOODLE_37_STABLE DB=mysqli
     - MOODLE_BRANCH=MOODLE_37_STABLE DB=pgsql
     - MOODLE_BRANCH=master DB=mysqli
@@ -55,11 +57,13 @@ matrix:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 8.9.0
   - cd ../..
   - composer selfupdate
-  - composer create-project -n --no-dev --prefer-dist moodlerooms/moodle-plugin-ci ci ^2
+  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
+
+  # Stop services that would claim ports we may need
+  - sudo service mysql stop
 
 install:
   - moodle-plugin-ci install
