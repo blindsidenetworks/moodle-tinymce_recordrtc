@@ -94,7 +94,6 @@ matrix:
 before_install:
   - phpenv config-rm xdebug.ini
   - cd ../..
-#  - composer selfupdate
   - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^${MOODLE_PLUGIN_CI}
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
   - nvm install 8.9
