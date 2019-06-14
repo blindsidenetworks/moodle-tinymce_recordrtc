@@ -30,4 +30,4 @@ $plugin->version   = 2019051900;
 $plugin->requires  = 2016120500;
 $plugin->component = 'tinymce_recordrtc';
 $plugin->maturity = MATURITY_BETA;
-$plugin->release = '1.0.1-beta';
+$plugin->release = '1.1-beta';
