@@ -35,7 +35,8 @@ const MOODLE_TINYMCE_RECORDRTC_ROOT = '/lib/editor/tinymce/plugins/recordrtc/';
 
 /**
  * This class defines functions for the plugin.
- * @copyright  2017 Blindside Networks Inc.
+ *
+ * @copyright  2017 onwards, Blindside Networks Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class tinymce_recordrtc extends editor_tinymce_plugin {
