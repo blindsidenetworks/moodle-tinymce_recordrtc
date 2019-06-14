@@ -161,7 +161,7 @@ M.tinymce_recordrtc.start_recording = function(type, stream) {
 };
 
 // Stop recording audio/video.
-M.tinymce_recordrtc.stop_recording = function (stream) {
+M.tinymce_recordrtc.stop_recording = function(stream) {
     // Stop recording microphone stream.
     mediaRecorder.stop();
 
