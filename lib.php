@@ -68,7 +68,7 @@ class tinymce_recordrtc extends editor_tinymce_plugin {
 
         foreach ($allowedtypes as &$type) {
             $params[$type.'rtc'] = array(
-                'contextid' => $options['context']->id,
+                'contextid' => $context->id,
                 'sesskey' => sesskey(),
                 'timelimit' => $this->get_config('timelimit'),
                 'audiobitrate' => $this->get_config('audiobitrate'),
