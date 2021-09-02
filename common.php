@@ -36,12 +36,12 @@ $PAGE->set_heading($title);
 // Reset page layout for inside editor.
 $PAGE->set_pagelayout('embedded');
 
-$PAGE->requires->css(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css'));
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/bowser.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/adapter.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/commonmodule.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/abstractmodule.js'), true);
-$PAGE->requires->js(new moodle_url($CFG->wwwroot.MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/compatcheckmodule.js'), true);
+$PAGE->requires->css(MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/css/style.css');
+$PAGE->requires->js(MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/bowser.js', true);
+$PAGE->requires->js(MOODLE_TINYMCE_RECORDRTC_ROOT.'vendor/js/adapter.js', true);
+$PAGE->requires->js(MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/commonmodule.js', true);
+$PAGE->requires->js(MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/abstractmodule.js', true);
+$PAGE->requires->js(MOODLE_TINYMCE_RECORDRTC_ROOT.'tinymce/js/compatcheckmodule.js', true);
 
 // Get max file upload size.
 $maxuploadsize = ini_get('upload_max_filesize');
