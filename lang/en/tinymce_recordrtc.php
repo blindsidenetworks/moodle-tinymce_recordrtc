@@ -76,3 +76,4 @@ $string['uploadaborted'] = 'Upload aborted:';
 $string['annotationprompt'] = 'What should the annotation appear as?';
 $string['annotation:audio'] = 'Audio annotation';
 $string['annotation:video'] = 'Video annotation';
+$string['privacy:metadata'] = 'The tinymce_recordrtc plugin does not store any personal data.';
